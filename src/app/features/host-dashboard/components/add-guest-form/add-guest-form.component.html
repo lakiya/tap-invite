@@ -67,5 +67,9 @@
     @if (phoneError() || emailError()) {
       <p class="submit-hint">Fix the format above to continue</p>
     }
+
+    @if (submitError()) {
+      <p class="hint hint-error">{{ submitError() }}</p>
+    }
   </form>
 </div>

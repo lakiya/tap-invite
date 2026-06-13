@@ -17,11 +17,13 @@ export class EventFormComponent {
   private supabase = inject(Supabase);
 
   isSubmitting = signal(false);
+  submitError = signal<string | null>(null);
   fields = { title: '', date: '', location: '' };
 
   async handleSubmit() {
     if (!this.fields.title.trim()) return;
     this.isSubmitting.set(true);
+    this.submitError.set(null);
     try {
       const event = await this.supabase.createEvent(
         this.hostId,
@@ -30,6 +32,8 @@ export class EventFormComponent {
         this.fields.location
       );
       this.eventCreated.emit(event);
+    } catch {
+      this.submitError.set('Failed to create event. Please try again.');
     } finally {
       this.isSubmitting.set(false);
     }

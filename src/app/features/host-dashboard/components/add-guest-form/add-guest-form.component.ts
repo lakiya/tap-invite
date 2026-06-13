@@ -26,6 +26,7 @@ export class AddGuestFormComponent {
   phoneError = signal<string | null>(null);
   emailError = signal<string | null>(null);
   isSubmitting = signal(false);
+  submitError = signal<string | null>(null);
 
   validatePhone() {
     if (!this.phone.trim()) { this.phoneError.set(null); return; }
@@ -47,6 +48,7 @@ export class AddGuestFormComponent {
     if (!this.canSubmit()) return;
 
     this.isSubmitting.set(true);
+    this.submitError.set(null);
     try {
       await this.supabase.addGuest(
         this.eventId,
@@ -60,6 +62,8 @@ export class AddGuestFormComponent {
       this.phoneError.set(null);
       this.emailError.set(null);
       this.guestAdded.emit();
+    } catch {
+      this.submitError.set('Failed to add guest. Please try again.');
     } finally {
       this.isSubmitting.set(false);
     }

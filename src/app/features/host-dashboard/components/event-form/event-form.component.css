@@ -83,3 +83,10 @@
 
 .submit-btn:hover:not(:disabled) { opacity: 0.92; }
 .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.error-msg {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--color-error);
+  text-align: center;
+}

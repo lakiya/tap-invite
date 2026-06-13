@@ -38,5 +38,9 @@
     <button class="submit-btn" type="submit" [disabled]="isSubmitting() || !fields.title.trim()">
       {{ isSubmitting() ? 'Launching...' : '🚀 Launch Event' }}
     </button>
+
+    @if (submitError()) {
+      <p class="error-msg">{{ submitError() }}</p>
+    }
   </form>
 </div>
