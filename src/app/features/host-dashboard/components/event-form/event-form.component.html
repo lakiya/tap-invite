@@ -1,0 +1,42 @@
+<div class="form-card">
+  <p class="step-eyebrow">Step 1 of 1</p>
+  <h2 class="form-title">Create Your Event</h2>
+  <p class="form-sub">Fill in the details and launch your event in seconds.</p>
+
+  <form (ngSubmit)="handleSubmit()">
+    <div class="field-group">
+      <label class="field-label">Event Name <span class="required">*</span></label>
+      <input
+        class="field-input"
+        [(ngModel)]="fields.title"
+        name="title"
+        placeholder="e.g. Priya & Kamal's Wedding"
+        required
+      />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Date &amp; Time</label>
+      <input
+        class="field-input"
+        type="datetime-local"
+        [(ngModel)]="fields.date"
+        name="date"
+      />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Location</label>
+      <input
+        class="field-input"
+        [(ngModel)]="fields.location"
+        name="location"
+        placeholder="e.g. The Grand Ballroom, Colombo"
+      />
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="isSubmitting() || !fields.title.trim()">
+      {{ isSubmitting() ? 'Launching...' : '🚀 Launch Event' }}
+    </button>
+  </form>
+</div>
