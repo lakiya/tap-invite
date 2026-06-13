@@ -1,0 +1,71 @@
+<div class="ag-card">
+  <h3 class="ag-title">➕ Add Guest</h3>
+
+  <form (ngSubmit)="handleSubmit()">
+    <div class="field-group">
+      <label class="field-label">Full Name <span class="required">*</span></label>
+      <input
+        class="field-input"
+        [(ngModel)]="name"
+        name="gname"
+        placeholder="e.g. Priya Sharma"
+        required
+      />
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field-group">
+      <label class="field-label">
+        Phone <span class="opt-badge">Optional</span>
+      </label>
+      <input
+        class="field-input"
+        [(ngModel)]="phone"
+        name="gphone"
+        placeholder="+94 77 000 0000"
+        (blur)="validatePhone()"
+        [class.input-valid]="phone && !phoneError()"
+        [class.input-invalid]="phoneError()"
+      />
+      @if (!phone) {
+        <p class="hint hint-neutral">Leave blank — invite link can be shared manually.</p>
+      } @else if (phoneError()) {
+        <p class="hint hint-error">✕ {{ phoneError() }}</p>
+      } @else {
+        <p class="hint hint-valid">✓ Looks like a valid phone number</p>
+      }
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">
+        Email <span class="opt-badge">Optional</span>
+      </label>
+      <input
+        class="field-input"
+        type="email"
+        [(ngModel)]="email"
+        name="gemail"
+        placeholder="guest@example.com"
+        (blur)="validateEmail()"
+        [class.input-valid]="email && !emailError()"
+        [class.input-invalid]="emailError()"
+      />
+      @if (!email) {
+        <p class="hint hint-neutral">Add email to enable "Send Invite" action.</p>
+      } @else if (emailError()) {
+        <p class="hint hint-error">✕ {{ emailError() }}</p>
+      } @else {
+        <p class="hint hint-valid">✓ "Send Email" action will appear for this guest.</p>
+      }
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="isSubmitting() || !canSubmit()">
+      {{ isSubmitting() ? 'Adding...' : '+ Add to Guest List' }}
+    </button>
+
+    @if (phoneError() || emailError()) {
+      <p class="submit-hint">Fix the format above to continue</p>
+    }
+  </form>
+</div>
