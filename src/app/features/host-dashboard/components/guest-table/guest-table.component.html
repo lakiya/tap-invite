@@ -1,0 +1,55 @@
+<div class="gt-card">
+  <h3 class="gt-title">Guest Network <span class="guest-count">{{ guests.length }}</span></h3>
+
+  @if (guests.length === 0) {
+    <p class="empty-msg">No guests yet. Start building your list.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="guest-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Contact</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (guest of guests; track guest.id) {
+            <tr>
+              <td class="name-cell">{{ guest.display_name }}</td>
+
+              <td>
+                <span class="badge badge-{{ getStatus(guest).toLowerCase() }}">
+                  {{ getStatus(guest) }}
+                </span>
+              </td>
+
+              <td class="contact-icons">
+                @if (guest.phone_number) { <span title="{{ guest.phone_number }}">📱</span> }
+                @if (guest.email)        { <span title="{{ guest.email }}">✉️</span> }
+              </td>
+
+              <td class="action-cell">
+                <button type="button" class="btn-copy" (click)="copyLink.emit(guest.id)">🔗 Copy</button>
+
+                @if (guest.email) {
+                  <button
+                    type="button"
+                    class="btn-email"
+                    [disabled]="sendingId() === guest.id"
+                    (click)="onSendEmail(guest.id)"
+                  >
+                    {{ sendingId() === guest.id ? 'Sending…' : '✉ Email' }}
+                  </button>
+                } @else {
+                  <span class="no-email">no email</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
