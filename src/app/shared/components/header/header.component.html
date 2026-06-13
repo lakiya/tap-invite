@@ -1,0 +1,30 @@
+<header class="site-header">
+  <div class="header-inner">
+
+    <a routerLink="/" class="logo">
+      <span class="logo-mark">T</span>
+      <span class="logo-text">TapInvite</span>
+    </a>
+
+    @if (variant === 'landing') {
+      <nav class="header-nav">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a routerLink="/login" class="nav-cta">Get Started</a>
+      </nav>
+    }
+
+    @if (variant === 'dashboard') {
+      <div class="header-actions">
+        <button class="logout-btn" (click)="logoutClick.emit()">Logout</button>
+      </div>
+    }
+
+    <button class="theme-toggle" (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+      <span class="toggle-track" [class.dark]="themeService.isDark()">
+        <span class="toggle-knob">{{ themeService.isDark() ? '🌙' : '☀️' }}</span>
+      </span>
+    </button>
+
+  </div>
+</header>
