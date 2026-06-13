@@ -16,11 +16,11 @@
 
     @if (variant === 'dashboard') {
       <div class="header-actions">
-        <button class="logout-btn" (click)="logoutClick.emit()">Logout</button>
+        <button class="logout-btn" type="button" (click)="logoutClick.emit()">Logout</button>
       </div>
     }
 
-    <button class="theme-toggle" (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+    <button class="theme-toggle" type="button" (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
       <span class="toggle-track" [class.dark]="themeService.isDark()">
         <span class="toggle-knob">{{ themeService.isDark() ? '🌙' : '☀️' }}</span>
       </span>
