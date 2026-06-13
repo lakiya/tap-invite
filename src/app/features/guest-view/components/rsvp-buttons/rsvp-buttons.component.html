@@ -16,7 +16,7 @@
         <p class="banner-sub">We can't wait to see you.</p>
       </div>
     </div>
-    <button type="button" class="btn-change" (click)="rsvpChange.emit('Accepted')">Change my response</button>
+    <button type="button" class="btn-change" (click)="rsvpChange.emit('Pending')">Change my response</button>
   }
 
   @if (status === 'Declined') {
@@ -27,7 +27,7 @@
         <p class="banner-sub">We'll miss you.</p>
       </div>
     </div>
-    <button type="button" class="btn-change" (click)="rsvpChange.emit('Declined')">Change my response</button>
+    <button type="button" class="btn-change" (click)="rsvpChange.emit('Pending')">Change my response</button>
   }
 
   @if (status === 'Tentative') {
@@ -38,6 +38,6 @@
         <p class="banner-sub">Let us know if your plans change.</p>
       </div>
     </div>
-    <button type="button" class="btn-change" (click)="rsvpChange.emit('Tentative')">Change my response</button>
+    <button type="button" class="btn-change" (click)="rsvpChange.emit('Pending')">Change my response</button>
   }
 </div>

@@ -12,5 +12,5 @@ export type RsvpStatus = 'Pending' | 'Accepted' | 'Declined' | 'Tentative';
 })
 export class RsvpButtonsComponent {
   @Input() status: RsvpStatus = 'Pending';
-  @Output() rsvpChange = new EventEmitter<'Accepted' | 'Declined' | 'Tentative'>();
+  @Output() rsvpChange = new EventEmitter<RsvpStatus>();
 }
