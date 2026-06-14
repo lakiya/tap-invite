@@ -143,7 +143,7 @@ import { Supabase } from '../../core/services/supabase/supabase';
     }
 
     .submit-btn:hover:not(:disabled) { opacity: 0.92; }
-    .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
 
     .back-link {
       display: inline-block;

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Supabase } from '../../../core/services/supabase/supabase';
 import { RsvpButtonsComponent, RsvpStatus } from './rsvp-buttons/rsvp-buttons.component';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
@@ -21,7 +21,7 @@ interface GuestData {
 @Component({
   selector: 'app-guest-view',
   standalone: true,
-  imports: [CommonModule, LottieComponent, RsvpButtonsComponent],
+  imports: [CommonModule, RouterModule, LottieComponent, RsvpButtonsComponent],
   templateUrl: './guest-view.component.html',
   styleUrls: ['./guest-view.component.css']
 })

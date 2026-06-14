@@ -35,6 +35,16 @@
 .status-wrap h2 { font-size: 1.25rem; font-weight: 700; margin: 0; }
 .status-wrap p { font-size: 0.875rem; color: var(--color-text-muted); margin: 0; }
 
+.back-home {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.83rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.back-home:hover { color: var(--color-primary); }
+
 .invitation-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
