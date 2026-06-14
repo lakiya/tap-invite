@@ -14,7 +14,10 @@ export class ToastComponent {
   readonly toasts = this.toastService.toasts;
 
   icon(type: Toast['type']): string {
-    return { success: '✓', error: '✕', info: 'ℹ', warning: '⚠', confirm: '?' }[type];
+    const icons: Record<Toast['type'], string> = {
+      success: '✓', error: '✕', info: 'ℹ', warning: '⚠', confirm: '?'
+    };
+    return icons[type];
   }
 
   confirm(toast: Toast): void {
