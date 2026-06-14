@@ -23,6 +23,7 @@
   color: var(--color-text);
   animation: slide-in 0.2s ease;
   backdrop-filter: blur(16px);
+  pointer-events: all;
 }
 
 .toast-body {
@@ -35,14 +36,17 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(34, 197, 94, 0.15);
-  color: var(--color-success);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--color-success);
 }
 
 .toast-error .toast-icon {
