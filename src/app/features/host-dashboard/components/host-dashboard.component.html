@@ -1,7 +1,5 @@
 <app-header variant="dashboard" (logoutClick)="handleLogout()"></app-header>
 
-<app-toast [toasts]="toasts()"></app-toast>
-
 <main class="dash-main">
 
   @if (isLoading()) {
@@ -40,12 +38,14 @@
       <app-add-guest-form
         [eventId]="activeEvent().id"
         (guestAdded)="handleGuestAdded()"
+        (guestDeleted)="handleGuestDeleted()"
       ></app-add-guest-form>
 
       <app-guest-table
         [guests]="guests()"
         (copyLink)="copyLink($event)"
         (sendEmail)="sendEmailInvitation($event)"
+        (guestDeleted)="handleGuestDeleted()"
       ></app-guest-table>
     </div>
   }

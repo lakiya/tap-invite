@@ -2,8 +2,8 @@ import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angu
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { Supabase } from '../../../core/services/supabase/supabase';
+import { ToastService } from '../../../core/services/toast/toast.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { ToastComponent, Toast } from '../../../shared/components/toast/toast.component';
 import { EventFormComponent } from './event-form/event-form.component';
 import { AddGuestFormComponent } from './add-guest-form/add-guest-form.component';
 import { GuestTableComponent } from './guest-table/guest-table.component';
@@ -14,7 +14,6 @@ import { GuestTableComponent } from './guest-table/guest-table.component';
   imports: [
     CommonModule,
     HeaderComponent,
-    ToastComponent,
     EventFormComponent,
     AddGuestFormComponent,
     GuestTableComponent
@@ -25,15 +24,14 @@ import { GuestTableComponent } from './guest-table/guest-table.component';
 export class HostDashboardComponent implements OnInit, OnDestroy {
   private supabase    = inject(Supabase);
   private router      = inject(Router);
+  private toastService = inject(ToastService);
   private platformId  = inject(PLATFORM_ID);
 
   userId      = signal<string | null>(null);
   isLoading   = signal(true);
   activeEvent = signal<any>(null);
   guests      = signal<any[]>([]);
-  toasts      = signal<Toast[]>([]);
 
-  private toastCounter = 0;
   private realtimeChannel: ReturnType<typeof this.supabase.client.channel> | null = null;
 
   async ngOnInit() {
@@ -95,6 +93,11 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
     this.showToast('Guest added successfully!');
   }
 
+  async handleGuestDeleted() {
+    await this.loadGuests(this.activeEvent().id);
+    this.showToast('Guest deleted successfully!');
+  }
+
   async copyLink(guestId: string) {
     if (!isPlatformBrowser(this.platformId)) return;
     const url = `${window.location.origin}/w/${this.activeEvent().id}/${guestId}`;
@@ -121,8 +124,10 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
   }
 
   showToast(message: string, type: 'success' | 'error' = 'success') {
-    const id = ++this.toastCounter;
-    this.toasts.update(t => [...t, { id, message, type }]);
-    setTimeout(() => this.toasts.update(t => t.filter(x => x.id !== id)), 3000);
+    if (type === 'success') {
+      this.toastService.success(message);
+    } else {
+      this.toastService.error(message);
+    }
   }
 }
