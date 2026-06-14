@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System + Header</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #080e1a;
+    color: #e2e8f0;
+    padding: 40px 24px 80px;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .section-title h1 { font-size: 1.8rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px; letter-spacing: -0.03em; }
+  .section-title p { color: #64748b; font-size: 0.95rem; }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #0ea5e9;
+    margin-bottom: 16px;
+  }
+
+  .panel {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    background: #111827;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title { font-size: 1rem; font-weight: 700; color: #f1f5f9; }
+  .panel-body { padding: 28px; }
+
+  /* ── COLOR TOKENS ── */
+  .tokens-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .mode-column h3 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .light-col h3 { color: #94a3b8; }
+  .dark-col h3 { color: #94a3b8; }
+
+  .swatches { display: flex; flex-direction: column; gap: 8px; }
+  .swatch-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+  }
+  .swatch-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .swatch-info { flex: 1; }
+  .swatch-name { font-size: 0.82rem; font-weight: 600; color: #e2e8f0; }
+  .swatch-hex { font-size: 0.72rem; color: #64748b; font-family: 'Courier New', monospace; margin-top: 1px; }
+  .swatch-role { font-size: 0.7rem; color: #475569; margin-top: 2px; }
+
+  /* ── HEADER PREVIEW ── */
+  .split-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .preview-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* Light header */
+  .header-light {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  }
+  .logo-light {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+  }
+  .logo-icon-light {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: white;
+  }
+  .logo-light span { color: #0ea5e9; }
+
+  .nav-links-light {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-link-light {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #64748b;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .nav-link-light:hover { background: #f1f5f9; color: #0f172a; }
+
+  /* Toggle button */
+  .theme-toggle-light {
+    width: 44px;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    padding: 0 3px;
+  }
+  .theme-toggle-light .knob {
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: #f59e0b;
+  }
+  .theme-toggle-dark {
+    width: 44px;
+    height: 24px;
+    background: #1d4ed8;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 3px;
+  }
+  .theme-toggle-dark .knob {
+    width: 18px;
+    height: 18px;
+    background: #60a5fa;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: #fff;
+  }
+
+  /* Dark header */
+  .header-dark {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .logo-dark {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    letter-spacing: -0.03em;
+  }
+  .logo-icon-dark {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #0ea5e9, #0369a1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: white;
+    box-shadow: 0 0 12px rgba(14,165,233,0.4);
+  }
+  .logo-dark span { color: #38bdf8; }
+  .nav-links-dark { display: flex; align-items: center; gap: 6px; }
+  .nav-link-dark {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #94a3b8;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .type-grid { display: flex; flex-direction: column; gap: 16px; }
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+  }
+  .type-meta { width: 120px; flex-shrink: 0; }
+  .type-meta .size-label { font-size: 0.7rem; font-weight: 700; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; }
+  .type-meta .size-value { font-size: 0.7rem; color: #475569; font-family: monospace; margin-top: 2px; }
+  .type-preview-light { color: #0f172a; }
+  .type-preview-dark { color: #f1f5f9; }
+
+  /* ── SPACING & RADIUS ── */
+  .tokens-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .token-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .radius-box {
+    background: rgba(14,165,233,0.15);
+    border: 1px solid rgba(14,165,233,0.3);
+    width: 56px;
+    height: 40px;
+  }
+  .token-chip span { font-size: 0.68rem; color: #64748b; font-family: monospace; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="section-title">
+  <h1>Design System & Header — Section 1 of 5</h1>
+  <p>Color tokens, typography scale, and the shared header component in both modes.</p>
+</div>
+
+<!-- COLOR TOKENS -->
+<div class="panel">
+  <div class="panel-header">
+    <div class="panel-title">Color Tokens (CSS Variables)</div>
+    <div style="font-size:0.75rem;color:#64748b">Applied globally via <code style="color:#0ea5e9">:root</code> + <code style="color:#0ea5e9">[data-theme="dark"]</code></div>
+  </div>
+  <div class="panel-body">
+    <div class="tokens-grid">
+
+      <div class="mode-column light-col">
+        <h3>☀️ Light Mode</h3>
+        <div class="swatches">
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#0ea5e9"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-primary</div>
+              <div class="swatch-hex">#0ea5e9</div>
+              <div class="swatch-role">Sky Blue — links, active states</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#0284c7"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-primary-dark</div>
+              <div class="swatch-hex">#0284c7</div>
+              <div class="swatch-role">Hover / pressed state</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#f97316"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-accent</div>
+              <div class="swatch-hex">#f97316</div>
+              <div class="swatch-role">Orange — primary CTAs</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#f8fafc;border:1px solid #e2e8f0"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-bg</div>
+              <div class="swatch-hex">#f8fafc</div>
+              <div class="swatch-role">Page background</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#ffffff;border:1px solid #e2e8f0"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-surface</div>
+              <div class="swatch-hex">#ffffff</div>
+              <div class="swatch-role">Cards, panels</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#e2e8f0;border:1px solid #cbd5e1"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-border</div>
+              <div class="swatch-hex">#e2e8f0</div>
+              <div class="swatch-role">Dividers, input borders</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#0f172a"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-text</div>
+              <div class="swatch-hex">#0f172a</div>
+              <div class="swatch-role">Primary text</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#64748b"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-text-muted</div>
+              <div class="swatch-hex">#64748b</div>
+              <div class="swatch-role">Secondary / helper text</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-column dark-col">
+        <h3>🌙 Dark Mode</h3>
+        <div class="swatches">
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#38bdf8"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-primary</div>
+              <div class="swatch-hex">#38bdf8</div>
+              <div class="swatch-role">Lightened for dark bg readability</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#0ea5e9"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-primary-dark</div>
+              <div class="swatch-hex">#0ea5e9</div>
+              <div class="swatch-role">Hover state</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#fb923c"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-accent</div>
+              <div class="swatch-hex">#fb923c</div>
+              <div class="swatch-role">Orange — same energy, brighter</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#0b1120;border:1px solid #1e293b"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-bg</div>
+              <div class="swatch-hex">#0b1120</div>
+              <div class="swatch-role">Deep navy page background</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#111827;border:1px solid #1e293b"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-surface</div>
+              <div class="swatch-hex">#111827</div>
+              <div class="swatch-role">Cards, panels</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#1e293b;border:1px solid #334155"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-border</div>
+              <div class="swatch-hex">#1e293b</div>
+              <div class="swatch-role">Subtle dividers</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#f1f5f9"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-text</div>
+              <div class="swatch-hex">#f1f5f9</div>
+              <div class="swatch-role">Primary text on dark</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-box" style="background:#94a3b8"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--color-text-muted</div>
+              <div class="swatch-hex">#94a3b8</div>
+              <div class="swatch-role">Secondary text on dark</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- HEADER PREVIEW -->
+<div class="panel">
+  <div class="panel-header">
+    <div class="panel-title">HeaderComponent — Light & Dark</div>
+    <div style="font-size:0.75rem;color:#64748b">Used on: Landing, Host Dashboard</div>
+  </div>
+  <div class="panel-body">
+    <div class="split-preview">
+
+      <div>
+        <div class="preview-label">☀️ Light Mode</div>
+        <div class="header-light">
+          <div class="logo-light">
+            <div class="logo-icon-light">⚡</div>
+            Tap<span>Invite</span>
+          </div>
+          <div class="nav-links-light">
+            <div class="nav-link-light">Features</div>
+            <div class="nav-link-light">Pricing</div>
+            <div style="width:1px;height:18px;background:#e2e8f0;margin:0 4px"></div>
+            <div class="theme-toggle-light">
+              <div class="knob">☀️</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:rgba(14,165,233,0.06);border-radius:8px;font-size:0.74rem;color:#64748b">
+          → Sticky, <code style="color:#0ea5e9">backdrop-filter: blur(12px)</code> + subtle bottom border on scroll. Logo links to /. Toggle persists to localStorage.
+        </div>
+      </div>
+
+      <div>
+        <div class="preview-label">🌙 Dark Mode</div>
+        <div class="header-dark">
+          <div class="logo-dark">
+            <div class="logo-icon-dark">⚡</div>
+            Tap<span>Invite</span>
+          </div>
+          <div class="nav-links-dark">
+            <div class="nav-link-dark">Features</div>
+            <div class="nav-link-dark">Pricing</div>
+            <div style="width:1px;height:18px;background:rgba(255,255,255,0.1);margin:0 4px"></div>
+            <div class="theme-toggle-dark">
+              <div class="knob">🌙</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:rgba(56,189,248,0.06);border-radius:8px;font-size:0.74rem;color:#64748b">
+          → Same structure, <code style="color:#38bdf8">border-bottom: 1px solid rgba(255,255,255,0.08)</code>. Icon glows with <code style="color:#38bdf8">box-shadow</code> in dark.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Anatomy -->
+    <div style="margin-top:24px;padding:18px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+      <div style="font-size:0.75rem;font-weight:700;color:#64748b;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">Component Anatomy</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="padding:12px;background:rgba(14,165,233,0.08);border-radius:8px;border:1px solid rgba(14,165,233,0.15)">
+          <div style="font-size:0.78rem;font-weight:700;color:#38bdf8;margin-bottom:4px">@Input() variant</div>
+          <div style="font-size:0.73rem;color:#94a3b8">'landing' | 'dashboard'<br>Controls nav link visibility</div>
+        </div>
+        <div style="padding:12px;background:rgba(14,165,233,0.08);border-radius:8px;border:1px solid rgba(14,165,233,0.15)">
+          <div style="font-size:0.78rem;font-weight:700;color:#38bdf8;margin-bottom:4px">ThemeService</div>
+          <div style="font-size:0.73rem;color:#94a3b8">isDark signal<br>toggle() method<br>localStorage persist</div>
+        </div>
+        <div style="padding:12px;background:rgba(14,165,233,0.08);border-radius:8px;border:1px solid rgba(14,165,233,0.15)">
+          <div style="font-size:0.78rem;font-weight:700;color:#38bdf8;margin-bottom:4px">@Output() logoutClick</div>
+          <div style="font-size:0.73rem;color:#94a3b8">EventEmitter — only<br>active on 'dashboard'<br>variant</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TYPOGRAPHY -->
+<div class="panel">
+  <div class="panel-header">
+    <div class="panel-title">Typography Scale</div>
+    <div style="font-size:0.75rem;color:#64748b">System font stack — no external font load penalty</div>
+  </div>
+  <div class="panel-body">
+    <div class="type-grid">
+      <div class="type-row">
+        <div class="type-meta"><div class="size-label">Display</div><div class="size-value">3rem / 700</div></div>
+        <div class="type-preview-light" style="font-size:2.2rem;font-weight:800;letter-spacing:-0.04em;color:#f1f5f9;line-height:1">Your Event</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><div class="size-label">H1</div><div class="size-value">2rem / 800</div></div>
+        <div style="font-size:1.6rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.03em">TapInvite Dashboard</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><div class="size-label">H2</div><div class="size-value">1.35rem / 700</div></div>
+        <div style="font-size:1.35rem;font-weight:700;color:#f1f5f9">Guest Network (12)</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><div class="size-label">Body</div><div class="size-value">0.9rem / 400</div></div>
+        <div style="font-size:0.9rem;color:#94a3b8;line-height:1.6">Personalised invitations that guests actually open and remember.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><div class="size-label">Label</div><div class="size-value">0.75rem / 600</div></div>
+        <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#64748b">Event Name</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><div class="size-label">Badge</div><div class="size-value">0.7rem / 700</div></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="background:#dcfce7;color:#16a34a;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px">Accepted</span>
+          <span style="background:#fee2e2;color:#dc2626;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px">Declined</span>
+          <span style="background:#fef9c3;color:#ca8a04;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px">Maybe</span>
+          <span style="background:#f1f5f9;color:#64748b;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px">Pending</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center;color:#475569;font-size:0.85rem">
+  Does this look right? Reply in the terminal — type <strong style="color:#f1f5f9">yes</strong> to continue to Section 2 (Landing Page), or describe any changes.
+</p>
+
+</body>
+</html>

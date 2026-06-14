@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { Supabase } from '../../../core/services/supabase/supabase';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
@@ -22,9 +22,10 @@ import { GuestTableComponent } from './guest-table/guest-table.component';
   templateUrl: './host-dashboard.component.html',
   styleUrls: ['./host-dashboard.component.css']
 })
-export class HostDashboardComponent implements OnInit {
-  private supabase = inject(Supabase);
-  private router   = inject(Router);
+export class HostDashboardComponent implements OnInit, OnDestroy {
+  private supabase    = inject(Supabase);
+  private router      = inject(Router);
+  private platformId  = inject(PLATFORM_ID);
 
   userId      = signal<string | null>(null);
   isLoading   = signal(true);
@@ -33,6 +34,7 @@ export class HostDashboardComponent implements OnInit {
   toasts      = signal<Toast[]>([]);
 
   private toastCounter = 0;
+  private realtimeChannel: ReturnType<typeof this.supabase.client.channel> | null = null;
 
   async ngOnInit() {
     const user = await this.supabase.getCurrentUser();
@@ -47,9 +49,26 @@ export class HostDashboardComponent implements OnInit {
       if (events?.length) {
         this.activeEvent.set(events[0]);
         await this.loadGuests(events[0].id);
+        this.subscribeToRsvpUpdates(events[0].id);
       }
     } finally {
       this.isLoading.set(false);
+    }
+  }
+
+  subscribeToRsvpUpdates(eventId: string) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.realtimeChannel = this.supabase.client
+      .channel(`rsvps-${eventId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rsvps' },
+        () => this.loadGuests(eventId)
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy() {
+    if (this.realtimeChannel) {
+      this.supabase.client.removeChannel(this.realtimeChannel);
     }
   }
 
@@ -67,10 +86,15 @@ export class HostDashboardComponent implements OnInit {
     this.showToast('Guest added successfully!');
   }
 
-  copyLink(guestId: string) {
+  async copyLink(guestId: string) {
+    if (!isPlatformBrowser(this.platformId)) return;
     const url = `${window.location.origin}/w/${this.activeEvent().id}/${guestId}`;
-    navigator.clipboard.writeText(url);
-    this.showToast('Invitation link copied!');
+    try {
+      await navigator.clipboard.writeText(url);
+      this.showToast('Invitation link copied!');
+    } catch {
+      this.showToast('Could not copy — please copy the link manually.', 'error');
+    }
   }
 
   async sendEmailInvitation(guestId: string) {

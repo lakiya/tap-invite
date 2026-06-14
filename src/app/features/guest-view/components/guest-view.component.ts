@@ -36,6 +36,7 @@ export class GuestViewComponent implements OnInit {
   rsvpStatus = signal<RsvpStatus>('Pending');
   isLoading  = signal(true);
   hasError   = signal(false);
+  rsvpError  = signal<string | null>(null);
 
   lottieOptions: AnimationOptions = {
     path: 'assets/animations/celebration4.json',
@@ -78,15 +79,13 @@ export class GuestViewComponent implements OnInit {
     if (status === 'Pending') { this.rsvpStatus.set('Pending'); return; }
     const guestId = this.guestId();
     if (!guestId) return;
+    this.rsvpError.set(null);
     try {
-      this.isLoading.set(true);
       await this.supabase.updateRsvpStatus(guestId, status);
       this.rsvpStatus.set(status);
     } catch (error) {
       console.error(error);
-      alert('Failed to update RSVP. Please try again.');
-    } finally {
-      this.isLoading.set(false);
+      this.rsvpError.set('Failed to save your response. Please try again.');
     }
   }
 }

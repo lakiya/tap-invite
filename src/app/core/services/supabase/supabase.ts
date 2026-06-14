@@ -31,16 +31,18 @@ export class Supabase {
   async updateRsvpStatus(guestId: string, status: string, dietary?: string, count: number = 1) {
     const { data, error } = await this.supabase
       .from('rsvps')
-      .update({ status, dietary_preference: dietary, attending_count: count, updated_at: new Date().toISOString() })
-      .eq('guest_id', guestId);
+      .upsert(
+        { guest_id: guestId, status, dietary_preference: dietary, attending_count: count, updated_at: new Date().toISOString() },
+        { onConflict: 'guest_id' }
+      );
     if (error) throw error;
     return data;
   }
 
-  async signInWithMagicLink(email: string) {
+  async signInWithMagicLink(email: string, redirectTo: string) {
     const { data, error } = await this.supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/dashboard` }
+      options: { emailRedirectTo: redirectTo }
     });
     if (error) throw error;
     return data;

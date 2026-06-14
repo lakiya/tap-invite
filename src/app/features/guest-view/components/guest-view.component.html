@@ -61,6 +61,10 @@
           (rsvpChange)="handleRsvpChange($event)"
         ></app-rsvp-buttons>
 
+        @if (rsvpError()) {
+          <p class="rsvp-error">{{ rsvpError() }}</p>
+        }
+
       </div>
     </div>
   }

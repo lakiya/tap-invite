@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard v3 — Corrected Validation</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #080e1a; color: #e2e8f0;
+    padding: 40px 24px 80px;
+  }
+  .page-header { text-align:center; margin-bottom:36px; }
+  .page-header h1 { font-size:1.8rem; font-weight:800; color:#f8fafc; letter-spacing:-0.03em; margin-bottom:6px; }
+  .page-header p { color:#64748b; font-size:0.95rem; }
+
+  .section-lbl { font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#0ea5e9; text-align:center; margin:28px 0 14px; }
+
+  .split { max-width:900px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .col-label { font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#64748b; text-align:center; margin-bottom:10px; }
+
+  .form-frame { border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); box-shadow:0 16px 40px rgba(0,0,0,0.4); }
+
+  /* LIGHT FORM */
+  .lm-form { background:white; padding:22px; }
+  .lm-form .card-title { font-size:0.9rem;font-weight:800;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px; }
+  .lm .fg { margin-bottom:12px; }
+  .lbl { font-size:0.68rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:6px; }
+  .lm-lbl { color:#374151; }
+  .opt-badge { background:#f1f5f9;color:#94a3b8;font-size:0.58rem;font-weight:700;padding:1px 7px;border-radius:4px;letter-spacing:0.04em; }
+  .lm-inp { width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.82rem;color:#0f172a;background:white; }
+  .lm-inp.has-val { border-color:#e2e8f0; }
+  .lm-inp.valid { border-color:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,0.1); }
+  .lm-inp.invalid { border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1); }
+  .hint { font-size:0.68rem;margin-top:5px;line-height:1.4; }
+  .hint.neutral { color:#94a3b8; }
+  .hint.valid { color:#16a34a; }
+  .hint.invalid { color:#dc2626; }
+  .lm-add-btn { width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:white;font-size:0.83rem;font-weight:700;margin-top:6px;text-align:center;box-shadow:0 3px 10px rgba(14,165,233,0.3); }
+  .lm-divider { height:1px;background:#f1f5f9;margin:12px 0; }
+
+  /* DARK FORM */
+  .dm-form { background:rgba(255,255,255,0.04);padding:22px;border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(12px); }
+  .dm-form .card-title { font-size:0.9rem;font-weight:800;color:#f1f5f9;margin-bottom:16px; }
+  .dm-lbl { color:#64748b; }
+  .dm-opt-badge { background:rgba(255,255,255,0.07);color:#475569;font-size:0.58rem;font-weight:700;padding:1px 7px;border-radius:4px;letter-spacing:0.04em; }
+  .dm-inp { width:100%;padding:10px 12px;border:1.5px solid rgba(255,255,255,0.1);border-radius:9px;font-size:0.82rem;color:#e2e8f0;background:rgba(255,255,255,0.05); }
+  .dm-inp.valid { border-color:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,0.12); }
+  .dm-inp.invalid { border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.12); }
+  .dm-divider { height:1px;background:rgba(255,255,255,0.06);margin:12px 0; }
+  .dm-add-btn { width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:white;font-size:0.83rem;font-weight:700;margin-top:6px;text-align:center;box-shadow:0 3px 12px rgba(14,165,233,0.3); }
+
+  /* Annotation */
+  .annotation { max-width:900px;margin:28px auto 0;background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:22px; }
+  .ann-title { font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f97316;margin-bottom:16px; }
+  .ann-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:14px; }
+  .ann-card { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px; }
+  .ann-card h4 { font-size:0.8rem;font-weight:700;margin-bottom:8px; }
+  .ann-card p { font-size:0.76rem;color:#94a3b8;line-height:1.55; }
+  .ann-card code { color:#38bdf8;font-family:monospace;font-size:0.72rem; }
+  .strike { text-decoration:line-through;color:#475569; }
+  .green { color:#4ade80; }
+  .blue { color:#38bdf8; }
+
+  /* validation states legend */
+  .legend { max-width:900px;margin:20px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px; }
+  .leg-card { background:#111827;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px; }
+  .leg-label { font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px; }
+  .leg-inp { width:100%;padding:8px 10px;border-radius:7px;font-size:0.76rem;margin-bottom:5px; }
+  .leg-hint { font-size:0.67rem;margin-top:3px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>AddGuestForm — v3 Corrected</h1>
+  <p>All fields fully optional · Format validation only fires if a value is entered · No "at least one" gate</p>
+</div>
+
+<div class="section-lbl">AddGuestFormComponent — 4 Input States</div>
+
+<!-- VALIDATION STATES LEGEND -->
+<div class="legend">
+  <div class="leg-card">
+    <div class="leg-label" style="color:#64748b">Empty (untouched)</div>
+    <input class="leg-inp" style="border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#94a3b8" placeholder="+94 77 000 0000" readonly>
+    <div class="leg-hint" style="color:#475569">No validation — fully optional. User can just enter a name and submit.</div>
+  </div>
+  <div class="leg-card">
+    <div class="leg-label" style="color:#94a3b8">Typing (dirty, no blur)</div>
+    <input class="leg-inp" style="border:1.5px solid #0ea5e9;background:rgba(14,165,233,0.07);color:#e2e8f0;box-shadow:0 0 0 3px rgba(14,165,233,0.12)" value="+94 77 23" readonly>
+    <div class="leg-hint" style="color:#64748b">Active focus ring — no error shown while typing.</div>
+  </div>
+  <div class="leg-card">
+    <div class="leg-label" style="color:#4ade80">Valid on blur</div>
+    <input class="leg-inp" style="border:1.5px solid #22c55e;background:rgba(34,197,94,0.07);color:#e2e8f0;box-shadow:0 0 0 3px rgba(34,197,94,0.1)" value="+94 77 234 5678" readonly>
+    <div class="leg-hint" style="color:#22c55e">✓ Looks like a valid phone number</div>
+  </div>
+  <div class="leg-card">
+    <div class="leg-label" style="color:#f87171">Invalid on blur</div>
+    <input class="leg-inp" style="border:1.5px solid #ef4444;background:rgba(239,68,68,0.07);color:#e2e8f0;box-shadow:0 0 0 3px rgba(239,68,68,0.1)" value="not-an-email" readonly>
+    <div class="leg-hint" style="color:#ef4444">✕ Please enter a valid email address</div>
+  </div>
+</div>
+
+<div class="section-lbl" style="margin-top:28px">Full Form — Light &amp; Dark</div>
+
+<div class="split">
+
+  <!-- LIGHT: all optional, valid email entered -->
+  <div>
+    <div class="col-label">☀️ Light — Phone empty, Email valid</div>
+    <div class="form-frame">
+      <div class="lm-form">
+        <div class="card-title">➕ Add Guest</div>
+
+        <div class="fg" style="margin-bottom:12px">
+          <label class="lbl lm-lbl">Full Name</label>
+          <input class="lm-inp has-val" value="Priya Sharma" readonly>
+        </div>
+
+        <div class="lm-divider"></div>
+
+        <div class="fg" style="margin-bottom:12px">
+          <label class="lbl lm-lbl">Phone <span class="opt-badge">Optional</span></label>
+          <input class="lm-inp" placeholder="+94 77 000 0000" readonly>
+          <div class="hint neutral">Leave blank — invite link can always be shared manually.</div>
+        </div>
+
+        <div class="fg" style="margin-bottom:14px">
+          <label class="lbl lm-lbl">Email <span class="opt-badge">Optional</span></label>
+          <input class="lm-inp valid" value="priya@example.com" readonly>
+          <div class="hint valid">✓ Valid — "Send Email" action will appear for this guest.</div>
+        </div>
+
+        <div class="lm-add-btn">+ Add to Guest List</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK: invalid phone format, empty email -->
+  <div>
+    <div class="col-label">🌙 Dark — Phone invalid format, Email empty</div>
+    <div class="form-frame">
+      <div class="dm-form">
+        <div class="card-title">➕ Add Guest</div>
+
+        <div style="margin-bottom:12px">
+          <label class="lbl dm-lbl">Full Name</label>
+          <input class="dm-inp" style="border-color:rgba(255,255,255,0.1)" value="Priya Sharma" readonly>
+        </div>
+
+        <div class="dm-divider"></div>
+
+        <div style="margin-bottom:12px">
+          <label class="lbl dm-lbl">Phone <span class="dm-opt-badge">Optional</span></label>
+          <input class="dm-inp invalid" value="077abc" readonly>
+          <div class="hint invalid">✕ Enter a valid phone number (e.g. +94 77 234 5678)</div>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label class="lbl dm-lbl">Email <span class="dm-opt-badge">Optional</span></label>
+          <input class="dm-inp" placeholder="guest@example.com" readonly>
+          <div class="hint neutral" style="color:#475569">Leave blank — invite link can always be shared manually.</div>
+        </div>
+
+        <div class="dm-add-btn" style="opacity:0.5;cursor:not-allowed">+ Add to Guest List</div>
+        <div style="text-align:center;font-size:0.7rem;color:#475569;margin-top:6px">Fix the phone format above to continue</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ANNOTATION -->
+<div class="annotation">
+  <div class="ann-title">Updated Rules — What Changed</div>
+  <div class="ann-grid">
+    <div class="ann-card">
+      <h4 class="green">✓ All fields optional</h4>
+      <p>Name is the only required field. Phone and Email are fully optional — a guest can be added with just a name, then the host shares the invite link manually. <span class="strike">No "at least one contact" gate.</span></p>
+    </div>
+    <div class="ann-card">
+      <h4 class="blue">Format validation on blur</h4>
+      <p>Validation only fires <strong style="color:#f1f5f9">if a value is entered</strong> and the field loses focus. Phone checked against <code>/^\+?[\d\s\-()]{7,15}$/</code>. Email checked against standard email regex. Empty field = no error, ever.</p>
+    </div>
+    <div class="ann-card">
+      <h4 style="color:#fb923c">Submit blocked only on bad format</h4>
+      <p>The Add button is disabled only if a field has an <strong style="color:#f1f5f9">entered but invalid</strong> value. Empty phone + empty email = submit allowed. Invalid phone format = submit blocked until fixed or cleared.</p>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center;color:#475569;font-size:0.85rem;margin-top:32px">
+  Does this match your intent? Type <strong style="color:#f1f5f9">yes</strong> to approve the complete design and I'll write the spec document.
+</p>
+</body>
+</html>

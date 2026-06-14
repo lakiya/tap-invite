@@ -33,6 +33,9 @@ import { Supabase } from '../../core/services/supabase/supabase';
               {{ isLoading() ? 'Sending…' : '✉ Send Magic Link' }}
             </button>
           </form>
+          @if (loginError()) {
+            <p class="login-error">{{ loginError() }}</p>
+          }
           <a routerLink="/" class="back-link">← Back to home</a>
         } @else {
           <div class="sent-card">
@@ -145,6 +148,13 @@ import { Supabase } from '../../core/services/supabase/supabase';
     .submit-btn:hover:not(:disabled) { opacity: 0.92; }
     .submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
 
+    .login-error {
+      font-size: 0.82rem;
+      color: var(--color-error);
+      margin: 10px 0 0;
+      text-align: center;
+    }
+
     .back-link {
       display: inline-block;
       margin-top: 20px;
@@ -208,16 +218,18 @@ export class LoginComponent {
   email = '';
   isLoading = signal(false);
   isSent = signal(false);
+  loginError = signal<string | null>(null);
 
   async handleLogin() {
     if (!this.email) return;
+    this.loginError.set(null);
     try {
       this.isLoading.set(true);
-      await this.supabase.signInWithMagicLink(this.email);
+      await this.supabase.signInWithMagicLink(this.email, `${window.location.origin}/dashboard`);
       this.isSent.set(true);
     } catch (error) {
       console.error('Login error:', error);
-      alert('Failed to send magic link. Please try again.');
+      this.loginError.set('Failed to send magic link. Please try again.');
     } finally {
       this.isLoading.set(false);
     }

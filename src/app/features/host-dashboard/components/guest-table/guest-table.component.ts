@@ -24,6 +24,6 @@ export class GuestTableComponent {
   }
 
   getStatus(guest: any): string {
-    return guest.rsvps?.status || 'Pending';
+    return guest.rsvps?.[0]?.status || 'Pending';
   }
 }

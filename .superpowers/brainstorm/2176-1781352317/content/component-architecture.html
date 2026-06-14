@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Component Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+  .page-header h1 { font-size: 1.9rem; font-weight: 800; color: #f8fafc; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .page-header p { color: #94a3b8; font-size: 1rem; }
+
+  .approaches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+  }
+
+  .approach-card {
+    background: #1a2035;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+  .approach-card:hover { transform: translateY(-5px); box-shadow: 0 24px 48px rgba(0,0,0,0.4); }
+  .approach-card.selected {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 4px rgba(14,165,233,0.15), 0 24px 48px rgba(0,0,0,0.4);
+  }
+  .approach-card.selected::after {
+    content: '✓ Selected';
+    display: block;
+    text-align: right;
+    background: #0ea5e9;
+    color: #0f172a;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .card-header {
+    padding: 20px 22px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .card-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+  .card-title { font-size: 1.15rem; font-weight: 800; color: #f1f5f9; }
+  .card-subtitle { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+
+  .tag-rec {
+    display: inline-block;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .tree-area {
+    padding: 18px 22px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  /* Tree node types */
+  .t-service { color: #f59e0b; }
+  .t-new     { color: #34d399; }
+  .t-existing{ color: #94a3b8; }
+  .t-page    { color: #60a5fa; }
+  .t-label   { color: #6b7280; font-style: italic; font-family: sans-serif; font-size: 0.72rem; }
+  .t-badge-new {
+    display: inline-block;
+    background: rgba(52,211,153,0.15);
+    color: #34d399;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(52,211,153,0.3);
+    margin-left: 6px;
+    vertical-align: middle;
+    font-family: sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .t-badge-split {
+    display: inline-block;
+    background: rgba(96,165,250,0.15);
+    color: #93c5fd;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(96,165,250,0.3);
+    margin-left: 6px;
+    vertical-align: middle;
+    font-family: sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .pros-cons {
+    padding: 0 22px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .pros, .cons {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .pros { border-left: 3px solid #34d399; }
+  .cons { border-left: 3px solid #f87171; }
+  .pros-cons h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .pros h4 { color: #34d399; }
+  .cons h4 { color: #f87171; }
+  .pros-cons li { font-size: 0.77rem; color: #94a3b8; line-height: 1.5; list-style: none; padding-left: 0; margin-bottom: 4px; }
+  .pros li::before { content: '+ '; color: #34d399; }
+  .cons li::before { content: '− '; color: #f87171; }
+
+  .legend {
+    max-width: 1100px;
+    margin: 0 auto 16px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.78rem; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+  .hint { text-align: center; color: #475569; font-size: 0.85rem; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Component Architecture — 3 Approaches</h1>
+  <p>How deeply should we split the app into focused, single-responsibility components?</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div><span style="color:#34d399">New component</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div><span style="color:#60a5fa">Page component</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div><span style="color:#94a3b8">Existing (restyled)</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div><span style="color:#f59e0b">Service</span></div>
+</div>
+
+<div class="approaches">
+
+  <!-- Approach A -->
+  <div class="approach-card" onclick="selectCard(this,'A')" data-choice="A">
+    <div class="card-header">
+      <div class="card-tag">Approach A</div>
+      <div class="card-title">Header-Only Split</div>
+      <div class="card-subtitle">Minimal change — extract just the header</div>
+    </div>
+    <div class="tree-area">
+<span class="t-label">core/services/</span>
+  ├─ <span class="t-service">ThemeService</span><span class="t-badge-new">new</span>
+  └─ <span class="t-existing">Supabase</span>
+
+<span class="t-label">shared/components/</span>
+  └─ <span class="t-new">HeaderComponent</span><span class="t-badge-new">new</span>
+       <span class="t-label">└ logo + dark/light toggle</span>
+
+<span class="t-label">features/ (pages)</span>
+  ├─ <span class="t-page">LandingComponent</span> ← uses Header
+  ├─ <span class="t-existing">LoginComponent</span>
+  ├─ <span class="t-existing">GuestViewComponent</span>
+  └─ <span class="t-existing">HostDashboardComponent</span> ← uses Header
+    </div>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>Fast to implement</li>
+          <li>Low risk, focused change</li>
+          <li>Addresses exact ask</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>Dashboard stays monolithic</li>
+          <li>Form & table logic mixed</li>
+          <li>Missed SRP opportunity</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approach B — Recommended -->
+  <div class="approach-card" onclick="selectCard(this,'B')" data-choice="B">
+    <div class="card-header">
+      <div class="card-tag">Approach B <span class="tag-rec">★ Recommended</span></div>
+      <div class="card-title">Smart Domain Split</div>
+      <div class="card-subtitle">Header + meaningful sub-components</div>
+    </div>
+    <div class="tree-area">
+<span class="t-label">core/services/</span>
+  ├─ <span class="t-service">ThemeService</span><span class="t-badge-new">new</span>
+  └─ <span class="t-existing">Supabase</span>
+
+<span class="t-label">shared/components/</span>
+  └─ <span class="t-new">HeaderComponent</span><span class="t-badge-new">new</span>
+
+<span class="t-label">features/host-dashboard/components/</span>
+  ├─ <span class="t-page">HostDashboardComponent</span><span class="t-badge-split">restyled</span>
+  ├─ <span class="t-new">EventFormComponent</span><span class="t-badge-new">new</span>
+       <span class="t-label">└ create-event form only</span>
+  ├─ <span class="t-new">GuestTableComponent</span><span class="t-badge-new">new</span>
+       <span class="t-label">└ table + copy-link only</span>
+  └─ <span class="t-new">AddGuestFormComponent</span><span class="t-badge-new">new</span>
+       <span class="t-label">└ add-guest form only</span>
+
+<span class="t-label">features/guest-view/components/</span>
+  ├─ <span class="t-page">GuestViewComponent</span><span class="t-badge-split">restyled</span>
+  └─ <span class="t-new">RsvpButtonsComponent</span><span class="t-badge-new">new</span>
+
+<span class="t-label">shared/components/</span>
+  └─ <span class="t-new">ToastComponent</span><span class="t-badge-new">new</span>
+    </div>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>True SRP per component</li>
+          <li>Each piece testable alone</li>
+          <li>Dashboard easy to extend</li>
+          <li>Toast reusable anywhere</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>More files than A</li>
+          <li>Input/Output wiring needed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approach C -->
+  <div class="approach-card" onclick="selectCard(this,'C')" data-choice="C">
+    <div class="card-header">
+      <div class="card-tag">Approach C</div>
+      <div class="card-title">Full Atomic Split</div>
+      <div class="card-subtitle">Every visual element its own component</div>
+    </div>
+    <div class="tree-area">
+<span class="t-label">core/services/</span>
+  ├─ <span class="t-service">ThemeService</span><span class="t-badge-new">new</span>
+  └─ <span class="t-existing">Supabase</span>
+
+<span class="t-label">shared/components/</span>
+  ├─ <span class="t-new">HeaderComponent</span>
+  ├─ <span class="t-new">ToastComponent</span>
+  ├─ <span class="t-new">BadgeComponent</span>
+  ├─ <span class="t-new">ButtonComponent</span>
+  └─ <span class="t-new">CardComponent</span>
+
+<span class="t-label">features/host-dashboard/</span>
+  ├─ <span class="t-page">HostDashboardComponent</span>
+  ├─ <span class="t-new">EventFormComponent</span>
+  ├─ <span class="t-new">AddGuestFormComponent</span>
+  ├─ <span class="t-new">GuestTableComponent</span>
+  └─ <span class="t-new">GuestRowComponent</span>
+
+<span class="t-label">features/guest-view/</span>
+  ├─ <span class="t-page">GuestViewComponent</span>
+  ├─ <span class="t-new">InvitationCardComponent</span>
+  ├─ <span class="t-new">EventDetailsComponent</span>
+  └─ <span class="t-new">RsvpButtonsComponent</span>
+    </div>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>Maximum reusability</li>
+          <li>Design system ready</li>
+          <li>Fully isolated units</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>Significant overhead now</li>
+          <li>Premature for V1 app</li>
+          <li>Many files for little gain</li>
+          <li>Over-engineering risk</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">Click to select, then confirm in the terminal. Approach B is recommended — it gives real SRP benefits without over-engineering.</p>
+
+<script>
+  function selectCard(el, choice) {
+    document.querySelectorAll('.approach-card').forEach(c => {
+      c.classList.remove('selected');
+      if (c.querySelector('.approach-card.selected::after')) {}
+    });
+    el.classList.add('selected');
+    fetch('/event', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ type: 'click', choice: choice, text: el.querySelector('.card-title').textContent, timestamp: Date.now() })
+    }).catch(() => {});
+  }
+</script>
+</body>
+</html>

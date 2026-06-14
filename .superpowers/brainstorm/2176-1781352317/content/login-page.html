@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Page Mockup</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #080e1a;
+    color: #e2e8f0;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header { text-align:center; margin-bottom:40px; }
+  .page-header h1 { font-size:1.8rem; font-weight:800; color:#f8fafc; letter-spacing:-0.03em; margin-bottom:6px; }
+  .page-header p { color:#64748b; font-size:0.95rem; }
+
+  .states-row {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .mode-col-label {
+    font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:#64748b; text-align:center; margin-bottom:12px;
+  }
+
+  /* ── LIGHT FULL PAGE ── */
+  .lm-page {
+    background: #f1f5f9;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 32px 64px rgba(0,0,0,0.4);
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    position: relative;
+  }
+  .lm-page::before {
+    content:'';
+    position:absolute; top:-80px; left:50%; transform:translateX(-50%);
+    width:400px; height:300px;
+    background:radial-gradient(ellipse,rgba(14,165,233,0.07) 0%,transparent 70%);
+    pointer-events:none;
+  }
+
+  .lm-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+    position: relative; z-index: 1;
+  }
+
+  .lm-logo {
+    display:flex; align-items:center; gap:8px;
+    font-weight:800; font-size:1.1rem; color:#0f172a; letter-spacing:-0.03em;
+    margin-bottom:28px; justify-content:center;
+  }
+  .lm-logo-icon {
+    width:32px; height:32px; background:linear-gradient(135deg,#0ea5e9,#0284c7);
+    border-radius:9px; display:flex; align-items:center; justify-content:center;
+    font-size:0.9rem; color:white;
+  }
+  .lm-logo span { color:#0ea5e9; }
+
+  .lm-card h2 { font-size:1.4rem; font-weight:800; color:#0f172a; letter-spacing:-0.02em; margin-bottom:6px; }
+  .lm-card .subtitle { font-size:0.85rem; color:#64748b; line-height:1.55; margin-bottom:28px; }
+
+  .lm-label { font-size:0.75rem; font-weight:600; color:#374151; letter-spacing:0.04em; margin-bottom:7px; display:block; }
+  .lm-input {
+    width:100%; padding:12px 14px;
+    border:1.5px solid #e2e8f0; border-radius:10px;
+    font-size:0.9rem; color:#0f172a; background:white;
+    outline:none; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+  }
+  .lm-input:focus { border-color:#0ea5e9; box-shadow:0 0 0 3px rgba(14,165,233,0.12); }
+  .lm-input.active { border-color:#0ea5e9; box-shadow:0 0 0 3px rgba(14,165,233,0.12); }
+
+  .lm-btn {
+    width:100%; padding:14px;
+    background:linear-gradient(135deg,#f97316,#ea580c);
+    color:white; font-size:0.9rem; font-weight:700;
+    border-radius:12px; border:none; cursor:pointer;
+    box-shadow:0 4px 16px rgba(249,115,22,0.35);
+    letter-spacing:0.01em;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  .lm-divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
+  .lm-divider .line { flex:1; height:1px; background:#e2e8f0; }
+  .lm-divider span { font-size:0.75rem; color:#94a3b8; }
+
+  .lm-back {
+    text-align:center; font-size:0.8rem; color:#64748b; margin-top:4px;
+  }
+  .lm-back a { color:#0ea5e9; font-weight:600; }
+
+  /* success state */
+  .lm-success {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .success-icon {
+    width:64px; height:64px; background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:1.8rem; margin:0 auto 20px;
+    box-shadow:0 4px 16px rgba(34,197,94,0.2);
+  }
+  .lm-success h2 { font-size:1.3rem; font-weight:800; color:#0f172a; margin-bottom:10px; }
+  .lm-success p { font-size:0.85rem; color:#64748b; line-height:1.6; margin-bottom:20px; }
+  .lm-success .email-chip {
+    display:inline-block; background:#f0f9ff; border:1px solid #bae6fd;
+    color:#0284c7; font-size:0.82rem; font-weight:600;
+    padding:6px 14px; border-radius:8px; margin-bottom:20px;
+  }
+  .lm-resend { font-size:0.78rem; color:#94a3b8; }
+  .lm-resend a { color:#0ea5e9; font-weight:600; }
+
+  /* ── DARK FULL PAGE ── */
+  .dm-page {
+    background: #0b1120;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    position: relative;
+  }
+  .dm-page::before {
+    content:'';
+    position:absolute; top:-100px; left:50%; transform:translateX(-50%);
+    width:500px; height:400px;
+    background:radial-gradient(ellipse,rgba(14,165,233,0.1) 0%,transparent 65%);
+    pointer-events:none;
+  }
+  .dm-page::after {
+    content:'';
+    position:absolute; bottom:-60px; right:-40px;
+    width:250px; height:250px;
+    background:radial-gradient(circle,rgba(249,115,22,0.07) 0%,transparent 65%);
+    pointer-events:none;
+  }
+
+  .dm-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+    position: relative; z-index: 1;
+  }
+
+  .dm-logo {
+    display:flex; align-items:center; gap:8px;
+    font-weight:800; font-size:1.1rem; color:#f1f5f9; letter-spacing:-0.03em;
+    margin-bottom:28px; justify-content:center;
+  }
+  .dm-logo-icon {
+    width:32px; height:32px; background:linear-gradient(135deg,#0ea5e9,#0369a1);
+    border-radius:9px; display:flex; align-items:center; justify-content:center;
+    font-size:0.9rem; color:white;
+    box-shadow:0 0 14px rgba(14,165,233,0.4);
+  }
+  .dm-logo span { color:#38bdf8; }
+
+  .dm-card h2 { font-size:1.4rem; font-weight:800; color:#f1f5f9; letter-spacing:-0.02em; margin-bottom:6px; }
+  .dm-card .subtitle { font-size:0.85rem; color:#94a3b8; line-height:1.55; margin-bottom:28px; }
+
+  .dm-label { font-size:0.75rem; font-weight:600; color:#94a3b8; letter-spacing:0.04em; margin-bottom:7px; display:block; }
+  .dm-input {
+    width:100%; padding:12px 14px;
+    border:1.5px solid rgba(255,255,255,0.1); border-radius:10px;
+    font-size:0.9rem; color:#f1f5f9; background:rgba(255,255,255,0.05);
+    outline:none; margin-bottom:20px;
+  }
+  .dm-input.active { border-color:#0ea5e9; box-shadow:0 0 0 3px rgba(14,165,233,0.15); }
+
+  .dm-btn {
+    width:100%; padding:14px;
+    background:linear-gradient(135deg,#fb923c,#ea580c);
+    color:white; font-size:0.9rem; font-weight:700;
+    border-radius:12px; border:none; cursor:pointer;
+    box-shadow:0 4px 20px rgba(251,146,60,0.35);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  .dm-back { text-align:center; font-size:0.8rem; color:#64748b; margin-top:16px; }
+  .dm-back a { color:#38bdf8; font-weight:600; }
+
+  /* dm success */
+  .dm-success {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(16px);
+    text-align: center;
+    position: relative; z-index: 1;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .dm-success-icon {
+    width:64px; height:64px;
+    background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(14,165,233,0.1));
+    border:1px solid rgba(14,165,233,0.3);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:1.8rem; margin:0 auto 20px;
+    box-shadow:0 0 20px rgba(14,165,233,0.2);
+  }
+  .dm-success h2 { font-size:1.3rem; font-weight:800; color:#f1f5f9; margin-bottom:10px; }
+  .dm-success p { font-size:0.85rem; color:#94a3b8; line-height:1.6; margin-bottom:20px; }
+  .dm-success .email-chip {
+    display:inline-block; background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.25);
+    color:#38bdf8; font-size:0.82rem; font-weight:600;
+    padding:6px 14px; border-radius:8px; margin-bottom:20px;
+  }
+  .dm-resend { font-size:0.78rem; color:#475569; }
+  .dm-resend a { color:#38bdf8; font-weight:600; }
+
+  /* ── STATES ROW ── */
+  .states-label {
+    font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:#0ea5e9; text-align:center; margin: 32px 0 16px;
+  }
+  .four-grid {
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  }
+  .state-card {
+    background:#111827; border:1px solid rgba(255,255,255,0.06);
+    border-radius:14px; overflow:hidden;
+  }
+  .state-label {
+    padding:10px 14px; font-size:0.7rem; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .state-body { padding:14px; }
+  .mini-input {
+    width:100%; padding:8px 10px;
+    border-radius:7px; font-size:0.75rem; margin-bottom:10px;
+  }
+  .mini-btn {
+    width:100%; padding:9px; border-radius:8px;
+    font-size:0.75rem; font-weight:700; text-align:center; color:white;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Login Page — Section 3 of 5</h1>
+  <p>Full-page magic link auth — no header, two states: idle + sent.</p>
+</div>
+
+<!-- MAIN SPLIT: idle state -->
+<div class="states-row">
+
+  <!-- LIGHT idle -->
+  <div>
+    <div class="mode-col-label">☀️ Light — Default State</div>
+    <div class="lm-page">
+      <div class="lm-card">
+        <div class="lm-logo"><div class="lm-logo-icon">⚡</div>Tap<span>Invite</span></div>
+        <h2>Welcome back</h2>
+        <div class="subtitle">Enter your email and we'll send you a secure magic link — no password needed.</div>
+        <label class="lm-label">Email address</label>
+        <input class="lm-input active" value="kamal@example.com" style="pointer-events:none">
+        <button class="lm-btn">✉ Send Magic Link</button>
+        <div class="lm-divider"><div class="line"></div><span>secure · passwordless</span><div class="line"></div></div>
+        <div class="lm-back">← <a>Back to home</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK idle -->
+  <div>
+    <div class="mode-col-label">🌙 Dark — Default State</div>
+    <div class="dm-page">
+      <div class="dm-card">
+        <div class="dm-logo"><div class="dm-logo-icon">⚡</div>Tap<span>Invite</span></div>
+        <h2>Welcome back</h2>
+        <div class="subtitle">Enter your email and we'll send you a secure magic link — no password needed.</div>
+        <label class="dm-label">Email address</label>
+        <input class="dm-input active" value="kamal@example.com" style="pointer-events:none;color:#f1f5f9">
+        <button class="dm-btn">✉ Send Magic Link</button>
+        <div style="margin-top:16px"></div>
+        <div class="dm-back">← <a>Back to home</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUCCESS STATES -->
+<div class="states-label">After Sending — Success State</div>
+
+<div class="states-row">
+
+  <!-- LIGHT success -->
+  <div>
+    <div class="mode-col-label">☀️ Light — Sent State</div>
+    <div class="lm-page">
+      <div class="lm-success">
+        <div class="success-icon">✅</div>
+        <h2>Check your inbox!</h2>
+        <p>We've sent a secure login link to</p>
+        <div class="email-chip">kamal@example.com</div>
+        <p>Click the link in your email to sign in. The link expires in 60 minutes.</p>
+        <div style="margin-top:20px" class="lm-resend">Didn't receive it? <a>Resend link</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK success -->
+  <div>
+    <div class="mode-col-label">🌙 Dark — Sent State</div>
+    <div class="dm-page">
+      <div class="dm-success">
+        <div class="dm-success-icon">✉️</div>
+        <h2>Check your inbox!</h2>
+        <p>We've sent a secure login link to</p>
+        <div class="email-chip">kamal@example.com</div>
+        <p>Click the link in your email to sign in. The link expires in 60 minutes.</p>
+        <div style="margin-top:20px" class="dm-resend">Didn't receive it? <a>Resend link</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p style="text-align:center;color:#475569;font-size:0.85rem;margin-top:12px">
+  Happy with Login? Type <strong style="color:#f1f5f9">yes</strong> for Section 4 (Guest Invitation View), or describe changes.
+</p>
+
+</body>
+</html>
