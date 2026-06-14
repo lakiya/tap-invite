@@ -11,7 +11,7 @@
 
 .toast {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   padding: 12px 18px;
   border-radius: 12px;
@@ -23,6 +23,12 @@
   color: var(--color-text);
   animation: slide-in 0.2s ease;
   backdrop-filter: blur(16px);
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .toast-icon {
@@ -42,6 +48,57 @@
 .toast-error .toast-icon {
   background: rgba(239, 68, 68, 0.15);
   color: var(--color-error);
+}
+
+.toast-info .toast-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--color-info);
+}
+
+.toast-warning .toast-icon {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--color-warning);
+}
+
+.toast-confirm .toast-icon {
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--color-primary);
+}
+
+.toast-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  pointer-events: all;
+}
+
+.btn-confirm {
+  padding: 4px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-success);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirm:hover {
+  opacity: 0.85;
+}
+
+.btn-cancel {
+  padding: 4px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: var(--color-border);
 }
 
 @keyframes slide-in {
