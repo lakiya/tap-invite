@@ -61,12 +61,16 @@ export class GuestViewComponent implements OnInit {
       const [eventRes, guestRes, rsvpRes] = await Promise.all([
         this.supabase.client.from('events').select('*').eq('id', this.eventId()).single(),
         this.supabase.client.from('guests').select('*').eq('id', this.guestId()).single(),
-        this.supabase.client.from('rsvps').select('*').eq('guest_id', this.guestId()).single()
+        this.supabase.client.from('rsvps').select('*').eq('guest_id', this.guestId()).maybeSingle()
       ]);
       if (eventRes.error || guestRes.error) throw new Error('Invitation not found');
       this.eventData.set(eventRes.data);
       this.guestData.set(guestRes.data);
-      if (rsvpRes.data?.status) this.rsvpStatus.set(rsvpRes.data.status as RsvpStatus);
+      if (rsvpRes.error) {
+        console.warn('Could not load existing RSVP status:', rsvpRes.error.message);
+      } else if (rsvpRes.data?.status) {
+        this.rsvpStatus.set(rsvpRes.data.status as RsvpStatus);
+      }
     } catch (error) {
       console.error(error);
       this.hasError.set(true);

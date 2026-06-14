@@ -60,8 +60,17 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
     this.realtimeChannel = this.supabase.client
       .channel(`rsvps-${eventId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'rsvps' },
-        () => this.loadGuests(eventId)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'rsvps' },
+        (payload) => {
+          // Only reload if the changed RSVP belongs to a guest in this event
+          const changedGuestId =
+            (payload.new as { guest_id?: string })?.guest_id ??
+            (payload.old as { guest_id?: string })?.guest_id;
+          if (changedGuestId && this.guests().some(g => g.id === changedGuestId)) {
+            this.loadGuests(eventId);
+          }
+        }
       )
       .subscribe();
   }

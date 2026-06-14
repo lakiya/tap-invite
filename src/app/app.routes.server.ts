@@ -6,8 +6,14 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    // Auth guard reads localStorage; must run client-side only
     path: 'dashboard',
-    renderMode: RenderMode.Server
+    renderMode: RenderMode.Client
+  },
+  {
+    // Magic link hash fragment is client-only; cannot be prerendered
+    path: 'auth/callback',
+    renderMode: RenderMode.Client
   },
   {
     path: '**',

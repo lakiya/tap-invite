@@ -125,17 +125,37 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { data: { subscription } } = this.supabase.client.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
+    // No hash at all — redirect to login rather than spinning forever
+    if (!this.document.location.hash) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    let navigated = false;
+    const navigate = () => {
+      if (!navigated) {
+        navigated = true;
         this.router.navigate(['/dashboard']);
       }
+    };
+
+    const { data: { subscription } } = this.supabase.client.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) navigate();
     });
     this.authSubscription = subscription;
 
     const { data: { session } } = await this.supabase.client.auth.getSession();
     if (session) {
-      this.router.navigate(['/dashboard']);
+      navigate();
+      return;
     }
+
+    // Fallback: if supabase-js never fires SIGNED_IN (e.g. consumed token), redirect after 8s
+    setTimeout(() => {
+      if (!navigated) {
+        this.errorMessage.set('Sign-in timed out. Please request a new link.');
+      }
+    }, 8000);
   }
 
   ngOnDestroy() {

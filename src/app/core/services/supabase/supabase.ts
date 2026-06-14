@@ -23,7 +23,8 @@ export class Supabase {
 
   async getEventByHost(hostId: string) {
     const { data, error } = await this.supabase
-      .from('events').select('*').eq('host_id', hostId).limit(1);
+      .from('events').select('*').eq('host_id', hostId)
+      .order('created_at', { ascending: false }).limit(1);
     if (error) throw error;
     return data ?? [];
   }
@@ -49,9 +50,9 @@ export class Supabase {
   }
 
   async getCurrentUser() {
-    const { data: { session }, error } = await this.supabase.auth.getSession();
-    if (error) throw error;
-    return session?.user || null;
+    const { data: { user }, error } = await this.supabase.auth.getUser();
+    if (error) return null;
+    return user;
   }
 
   async signOut() {

@@ -47,3 +47,7 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+
+# Generated Angular environment files (values live in .env)
+src/environments/environment.ts
+src/environments/environment.prod.ts

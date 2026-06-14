@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -214,6 +215,7 @@ import { Supabase } from '../../core/services/supabase/supabase';
 })
 export class LoginComponent {
   private supabase = inject(Supabase);
+  private document = inject(DOCUMENT);
 
   email = '';
   isLoading = signal(false);
@@ -225,7 +227,7 @@ export class LoginComponent {
     this.loginError.set(null);
     try {
       this.isLoading.set(true);
-      await this.supabase.signInWithMagicLink(this.email, `${window.location.origin}/auth/callback`);
+      await this.supabase.signInWithMagicLink(this.email, `${this.document.location.origin}/auth/callback`);
       this.isSent.set(true);
     } catch (error) {
       console.error('Login error:', error);
