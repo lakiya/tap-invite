@@ -43,7 +43,7 @@ import { Supabase } from '../../core/services/supabase/supabase';
             <h2 class="sent-title">Check your inbox!</h2>
             <p class="sent-sub">We sent a secure link to</p>
             <span class="email-chip">{{ email }}</span>
-            <p class="sent-note">Link expires in 60 minutes.</p>
+            <p class="sent-note">Link expires in 48 hours.</p>
             <button type="button" class="resend-btn" (click)="handleLogin()">Resend link</button>
           </div>
         }
@@ -225,7 +225,7 @@ export class LoginComponent {
     this.loginError.set(null);
     try {
       this.isLoading.set(true);
-      await this.supabase.signInWithMagicLink(this.email, `${window.location.origin}/dashboard`);
+      await this.supabase.signInWithMagicLink(this.email, `${window.location.origin}/auth/callback`);
       this.isSent.set(true);
     } catch (error) {
       console.error('Login error:', error);
