@@ -1,8 +1,21 @@
 <div class="toast-stack" aria-live="polite">
-  @for (toast of toasts; track toast.id) {
-    <div class="toast" [class.toast-error]="toast.type === 'error'">
-      <span class="toast-icon">{{ toast.type === 'success' ? '✓' : '✕' }}</span>
-      <span class="toast-msg">{{ toast.message }}</span>
+  @for (toast of toasts(); track toast.id) {
+    <div class="toast"
+         [class.toast-success]="toast.type === 'success'"
+         [class.toast-error]="toast.type === 'error'"
+         [class.toast-info]="toast.type === 'info'"
+         [class.toast-warning]="toast.type === 'warning'"
+         [class.toast-confirm]="toast.type === 'confirm'">
+      <span class="toast-icon">{{ icon(toast.type) }}</span>
+      <div class="toast-body">
+        <span class="toast-msg">{{ toast.message }}</span>
+        @if (toast.type === 'confirm') {
+          <div class="toast-actions">
+            <button class="btn-confirm" (click)="confirm(toast)">Confirm</button>
+            <button class="btn-cancel" (click)="cancel(toast)">Cancel</button>
+          </div>
+        }
+      </div>
     </div>
   }
 </div>
