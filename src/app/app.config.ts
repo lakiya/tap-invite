@@ -11,7 +11,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes), provideClientHydration(),
     provideLottieOptions({
-      player: () => import('lottie-web').then(m => m.default),// For Webpack users
+      player: () => import('lottie-web'),
     }),
   ]
 };
