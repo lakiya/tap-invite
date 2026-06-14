@@ -1,0 +1,53 @@
+<app-header variant="dashboard" (logoutClick)="handleLogout()"></app-header>
+
+<app-toast [toasts]="toasts()"></app-toast>
+
+<main class="dash-main">
+
+  @if (isLoading()) {
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <p>Loading your dashboard…</p>
+    </div>
+  }
+
+  @else if (!activeEvent()) {
+    <app-event-form
+      [hostId]="userId()!"
+      (eventCreated)="handleEventCreated($event)"
+    ></app-event-form>
+  }
+
+  @else {
+    <!-- Event strip -->
+    <div class="event-strip">
+      <div class="event-strip-inner">
+        <div>
+          <h1 class="event-title">{{ activeEvent().title }}</h1>
+          <p class="event-meta">
+            {{ activeEvent().event_date | date:'EEEE, MMM d · h:mm a' }}
+            @if (activeEvent().location_text) {
+              · {{ activeEvent().location_text }}
+            }
+          </p>
+        </div>
+        <span class="live-badge">● Live</span>
+      </div>
+    </div>
+
+    <!-- Dashboard grid -->
+    <div class="dash-grid">
+      <app-add-guest-form
+        [eventId]="activeEvent().id"
+        (guestAdded)="handleGuestAdded()"
+      ></app-add-guest-form>
+
+      <app-guest-table
+        [guests]="guests()"
+        (copyLink)="copyLink($event)"
+        (sendEmail)="sendEmailInvitation($event)"
+      ></app-guest-table>
+    </div>
+  }
+
+</main>
