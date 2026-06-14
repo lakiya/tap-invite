@@ -22,10 +22,10 @@ import { GuestTableComponent } from './guest-table/guest-table.component';
   styleUrls: ['./host-dashboard.component.css']
 })
 export class HostDashboardComponent implements OnInit, OnDestroy {
-  private supabase    = inject(Supabase);
-  private router      = inject(Router);
-  private toastService = inject(ToastService);
-  private platformId  = inject(PLATFORM_ID);
+  private supabase   = inject(Supabase);
+  private router     = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  private toast      = inject(ToastService);
 
   userId      = signal<string | null>(null);
   isLoading   = signal(true);
@@ -61,7 +61,6 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'rsvps' },
         (payload) => {
-          // Only reload if the changed RSVP belongs to a guest in this event
           const changedGuestId =
             (payload.new as { guest_id?: string })?.guest_id ??
             (payload.old as { guest_id?: string })?.guest_id;
@@ -90,12 +89,12 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
 
   async handleGuestAdded() {
     await this.loadGuests(this.activeEvent().id);
-    this.showToast('Guest added successfully!');
+    this.toast.success('Guest added successfully!');
   }
 
   async handleGuestDeleted() {
     await this.loadGuests(this.activeEvent().id);
-    this.showToast('Guest deleted successfully!');
+    this.toast.success('Guest deleted successfully!');
   }
 
   async copyLink(guestId: string) {
@@ -103,31 +102,23 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
     const url = `${window.location.origin}/w/${this.activeEvent().id}/${guestId}`;
     try {
       await navigator.clipboard.writeText(url);
-      this.showToast('Invitation link copied!');
+      this.toast.info('Invitation link copied!');
     } catch {
-      this.showToast('Could not copy — please copy the link manually.', 'error');
+      this.toast.error('Could not copy — please copy the link manually.');
     }
   }
 
   async sendEmailInvitation(guestId: string) {
     try {
       await this.supabase.sendEmailInvitation(guestId);
-      this.showToast('Invitation email sent!');
+      this.toast.success('Invitation email sent!');
     } catch {
-      this.showToast('Failed to send email. The email service may not be set up yet.', 'error');
+      this.toast.error('Failed to send email. The email service may not be set up yet.');
     }
   }
 
   async handleLogout() {
     await this.supabase.signOut();
     this.router.navigate(['/login']);
-  }
-
-  showToast(message: string, type: 'success' | 'error' = 'success') {
-    if (type === 'success') {
-      this.toastService.success(message);
-    } else {
-      this.toastService.error(message);
-    }
   }
 }
