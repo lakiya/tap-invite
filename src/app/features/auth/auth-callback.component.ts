@@ -115,7 +115,10 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
+    //TODO: remove after confirming callback flow works in production, to prevent users from getting stuck if supabase-js fails to fire SIGNED_IN for some reason (e.g. consumed token)
 
+        this.router.navigate(['/dashboard']);
+        
     const params = new URLSearchParams(this.document.location.hash.substring(1));
     const error = params.get('error');
 

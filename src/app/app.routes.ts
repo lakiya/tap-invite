@@ -23,5 +23,9 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./features/landing/landing.component').then(c => c.LandingComponent)
   },
+  {
+    path: 'magic-link',
+    loadComponent: () => import('./features/support/magic-link.component').then(c => c.MagicLinkComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

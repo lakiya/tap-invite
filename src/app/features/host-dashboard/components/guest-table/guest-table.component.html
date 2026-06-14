@@ -1,5 +1,16 @@
 <div class="gt-card">
-  <h3 class="gt-title">Guest Network <span class="guest-count">{{ guests.length }}</span></h3>
+  <div class="field-group">
+  <h3 class="gt-title">Guest Network </h3>
+      <input
+        class="field-input"
+        [(value)]="searchTerm"
+        name="search"
+        placeholder="Guest Name or Phone"
+      />
+    </div>
+  <div class="stats">
+    Total Guests: {{ totalGuests() }} | Attending: {{ totalAttending() }} | Declined: {{ totalDeclined() }} | Pending: {{ totalPending() }}
+    </div>
 
   @if (guests.length === 0) {
     <p class="empty-msg">No guests yet. Start building your list.</p>
@@ -10,7 +21,7 @@
           <tr>
             <th>Name</th>
             <th>Status</th>
-            <th>Contact</th>
+            <th>Tools</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -23,28 +34,36 @@
                 <span class="badge badge-{{ getStatus(guest).toLowerCase() }}">
                   {{ getStatus(guest) }}
                 </span>
+              </td>  
+              <td>
+                <div class="field-group">
+                @if (guest.phone_number) {
+                  <div>📱</div>
+                }
+                @else {
+                  <div class="email-icon-disabled">📱</div>
+                }
+                @if (guest.email) {
+                  <div>✉</div>
+                }         
+                @else {
+                  <div class="email-icon-disabled">✉</div>
+                }
+              </div>
               </td>
-
-              <td class="contact-icons">
-                @if (guest.phone_number) { <span title="{{ guest.phone_number }}">📱</span> }
-                @if (guest.email)        { <span title="{{ guest.email }}">✉️</span> }
-              </td>
-
               <td class="action-cell">
                 <button type="button" class="btn-copy" (click)="copyLink.emit(guest.id)">🔗 Copy</button>
 
-                @if (guest.email) {
                   <button
                     type="button"
                     class="btn-email"
-                    [disabled]="sendingId() === guest.id"
+                    [disabled]="sendingId() === guest.id || guest.email == null"
                     (click)="onSendEmail(guest.id)"
                   >
                     {{ sendingId() === guest.id ? 'Sending…' : '✉ Email' }}
                   </button>
-                } @else {
-                  <span class="no-email">no email</span>
-                }
+                
+                <button type="button" class="btn-delete" (click)="onDelete(guest.id)">🗑️ Delete</button>
               </td>
             </tr>
           }

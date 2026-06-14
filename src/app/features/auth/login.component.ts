@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Supabase } from '../../core/services/supabase/supabase';
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -37,7 +36,8 @@ import { Supabase } from '../../core/services/supabase/supabase';
           @if (loginError()) {
             <p class="login-error">{{ loginError() }}</p>
           }
-          <a routerLink="/" class="back-link">← Back to home</a>
+          <a routerLink="/" class="back-link">← Back to home</a> | 
+          <a class="back-link" routerLink="/magic-link" title="A magic link is a secure one-time login link sent to your email, so you can sign in without a password.">Why magic link?</a>
         } @else {
           <div class="sent-card">
             <div class="sent-icon">✅</div>

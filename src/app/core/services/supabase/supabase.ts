@@ -93,6 +93,14 @@ export class Supabase {
     return data;
   }
 
+  async deleteGuest(guestId: string) {
+    const { error } = await this.supabase
+      .from('guests')
+      .delete()
+      .eq('id', guestId);
+    if (error) throw error;
+  }
+
   async sendEmailInvitation(guestId: string): Promise<void> {
     const { error } = await this.supabase.functions.invoke('send-invite-email', {
       body: { guestId }

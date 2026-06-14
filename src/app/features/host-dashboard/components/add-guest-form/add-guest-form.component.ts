@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Supabase } from '../../../../core/services/supabase/supabase';
@@ -55,17 +55,23 @@ export class AddGuestFormComponent {
         this.name.trim(),
         this.phone.trim() || undefined,
         this.email.trim() || undefined
-      );
-      this.name = '';
-      this.phone = '';
-      this.email = '';
-      this.phoneError.set(null);
-      this.emailError.set(null);
-      this.guestAdded.emit();
+      ).then(() => {
+        this.guestAdded.emit();
+      });
     } catch {
       this.submitError.set('Failed to add guest. Please try again.');
     } finally {
+      this.resetForm();
       this.isSubmitting.set(false);
     }
+  }
+
+  resetForm() {
+    this.name = '';
+    this.phone = '';
+    this.email = '';
+    this.phoneError.set(null);
+    this.emailError.set(null);
+    this.submitError.set(null);
   }
 }
