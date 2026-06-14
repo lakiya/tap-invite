@@ -117,7 +117,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
     .pulse-dot {
       width: 8px; height: 8px;
       border-radius: 50%;
-      background: #22c55e;
+      background: var(--color-success);
       animation: pulse 2s infinite;
     }
 
@@ -156,7 +156,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
     .cta-primary {
       padding: 13px 28px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--color-accent), #ea6c06);
+      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
       color: white;
       font-weight: 700;
       font-size: 0.95rem;

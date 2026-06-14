@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Supabase } from '../../core/services/supabase/supabase';
@@ -7,7 +6,7 @@ import { Supabase } from '../../core/services/supabase/supabase';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule],
   template: `
     <main class="login-page">
       <div class="login-card">
@@ -132,7 +131,7 @@ import { Supabase } from '../../core/services/supabase/supabase';
       width: 100%;
       padding: 13px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--color-accent), #ea6c06);
+      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
       color: white;
       font-size: 0.95rem;
       font-weight: 700;
