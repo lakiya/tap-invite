@@ -140,6 +140,8 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
 
     const { data: { session } } = await this.supabase.client.auth.getSession();
     if (session) {
+      this.authSubscription?.unsubscribe();
+      this.authSubscription = null;
       this.navigateByRole(session.user.id);
       return;
     }
