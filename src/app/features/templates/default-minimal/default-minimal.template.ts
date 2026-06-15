@@ -33,7 +33,7 @@ import { TemplateContext, TemplateComponent } from '../template.types';
             <div>
               <p class="detail-primary">{{ context().event.location_text }}</p>
               @if (context().event.google_maps_url) {
-                <a [href]="context().event.google_maps_url" target="_blank" class="map-link">
+                <a [href]="context().event.google_maps_url" target="_blank" rel="noopener noreferrer" class="map-link">
                   View on Google Maps →
                 </a>
               }
