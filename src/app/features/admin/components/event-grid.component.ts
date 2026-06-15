@@ -175,23 +175,33 @@ export class EventGridComponent implements OnInit {
 
   async toggleEnabled(event: AdminEvent) {
     const newValue = !event.is_enabled;
+    this.allEvents.update(events =>
+      events.map(e => e.id === event.id
+        ? { ...e, is_enabled: newValue, computedStatus: this.adminService.computeStatus({ ...e, is_enabled: newValue }) }
+        : e
+      )
+    );
     try {
       await this.adminService.toggleEventEnabled(event.id, newValue);
+    } catch {
       this.allEvents.update(events =>
         events.map(e => e.id === event.id
-          ? { ...e, is_enabled: newValue, computedStatus: this.adminService.computeStatus({ ...e, is_enabled: newValue }) }
+          ? { ...e, is_enabled: event.is_enabled, computedStatus: this.adminService.computeStatus(event) }
           : e
         )
       );
-    } catch {
       this.toast.error('Failed to update event status.');
     }
   }
 
   async openEdit(event: AdminEvent) {
-    const guests = await this.adminService.getGuestsForEvent(event.id);
-    this.editingGuests.set(guests);
-    this.editingEvent.set(event);
+    try {
+      const guests = await this.adminService.getGuestsForEvent(event.id);
+      this.editingGuests.set(guests);
+      this.editingEvent.set(event);
+    } catch {
+      this.toast.error('Failed to load guests for this event.');
+    }
   }
 
   onEventSaved() {
