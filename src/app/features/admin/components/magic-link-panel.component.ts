@@ -18,7 +18,7 @@ import { ToastService } from '../../../core/services/toast/toast.service';
           type="text"
           class="admin-input search-input"
           placeholder="Search user by email…"
-          [(ngModel)]="searchQuery"
+          [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
         />
       </div>
 
@@ -58,11 +58,11 @@ export class MagicLinkPanelComponent implements OnInit {
   private toast = inject(ToastService);
 
   allProfiles = signal<AdminProfile[]>([]);
-  searchQuery = '';
+  searchQuery = signal('');
   sending = signal<string | null>(null);
 
   filteredProfiles = computed(() => {
-    const q = this.searchQuery.toLowerCase();
+    const q = this.searchQuery().toLowerCase();
     if (q.length < 2) return [];
     return this.allProfiles().filter(p => p.email.toLowerCase().includes(q)).slice(0, 8);
   });
@@ -80,7 +80,7 @@ export class MagicLinkPanelComponent implements OnInit {
     try {
       await this.adminService.sendManualMagicLink(profile.email);
       this.toast.success(`Magic link sent to ${profile.email}`);
-      this.searchQuery = '';
+      this.searchQuery.set('');
     } catch {
       this.toast.error(`Failed to send link to ${profile.email}`);
     } finally {
