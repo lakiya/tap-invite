@@ -1,12 +1,16 @@
+// src/app/features/host-dashboard/components/host-dashboard.component.ts
 import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Supabase } from '../../../core/services/supabase/supabase';
 import { ToastService } from '../../../core/services/toast/toast.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { EventFormComponent } from './event-form/event-form.component';
 import { AddGuestFormComponent } from './add-guest-form/add-guest-form.component';
 import { GuestTableComponent } from './guest-table/guest-table.component';
+import { TemplateGalleryComponent } from '../../../features/templates/components/template-gallery/template-gallery.component';
+import { EditEventDialogComponent, EditDialogResult } from './edit-event-dialog/edit-event-dialog.component';
 
 @Component({
   selector: 'app-host-dashboard',
@@ -16,21 +20,26 @@ import { GuestTableComponent } from './guest-table/guest-table.component';
     HeaderComponent,
     EventFormComponent,
     AddGuestFormComponent,
-    GuestTableComponent
+    GuestTableComponent,
+    TemplateGalleryComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrls: ['./host-dashboard.component.css']
 })
 export class HostDashboardComponent implements OnInit, OnDestroy {
-  private supabase   = inject(Supabase);
-  private router     = inject(Router);
-  private platformId = inject(PLATFORM_ID);
-  private toast      = inject(ToastService);
+  private supabase    = inject(Supabase);
+  private router      = inject(Router);
+  private platformId  = inject(PLATFORM_ID);
+  private toast       = inject(ToastService);
+  private dialog      = inject(MatDialog);
 
-  userId      = signal<string | null>(null);
-  isLoading   = signal(true);
-  activeEvent = signal<any>(null);
-  guests      = signal<any[]>([]);
+  userId             = signal<string | null>(null);
+  isLoading          = signal(true);
+  activeEvent        = signal<any>(null);
+  guests             = signal<any[]>([]);
+  showTemplatePicker = signal(false);
+  selectedTemplateId = signal('default-minimal');
+  isSavingTemplate   = signal(false);
 
   private realtimeChannel: ReturnType<typeof this.supabase.client.channel> | null = null;
 
@@ -52,6 +61,48 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  handleEventCreated(event: any) {
+    this.activeEvent.set(event);
+    this.selectedTemplateId.set('default-minimal');
+    this.showTemplatePicker.set(true);
+  }
+
+  async confirmTemplate() {
+    const event = this.activeEvent();
+    if (!event) return;
+    this.isSavingTemplate.set(true);
+    try {
+      await this.supabase.updateEvent(event.id, { template_id: this.selectedTemplateId() });
+      this.activeEvent.set({ ...event, template_id: this.selectedTemplateId() });
+      this.showTemplatePicker.set(false);
+      this.toast.success('Template saved!');
+    } catch {
+      this.toast.error('Could not save template. Please try again.');
+    } finally {
+      this.isSavingTemplate.set(false);
+    }
+  }
+
+  openEditDialog() {
+    const event = this.activeEvent();
+    if (!event) return;
+    const ref = this.dialog.open(EditEventDialogComponent, {
+      data: { event },
+      width: '440px',
+      panelClass: 'edit-event-dialog-panel',
+    });
+    ref.afterClosed().subscribe(async (result: EditDialogResult | undefined) => {
+      if (!result) return;
+      try {
+        await this.supabase.updateEvent(event.id, result);
+        this.activeEvent.set({ ...event, ...result });
+        this.toast.success('Event updated!');
+      } catch {
+        this.toast.error('Could not update event. Please try again.');
+      }
+    });
   }
 
   subscribeToRsvpUpdates(eventId: string) {
@@ -81,10 +132,6 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
   async loadGuests(eventId: string) {
     const list = await this.supabase.getGuests(eventId);
     this.guests.set(list || []);
-  }
-
-  handleEventCreated(event: any) {
-    this.activeEvent.set(event);
   }
 
   async handleGuestAdded() {
