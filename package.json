@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "prestart": "node scripts/set-env.js",
     "start": "ng serve",
-    "prebuild": "node scripts/set-env.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -25,6 +23,7 @@
     "@angular/router": "^22.0.0",
     "@angular/ssr": "^22.0.1",
     "@supabase/supabase-js": "^2.108.1",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "lottie-web": "^5.13.0",
     "ngx-lottie": "^21.2.0",
