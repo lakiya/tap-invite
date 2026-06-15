@@ -12,6 +12,8 @@ export class ProfilesService {
       .eq('id', userId)
       .single();
     if (error) return null;
-    return data as { role: 'user' | 'super_admin' };
+    const role = (data as { role: string } | null)?.role;
+    if (role !== 'user' && role !== 'super_admin') return null;
+    return { role };
   }
 }
