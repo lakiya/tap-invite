@@ -23,9 +23,10 @@ export class GuestViewComponent implements OnInit {
   eventData  = signal<EventData | null>(null);
   guestData  = signal<GuestData | null>(null);
   rsvpStatus = signal<RsvpStatus>('Pending');
-  isLoading  = signal(true);
-  hasError   = signal(false);
-  rsvpError  = signal<string | null>(null);
+  isLoading   = signal(true);
+  hasError    = signal(false);
+  isDisabled  = signal(false);
+  rsvpError   = signal<string | null>(null);
 
   templateContext = computed<TemplateContext | null>(() => {
     const event = this.eventData();
@@ -61,6 +62,7 @@ export class GuestViewComponent implements OnInit {
       ]);
       if (eventRes.error || guestRes.error) throw new Error('Invitation not found');
       this.eventData.set(eventRes.data as EventData);
+      this.isDisabled.set(!(eventRes.data as any).is_enabled);
       this.guestData.set(guestRes.data as GuestData);
       if (!rsvpRes.error && rsvpRes.data?.status) {
         this.rsvpStatus.set(rsvpRes.data.status as RsvpStatus);

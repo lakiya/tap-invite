@@ -17,6 +17,14 @@
     </div>
   }
 
+  @else if (isDisabled()) {
+    <div class="status-wrap fade-in">
+      <div class="err-icon">🔒</div>
+      <h2>Invitation Unavailable</h2>
+      <p>This invitation is temporarily unavailable. Please contact the host.</p>
+    </div>
+  }
+
   @else if (templateContext()) {
     <app-template-renderer [context]="templateContext()!"></app-template-renderer>
   }
