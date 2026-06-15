@@ -62,7 +62,7 @@ export class GuestViewComponent implements OnInit {
       ]);
       if (eventRes.error || guestRes.error) throw new Error('Invitation not found');
       this.eventData.set(eventRes.data as EventData);
-      this.isDisabled.set(!(eventRes.data as any).is_enabled);
+      this.isDisabled.set((eventRes.data as any).is_enabled === false);
       this.guestData.set(guestRes.data as GuestData);
       if (!rsvpRes.error && rsvpRes.data?.status) {
         this.rsvpStatus.set(rsvpRes.data.status as RsvpStatus);
