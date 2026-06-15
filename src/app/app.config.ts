@@ -5,8 +5,9 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideLottieOptions } from 'ngx-lottie';
 import { APP_ENV, APP_ENV_STATE_KEY, AppEnv } from './core/tokens/app-env';
+import { environment } from '../environments/environment';
 
-const DEFAULT_ENV: AppEnv = { supabaseUrl: '', supabaseKey: '' };
+const DEFAULT_ENV: AppEnv = { supabaseUrl: environment.supabaseUrl, supabaseKey: environment.supabaseKey };
 
 export const appConfig: ApplicationConfig = {
   providers: [

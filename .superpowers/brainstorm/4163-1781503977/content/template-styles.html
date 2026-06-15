@@ -1,0 +1,102 @@
+<h2>What style should the second template be?</h2>
+<p class="subtitle">The current default is a light card with a blue gradient band. Pick a direction for the second option.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="elegant-dark" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0;overflow:hidden;border-radius:8px;">
+      <!-- Mini invitation card mockup: Elegant Dark -->
+      <div style="background:#0f0f1a;border-radius:8px;overflow:hidden;font-family:Georgia,serif;">
+        <div style="background:linear-gradient(135deg,#1a1035,#3d1a78);padding:14px 16px 12px;">
+          <div style="display:inline-block;border:1px solid rgba(212,175,55,0.6);color:#d4af37;font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:6px;">You're Invited</div>
+          <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.8);font-style:italic;">Dear Alexandra,</p>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="text-align:center;margin-bottom:10px;">
+            <div style="font-size:22px;margin-bottom:4px;">✦</div>
+            <h3 style="margin:0;font-size:13px;font-weight:700;color:#fff;letter-spacing:.05em;">Summer Garden Party</h3>
+          </div>
+          <div style="border-top:1px solid rgba(212,175,55,0.2);padding-top:10px;display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span style="color:#d4af37;font-size:10px;">◆</span>
+              <span style="font-size:9px;color:rgba(255,255,255,0.75);">Saturday, July 12 · 6:00 PM</span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span style="color:#d4af37;font-size:10px;">◆</span>
+              <span style="font-size:9px;color:rgba(255,255,255,0.75);">The Grand Pavilion</span>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:6px;">
+            <div style="flex:1;background:linear-gradient(135deg,#d4af37,#a07830);border-radius:4px;padding:5px;text-align:center;font-size:9px;font-weight:600;color:#0f0f1a;">Accept</div>
+            <div style="flex:1;border:1px solid rgba(212,175,55,0.4);border-radius:4px;padding:5px;text-align:center;font-size:9px;color:rgba(255,255,255,0.6);">Decline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Elegant Dark</h3>
+      <p>Deep navy/purple with gold accents, serif typography. Formal dinners, weddings, upscale events.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="vibrant" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0;overflow:hidden;border-radius:8px;">
+      <!-- Mini invitation card mockup: Vibrant Fiesta -->
+      <div style="background:#fff;border-radius:8px;overflow:hidden;font-family:system-ui,sans-serif;">
+        <div style="background:linear-gradient(135deg,#f97316,#ec4899);padding:14px 16px 12px;">
+          <div style="display:inline-block;background:rgba(255,255,255,0.25);color:#fff;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-bottom:6px;">🎉 You're Invited</div>
+          <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.95);font-weight:600;">Hey Marcus!</p>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="text-align:center;margin-bottom:8px;">
+            <div style="font-size:24px;margin-bottom:4px;">🥳</div>
+            <h3 style="margin:0;font-size:13px;font-weight:800;color:#1a1a1a;letter-spacing:-.02em;">Birthday Bash!</h3>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;">
+            <div style="background:#fff7ed;border-radius:6px;padding:5px 8px;font-size:9px;color:#9a3412;font-weight:600;">📅 Saturday, July 12 · 7 PM</div>
+            <div style="background:#fff7ed;border-radius:6px;padding:5px 8px;font-size:9px;color:#9a3412;font-weight:600;">📍 Rooftop Lounge, Downtown</div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:6px;">
+            <div style="flex:1;background:linear-gradient(135deg,#f97316,#ec4899);border-radius:6px;padding:5px;text-align:center;font-size:9px;font-weight:700;color:#fff;">I'm In! 🙌</div>
+            <div style="flex:1;border:1.5px solid #f97316;border-radius:6px;padding:5px;text-align:center;font-size:9px;color:#f97316;font-weight:600;">Can't Make It</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Vibrant Fiesta</h3>
+      <p>Orange-to-pink gradient, bold type, playful tone. Birthdays, casual parties, celebrations.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="soft-floral" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0;overflow:hidden;border-radius:8px;">
+      <!-- Mini invitation card mockup: Soft Floral -->
+      <div style="background:#fdf6f0;border-radius:8px;overflow:hidden;font-family:Georgia,serif;border:1px solid #f0d9cc;">
+        <div style="background:linear-gradient(135deg,#f9e4d4,#f0c4b0);padding:14px 16px 12px;border-bottom:2px solid #e8a87c;">
+          <div style="text-align:center;font-size:14px;margin-bottom:4px;">🌸 🌿 🌸</div>
+          <p style="margin:0;font-size:10px;color:#8b4513;text-align:center;font-style:italic;letter-spacing:.05em;">Together with joy, we invite</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#5c2d0e;text-align:center;font-weight:700;font-style:italic;">Dear Sophie,</p>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="text-align:center;margin-bottom:8px;">
+            <h3 style="margin:0;font-size:12px;font-weight:700;color:#5c2d0e;letter-spacing:.04em;font-style:italic;">Afternoon Tea & Garden Walk</h3>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;border-top:1px dashed #e8a87c;padding-top:8px;">
+            <div style="font-size:9px;color:#8b4513;text-align:center;">📅 Sunday, August 3 · 3:00 PM</div>
+            <div style="font-size:9px;color:#8b4513;text-align:center;">📍 Rose Garden Estate</div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:6px;">
+            <div style="flex:1;background:#e8a87c;border-radius:6px;padding:5px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-style:italic;">Delighted to Attend</div>
+            <div style="flex:1;border:1px solid #e8a87c;border-radius:6px;padding:5px;text-align:center;font-size:9px;color:#8b4513;">Regrets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Soft Floral</h3>
+      <p>Warm blush/peach tones, serif italic type, decorative accents. Garden parties, showers, elegant brunches.</p>
+    </div>
+  </div>
+
+</div>

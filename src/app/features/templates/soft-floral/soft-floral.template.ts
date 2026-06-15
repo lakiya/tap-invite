@@ -9,6 +9,7 @@ import { TemplateContext, TemplateComponent } from '../template.types';
   standalone: true,
   imports: [CommonModule, DatePipe, RsvpButtonsComponent],
   template: `
+    <div class="sf-page">
     <div class="sf-card sf-fade-up">
       <div class="sf-header">
         <div class="sf-floral-accent">🌸 🌿 🌸</div>
@@ -46,6 +47,7 @@ import { TemplateContext, TemplateComponent } from '../template.types';
           <p class="sf-rsvp-error">{{ context().rsvpError }}</p>
         }
       </div>
+    </div>
     </div>
   `,
   styleUrl: './soft-floral.template.css'

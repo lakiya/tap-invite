@@ -10,6 +10,7 @@ import { TemplateContext, TemplateComponent } from '../template.types';
   standalone: true,
   imports: [CommonModule, DatePipe, LottieComponent, RsvpButtonsComponent],
   template: `
+    <div class="invitation-page">
     <div class="invitation-card fade-up">
       <div class="card-band">
         <span class="event-badge">You're Invited</span>
@@ -49,6 +50,7 @@ import { TemplateContext, TemplateComponent } from '../template.types';
           <p class="rsvp-error">{{ context().rsvpError }}</p>
         }
       </div>
+    </div>
     </div>
   `,
   styleUrl: './default-minimal.template.css'

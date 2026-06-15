@@ -2,10 +2,12 @@
 import { TemplateManifest } from './template.types';
 import { defaultMinimalManifest } from './default-minimal/default-minimal.manifest';
 import { softFloralManifest }     from './soft-floral/soft-floral.manifest';
+import { flipCardManifest }        from './flip-card/flip-card.manifest';
 
 export const TEMPLATE_REGISTRY: TemplateManifest[] = [
   defaultMinimalManifest,
   softFloralManifest,
+  flipCardManifest,
 ];
 
 export function getManifest(id: string): TemplateManifest {

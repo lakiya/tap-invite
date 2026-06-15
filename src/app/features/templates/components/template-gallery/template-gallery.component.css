@@ -1,7 +1,22 @@
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+/* Tablet — 2 per row */
+@media (max-width: 600px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Very small phones — 1 per row */
+@media (max-width: 360px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .gallery-card {
@@ -27,7 +42,7 @@
 
 .gallery-thumbnail {
   width: 100%;
-  aspect-ratio: 8 / 5;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: var(--color-bg);
 }
@@ -40,8 +55,8 @@
 }
 
 .gallery-label {
-  padding: 8px 10px;
-  font-size: 0.78rem;
+  padding: 10px 12px;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-text);
   display: flex;

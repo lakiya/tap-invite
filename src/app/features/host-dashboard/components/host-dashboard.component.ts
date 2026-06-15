@@ -88,9 +88,13 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
   openEditDialog() {
     const event = this.activeEvent();
     if (!event) return;
+    const isMobile = window.innerWidth <= 600;
     const ref = this.dialog.open(EditEventDialogComponent, {
       data: { event },
-      width: '440px',
+      width: isMobile ? '100vw' : '760px',
+      maxWidth: '100vw',
+      maxHeight: isMobile ? '92vh' : '90vh',
+      position: isMobile ? { bottom: '0' } : undefined,
       panelClass: 'edit-event-dialog-panel',
     });
     ref.afterClosed().subscribe(async (result: EditDialogResult | undefined) => {

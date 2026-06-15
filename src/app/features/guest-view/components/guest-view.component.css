@@ -1,19 +1,19 @@
-/* src/app/features/guest-view/components/guest-view.component.css */
+/* Guest page is just a shell — templates own their full-page layout */
 .guest-page {
+  min-height: 100vh;
+}
+
+/* Loading and error states handle their own full-height centering */
+.status-wrap {
   min-height: 100vh;
   background: var(--color-bg);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.status-wrap {
-  text-align: center;
-  display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 12px;
+  padding: 24px;
+  text-align: center;
 }
 
 .spinner {

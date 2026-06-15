@@ -1,0 +1,10 @@
+import { TemplateManifest } from '../template.types';
+
+export const flipCardManifest: TemplateManifest = {
+  id: 'flip-card',
+  label: 'Elegant Folio',
+  thumbnail: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="213"><rect width="160" height="213" fill="%23060c1c" rx="6"/><rect x="10" y="10" width="140" height="193" fill="none" stroke="%23c9a96e" stroke-width="0.5" rx="4" opacity="0.3"/><rect x="10" y="10" width="18" height="1.5" fill="%23c9a96e" opacity="0.65"/><rect x="10" y="10" width="1.5" height="18" fill="%23c9a96e" opacity="0.65"/><rect x="132" y="211.5" width="18" height="1.5" fill="%23c9a96e" opacity="0.65"/><rect x="148.5" y="185" width="1.5" height="18" fill="%23c9a96e" opacity="0.65"/><rect x="68" y="19" width="24" height="3.5" rx="1.75" fill="%23c9a96e" opacity="0.5"/><rect x="32" y="29" width="96" height="4" rx="2" fill="%23c9a96e" opacity="0.4"/><circle cx="80" cy="93" r="30" fill="%23c9a96e" opacity="0.07"/><circle cx="80" cy="93" r="22" fill="%23c9a96e" opacity="0.18"/><circle cx="80" cy="93" r="14" fill="%23c9a96e" opacity="0.5"/><rect x="71" y="86" width="18" height="14" rx="2" fill="%23060c1c" opacity="0.7"/><rect x="71" y="86" width="18" height="7" rx="2" fill="%23c9a96e" opacity="0.22"/><rect x="38" y="140" width="84" height="4" rx="2" fill="%23ffffff" opacity="0.18"/><rect x="22" y="152" width="116" height="8" rx="4" fill="%23ffffff" opacity="0.5"/><rect x="28" y="170" width="47" height="1" fill="%23c9a96e" opacity="0.25"/><rect x="85" y="170" width="47" height="1" fill="%23c9a96e" opacity="0.25"/><rect x="76" y="167" width="8" height="8" rx="1" fill="%23c9a96e" opacity="0.4" transform="rotate(45 80 171)"/><rect x="28" y="180" width="104" height="5" rx="2.5" fill="%23c9a96e" opacity="0.28"/><circle cx="61" cy="200" r="3" fill="%23c9a96e" opacity="0.45"/><rect x="68" y="197" width="40" height="4" rx="2" fill="%23ffffff" opacity="0.14"/></svg>`,
+  tags: ['elegant', 'premium', 'flip'],
+  load: () =>
+    import('./flip-card.template').then(m => m.FlipCardTemplateComponent),
+};

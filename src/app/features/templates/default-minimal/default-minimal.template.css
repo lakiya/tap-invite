@@ -1,112 +1,157 @@
-/* src/app/features/templates/default-minimal/default-minimal.template.css */
+/* ── Full-bleed immersive page ── */
+.invitation-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 60%, rgba(14, 165, 233, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(2, 132, 199, 0.12) 0%, transparent 50%),
+    linear-gradient(160deg, #060e1c 0%, #0d1f3c 45%, #08152a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+/* ── Card ── */
 .invitation-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  max-width: 440px;
+  border-radius: 28px;
+  max-width: 560px;
   width: 100%;
   overflow: hidden;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 40px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.07);
 }
 
 .card-band {
   background: linear-gradient(135deg, var(--color-band-from), var(--color-band-to));
-  padding: 28px 28px 24px;
+  padding: 36px 36px 32px;
 }
 
 .event-badge {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.18);
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 99px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .greeting {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.92);
   margin: 0;
 }
 
-.card-body { padding: 28px; }
+.card-body { padding: 36px; }
 
 .animation-wrap {
   display: flex;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .event-name {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 800;
   color: var(--color-text);
   text-align: center;
-  margin: 0 0 24px;
-  letter-spacing: -0.02em;
+  margin: 0 0 28px;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .detail-rows {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .detail-row {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
 }
 
 .detail-icon {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
 .detail-primary {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--color-text);
-  margin: 0 0 2px;
+  margin: 0 0 3px;
 }
 
 .detail-secondary {
-  font-size: 0.8rem;
+  font-size: 0.83rem;
   color: var(--color-text-muted);
   margin: 0;
 }
 
 .map-link {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--color-primary);
   text-decoration: none;
   font-weight: 600;
 }
-
 .map-link:hover { text-decoration: underline; }
 
 .divider {
   height: 1px;
   background: var(--color-border);
-  margin: 24px 0;
+  margin: 28px 0;
 }
 
 .rsvp-error {
   font-size: 0.82rem;
   color: var(--color-error);
   text-align: center;
-  margin: 12px 0 0;
+  margin: 14px 0 0;
 }
 
-.fade-up { animation: fadeUp 0.4s ease; }
+.fade-up { animation: fadeUp 0.5s ease; }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Mobile: seamless full-width card ── */
+@media (max-width: 600px) {
+  .invitation-page {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .invitation-card {
+    border-radius: 0;
+    max-width: 100%;
+    box-shadow: none;
+    min-height: 100dvh;
+  }
+
+  .card-band {
+    padding: 28px 24px 24px;
+  }
+
+  .card-body {
+    padding: 28px 24px 36px;
+  }
+
+  .event-name {
+    font-size: 1.6rem;
+  }
+}
+
+[data-theme="dark"] .card-band {
+  border-bottom: 1px solid var(--color-primary);
 }
