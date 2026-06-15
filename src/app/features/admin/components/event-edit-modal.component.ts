@@ -54,7 +54,7 @@ import { ToastService } from '../../../core/services/toast/toast.service';
         <div class="verify-box" role="dialog">
           <div class="verify-icon">⚠️</div>
           <h3>Confirm Edit</h3>
-          <p>You are editing an <strong>{{ event.computedStatus.toLowerCase() }}</strong> event.<br>Type <strong>VERIFY</strong> to confirm.</p>
+          <p>Warning: You are editing an old or active event. Type <strong>VERIFY</strong> to confirm these changes.</p>
           <input
             type="text"
             [(ngModel)]="verifyInput"
