@@ -108,4 +108,15 @@ export class Supabase {
     });
     if (error) throw error;
   }
+
+  async updateEvent(
+    eventId: string,
+    changes: { title?: string; location_text?: string; template_id?: string }
+  ): Promise<void> {
+    const { error } = await this.supabase
+      .from('events')
+      .update(changes)
+      .eq('id', eventId);
+    if (error) throw error;
+  }
 }
