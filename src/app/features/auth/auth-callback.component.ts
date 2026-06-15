@@ -2,6 +2,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Component, OnDestroy, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Supabase } from '../../core/services/supabase/supabase';
+import { ProfilesService } from '../../core/services/profiles/profiles.service';
 
 @Component({
   selector: 'app-auth-callback',
@@ -106,19 +107,18 @@ import { Supabase } from '../../core/services/supabase/supabase';
 })
 export class AuthCallbackComponent implements OnInit, OnDestroy {
   private supabase = inject(Supabase);
+  private profiles = inject(ProfilesService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
 
   errorMessage = signal<string | null>(null);
   private authSubscription: { unsubscribe: () => void } | null = null;
+  private navigated = false;
 
   async ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
-    //TODO: remove after confirming callback flow works in production, to prevent users from getting stuck if supabase-js fails to fire SIGNED_IN for some reason (e.g. consumed token)
 
-      return  this.router.navigate(['/dashboard']);
-        
     const params = new URLSearchParams(this.document.location.hash.substring(1));
     const error = params.get('error');
 
@@ -128,37 +128,35 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // No hash at all — redirect to login rather than spinning forever
     if (!this.document.location.hash) {
       this.router.navigate(['/login']);
       return;
     }
 
-    let navigated = false;
-    const navigate = () => {
-      if (!navigated) {
-        navigated = true;
-        this.router.navigate(['/dashboard']);
-      }
-    };
-
     const { data: { subscription } } = this.supabase.client.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) navigate();
+      if (event === 'SIGNED_IN' && session) this.navigateByRole(session.user.id);
     });
     this.authSubscription = subscription;
 
     const { data: { session } } = await this.supabase.client.auth.getSession();
     if (session) {
-      navigate();
+      this.navigateByRole(session.user.id);
       return;
     }
 
-    // Fallback: if supabase-js never fires SIGNED_IN (e.g. consumed token), redirect after 8s
     setTimeout(() => {
-      if (!navigated) {
+      if (!this.navigated) {
         this.errorMessage.set('Sign-in timed out. Please request a new link.');
       }
     }, 8000);
+  }
+
+  private async navigateByRole(userId: string) {
+    if (this.navigated) return;
+    this.navigated = true;
+    const profile = await this.profiles.getMyProfile(userId);
+    const dest = profile?.role === 'super_admin' ? '/admin' : '/dashboard';
+    this.router.navigate([dest]);
   }
 
   ngOnDestroy() {
