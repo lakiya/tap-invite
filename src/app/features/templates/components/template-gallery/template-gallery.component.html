@@ -1,0 +1,19 @@
+<div class="gallery-grid">
+  @for (tpl of templates; track tpl.id) {
+    <button
+      class="gallery-card"
+      [class.selected]="tpl.id === selectedId()"
+      (click)="select(tpl.id)"
+      type="button">
+      <div class="gallery-thumbnail">
+        <img [src]="tpl.thumbnail" [alt]="tpl.label" />
+      </div>
+      <div class="gallery-label">
+        {{ tpl.label }}
+        @if (tpl.id === selectedId()) {
+          <span class="gallery-check">&#x2713;</span>
+        }
+      </div>
+    </button>
+  }
+</div>
