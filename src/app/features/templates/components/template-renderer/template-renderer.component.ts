@@ -38,10 +38,14 @@ export class TemplateRendererComponent {
   private manifestResolver = inject(TEMPLATE_MANIFEST_RESOLVER);
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const id = this.templateId();
       this.templateComp.set(null);
-      this.manifestResolver(id).load().then(comp => this.templateComp.set(comp));
-    });
+      let cancelled = false;
+      onCleanup(() => { cancelled = true; });
+      this.manifestResolver(id).load().then(comp => {
+        if (!cancelled) this.templateComp.set(comp);
+      });
+    }, { allowSignalWrites: true });
   }
 }
