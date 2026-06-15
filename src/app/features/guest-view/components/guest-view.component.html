@@ -1,3 +1,4 @@
+<!-- src/app/features/guest-view/components/guest-view.component.html -->
 <main class="guest-page">
 
   @if (isLoading()) {
@@ -16,57 +17,8 @@
     </div>
   }
 
-  @else {
-    <div class="invitation-card fade-up">
-
-      <!-- Top band -->
-      <div class="card-band">
-        <span class="event-badge">You're Invited</span>
-        <p class="greeting">Dear {{ guestData()?.display_name }},</p>
-      </div>
-
-      <!-- Content -->
-      <div class="card-body">
-
-        <div class="animation-wrap">
-          <ng-lottie [options]="lottieOptions" width="160px" height="160px"></ng-lottie>
-        </div>
-
-        <h1 class="event-name">{{ eventData()?.title }}</h1>
-
-        <div class="detail-rows">
-          <div class="detail-row">
-            <span class="detail-icon">📅</span>
-            <div>
-              <p class="detail-primary">{{ eventData()?.event_date | date:'EEEE, MMMM d, y' }}</p>
-              <p class="detail-secondary">{{ eventData()?.event_date | date:'shortTime' }}</p>
-            </div>
-          </div>
-
-          <div class="detail-row">
-            <span class="detail-icon">📍</span>
-            <div>
-              <p class="detail-primary">{{ eventData()?.location_text }}</p>
-              @if (eventData()?.google_maps_url) {
-                <a [href]="eventData()?.google_maps_url" target="_blank" class="map-link">View on Google Maps →</a>
-              }
-            </div>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <app-rsvp-buttons
-          [status]="rsvpStatus()"
-          (rsvpChange)="handleRsvpChange($event)"
-        ></app-rsvp-buttons>
-
-        @if (rsvpError()) {
-          <p class="rsvp-error">{{ rsvpError() }}</p>
-        }
-
-      </div>
-    </div>
+  @else if (templateContext()) {
+    <app-template-renderer [context]="templateContext()!"></app-template-renderer>
   }
 
 </main>

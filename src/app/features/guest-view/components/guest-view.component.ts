@@ -1,48 +1,44 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+// src/app/features/guest-view/components/guest-view.component.ts
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Supabase } from '../../../core/services/supabase/supabase';
-import { RsvpButtonsComponent, RsvpStatus } from './rsvp-buttons/rsvp-buttons.component';
-import { LottieComponent, AnimationOptions } from 'ngx-lottie';
-
-interface EventData {
-  id: string;
-  title: string;
-  event_date: string;
-  location_text: string;
-  google_maps_url?: string;
-}
-
-interface GuestData {
-  id: string;
-  display_name: string;
-}
+import { RsvpStatus } from './rsvp-buttons/rsvp-buttons.component';
+import { EventData, GuestData, TemplateContext } from '../../templates/template.types';
+import { TemplateRendererComponent } from '../../templates/components/template-renderer/template-renderer.component';
 
 @Component({
   selector: 'app-guest-view',
   standalone: true,
-  imports: [CommonModule, RouterModule, LottieComponent, RsvpButtonsComponent],
+  imports: [CommonModule, RouterModule, TemplateRendererComponent],
   templateUrl: './guest-view.component.html',
   styleUrls: ['./guest-view.component.css']
 })
 export class GuestViewComponent implements OnInit {
-  private route = inject(ActivatedRoute);
+  private route    = inject(ActivatedRoute);
   private supabase = inject(Supabase);
 
-  eventId   = signal<string | null>(null);
-  guestId   = signal<string | null>(null);
-  eventData = signal<EventData | null>(null);
-  guestData = signal<GuestData | null>(null);
+  eventId    = signal<string | null>(null);
+  guestId    = signal<string | null>(null);
+  eventData  = signal<EventData | null>(null);
+  guestData  = signal<GuestData | null>(null);
   rsvpStatus = signal<RsvpStatus>('Pending');
   isLoading  = signal(true);
   hasError   = signal(false);
   rsvpError  = signal<string | null>(null);
 
-  lottieOptions: AnimationOptions = {
-    path: 'assets/animations/celebration4.json',
-    loop: true,
-    autoplay: true
-  };
+  templateContext = computed<TemplateContext | null>(() => {
+    const event = this.eventData();
+    const guest = this.guestData();
+    if (!event || !guest) return null;
+    return {
+      event,
+      guest,
+      rsvpStatus: this.rsvpStatus(),
+      rsvpError:  this.rsvpError(),
+      onRsvpChange: (status: RsvpStatus) => this.handleRsvpChange(status),
+    };
+  });
 
   ngOnInit() {
     this.eventId.set(this.route.snapshot.paramMap.get('eventId'));
@@ -64,15 +60,12 @@ export class GuestViewComponent implements OnInit {
         this.supabase.client.from('rsvps').select('*').eq('guest_id', this.guestId()).maybeSingle()
       ]);
       if (eventRes.error || guestRes.error) throw new Error('Invitation not found');
-      this.eventData.set(eventRes.data);
-      this.guestData.set(guestRes.data);
-      if (rsvpRes.error) {
-        console.warn('Could not load existing RSVP status:', rsvpRes.error.message);
-      } else if (rsvpRes.data?.status) {
+      this.eventData.set(eventRes.data as EventData);
+      this.guestData.set(guestRes.data as GuestData);
+      if (!rsvpRes.error && rsvpRes.data?.status) {
         this.rsvpStatus.set(rsvpRes.data.status as RsvpStatus);
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       this.hasError.set(true);
     } finally {
       this.isLoading.set(false);
@@ -87,8 +80,7 @@ export class GuestViewComponent implements OnInit {
     try {
       await this.supabase.updateRsvpStatus(guestId, status);
       this.rsvpStatus.set(status);
-    } catch (error) {
-      console.error(error);
+    } catch {
       this.rsvpError.set('Failed to save your response. Please try again.');
     }
   }
