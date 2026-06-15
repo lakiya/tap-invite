@@ -21,11 +21,13 @@ export class AdminService {
       (profilesRes.data ?? []).map((p: { id: string; email: string }) => [p.id, p.email])
     );
 
-    return (eventsRes.data ?? []).map((event: any) => ({
+    return (eventsRes.data ?? []).map((event: {
+      host_id: string; is_enabled: boolean; event_date: string; [key: string]: unknown
+    }) => ({
       ...event,
       hostEmail: profileMap.get(event.host_id) ?? 'Unknown',
       computedStatus: this.computeStatus(event)
-    }));
+    })) as AdminEvent[];
   }
 
   async getAllProfiles(): Promise<AdminProfile[]> {
@@ -73,14 +75,19 @@ export class AdminService {
 
   async sendManualMagicLink(email: string): Promise<void> {
     const redirectTo = `${this.document.location.origin}/auth/callback`;
-    await this.supabase.signInWithMagicLink(email, redirectTo);
+    const { error } = await this.supabase.client.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: redirectTo }
+    });
+    if (error) throw error;
   }
 
   computeStatus(event: { is_enabled: boolean; event_date: string }): EventStatus {
     if (!event.is_enabled) return 'Disabled';
     const today = new Date().toISOString().split('T')[0];
-    if (event.event_date > today) return 'Upcoming';
-    if (event.event_date === today) return 'Ongoing';
+    const eventDay = event.event_date.split('T')[0];
+    if (eventDay > today) return 'Upcoming';
+    if (eventDay === today) return 'Ongoing';
     return 'Passed';
   }
 }
