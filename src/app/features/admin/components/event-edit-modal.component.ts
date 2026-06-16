@@ -33,12 +33,16 @@ import { ToastService } from '../../../core/services/toast/toast.service';
 
         @if (guests.length > 0) {
           <div class="form-group">
-            <label>Guest Names</label>
-            @for (guest of guests; track guest.id) {
-              <div class="guest-row">
-                <input type="text" [(ngModel)]="guestEdits[guest.id]" class="admin-input guest-input" />
-              </div>
-            }
+            <label>Guests ({{ guests.length }})</label>
+            <div class="guest-list">
+              @for (guest of guests; track guest.id) {
+                <div class="guest-card">
+                  <span class="guest-name">{{ guest.display_name }}</span>
+                  <span class="guest-meta">{{ guest.phone_number || '—' }}</span>
+                  <span class="guest-meta">{{ guest.email || '—' }}</span>
+                </div>
+              }
+            </div>
           </div>
         }
 
@@ -83,7 +87,10 @@ import { ToastService } from '../../../core/services/toast/toast.service';
     label { display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em; }
     .admin-input { width:100%; background:#0f172a; border:1px solid #334155; border-radius:6px; padding:8px 12px; color:#f1f5f9; font-size:0.875rem; box-sizing:border-box; }
     .admin-input:focus { outline:none; border-color:#7c3aed; }
-    .guest-row { margin-bottom:6px; }
+    .guest-list { display:flex; flex-direction:column; gap:6px; }
+    .guest-card { background:#0f172a; border:1px solid #334155; border-radius:6px; padding:8px 12px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; align-items:center; }
+    .guest-name { color:#f1f5f9; font-size:0.875rem; font-weight:500; }
+    .guest-meta { color:#64748b; font-size:0.8rem; }
     .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
     .btn-cancel { background:#334155; color:#94a3b8; border:none; padding:8px 18px; border-radius:6px; cursor:pointer; font-size:0.875rem; }
     .btn-save { background:#7c3aed; color:white; border:none; padding:8px 18px; border-radius:6px; cursor:pointer; font-size:0.875rem; font-weight:600; }
@@ -109,7 +116,6 @@ export class EventEditModalComponent implements OnInit {
   editDate = '';
   editVenue = '';
   editMapsUrl = '';
-  guestEdits: Record<string, string> = {};
   showVerify = signal(false);
   verifyInput = '';
 
@@ -118,7 +124,6 @@ export class EventEditModalComponent implements OnInit {
     this.editDate = this.event.event_date?.split('T')[0] ?? '';
     this.editVenue = this.event.location_text;
     this.editMapsUrl = this.event.google_maps_url ?? '';
-    this.guests.forEach(g => { this.guestEdits[g.id] = g.display_name; });
   }
 
   onBackdropClick(e: MouseEvent) {
@@ -143,12 +148,6 @@ export class EventEditModalComponent implements OnInit {
         google_maps_url: this.editMapsUrl || null,
       };
       await this.adminService.updateEvent(this.event.id, fields);
-
-      const guestUpdates = this.guests
-        .filter(g => this.guestEdits[g.id] !== g.display_name)
-        .map(g => this.adminService.updateGuestName(g.id, this.guestEdits[g.id]));
-      await Promise.all(guestUpdates);
-
       this.toast.success('Event updated successfully');
       this.saved.emit();
     } catch {
