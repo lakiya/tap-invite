@@ -1,0 +1,92 @@
+<h2>Design — Section 1: Database Schema</h2>
+<p class="subtitle">Two schema changes. Everything else in the admin panel is built on top of these.</p>
+
+<div class="section">
+  <h3>1. New <code>profiles</code> table</h3>
+  <div class="mockup">
+    <div class="mockup-header">profiles table</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border-color);color:var(--text-secondary);font-size:11px;">
+            <th style="text-align:left;padding:4px 8px;">Column</th>
+            <th style="text-align:left;padding:4px 8px;">Type</th>
+            <th style="text-align:left;padding:4px 8px;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border-color);">
+            <td style="padding:4px 8px;color:#7c3aed;font-weight:bold;">id</td>
+            <td style="padding:4px 8px;">uuid</td>
+            <td style="padding:4px 8px;color:var(--text-secondary);">PK, references auth.users(id) ON DELETE CASCADE</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-color);">
+            <td style="padding:4px 8px;">email</td>
+            <td style="padding:4px 8px;">text</td>
+            <td style="padding:4px 8px;color:var(--text-secondary);">Copied from auth.users for fast lookup</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-color);">
+            <td style="padding:4px 8px;">role</td>
+            <td style="padding:4px 8px;">user_role</td>
+            <td style="padding:4px 8px;color:var(--text-secondary);">ENUM: <code>'user'</code> | <code>'super_admin'</code> — default: <code>'user'</code></td>
+          </tr>
+          <tr>
+            <td style="padding:4px 8px;">created_at</td>
+            <td style="padding:4px 8px;">timestamptz</td>
+            <td style="padding:4px 8px;color:var(--text-secondary);">default now()</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:12px;margin-top:8px;color:var(--text-secondary);">
+    A Postgres trigger on <code>auth.users</code> auto-inserts a row into <code>profiles</code> when a new user signs up (role = <code>'user'</code>).
+    To make yourself super_admin, run once in Supabase SQL editor:<br>
+    <code style="background:var(--card-bg);padding:2px 6px;border-radius:3px;">UPDATE profiles SET role = 'super_admin' WHERE email = 'lakshikac@embla.asia';</code>
+  </p>
+</div>
+
+<div class="section">
+  <h3>2. Add <code>is_enabled</code> to <code>events</code> table</h3>
+  <div class="mockup">
+    <div class="mockup-header">events table — new column</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border-color);color:var(--text-secondary);font-size:11px;">
+            <th style="text-align:left;padding:4px 8px;">Column</th>
+            <th style="text-align:left;padding:4px 8px;">Type</th>
+            <th style="text-align:left;padding:4px 8px;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:4px 8px;color:#7c3aed;font-weight:bold;">is_enabled</td>
+            <td style="padding:4px 8px;">boolean</td>
+            <td style="padding:4px 8px;color:var(--text-secondary);">default <code>true</code> — only admin can set to <code>false</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>3. Computed event status (UI-only, not stored)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Status logic derived at query time</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:2;">
+      <div style="padding:4px 0;"><span style="color:#dc2626;font-weight:bold;">Disabled</span> → <code>is_enabled = false</code> (overrides date status)</div>
+      <div style="padding:4px 0;"><span style="color:#16a34a;font-weight:bold;">Upcoming</span> → <code>is_enabled = true AND event_date &gt; today</code></div>
+      <div style="padding:4px 0;"><span style="color:#d97706;font-weight:bold;">Ongoing</span>  → <code>is_enabled = true AND event_date = today</code></div>
+      <div style="padding:4px 0;"><span style="color:#64748b;font-weight:bold;">Passed</span>   → <code>is_enabled = true AND event_date &lt; today</code></div>
+    </div>
+  </div>
+  <p style="font-size:12px;margin-top:8px;color:var(--text-secondary);">Computed in <code>AdminService</code> after fetching events. The verification guard fires on <strong>all four states</strong> — every admin edit requires typing "VERIFY".</p>
+</div>
+
+<div class="section" style="padding:12px;background:var(--card-bg);border-radius:8px;border-left:3px solid #7c3aed;">
+  <p style="margin:0;font-size:13px;"><strong>Guest view fallback:</strong> The <code>/w/:eventId/:guestId</code> route already fetches event details. It will check <code>is_enabled</code> and render a clean fallback: <em>"This invitation is temporarily unavailable. Please contact the host."</em></p>
+</div>
+
+<p style="margin-top:16px;font-size:12px;color:var(--text-secondary);">Does this schema look right? Reply in the terminal.</p>

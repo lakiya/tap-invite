@@ -1,0 +1,144 @@
+<h2>Design — Section 3: Admin Feature Structure & UI</h2>
+<p class="subtitle">File layout, component breakdown, and AdminService responsibilities.</p>
+
+<div class="section">
+  <h3>Feature Folder Structure</h3>
+  <div class="mockup">
+    <div class="mockup-header">src/app/features/admin/</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.9;">
+      <div>admin/</div>
+      <div style="padding-left:16px;">├── <span style="color:#7c3aed;">admin-dashboard.component.ts</span> &nbsp;<span style="color:var(--text-secondary);font-size:10px;">← root shell (nav + router-outlet)</span></div>
+      <div style="padding-left:16px;">├── components/</div>
+      <div style="padding-left:32px;">├── <span style="color:#7c3aed;">event-grid.component.ts</span> &nbsp;<span style="color:var(--text-secondary);font-size:10px;">← search, table, toggle, delete</span></div>
+      <div style="padding-left:32px;">├── <span style="color:#7c3aed;">event-edit-modal.component.ts</span> &nbsp;<span style="color:var(--text-secondary);font-size:10px;">← edit form + verification guard</span></div>
+      <div style="padding-left:32px;">└── <span style="color:#7c3aed;">magic-link-panel.component.ts</span> &nbsp;<span style="color:var(--text-secondary);font-size:10px;">← user lookup + manual send</span></div>
+      <div style="padding-left:16px;">└── <span style="color:#0ea5e9;">admin.service.ts</span> &nbsp;<span style="color:var(--text-secondary);font-size:10px;">← all admin Supabase queries</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>AdminService API</h3>
+  <div class="mockup">
+    <div class="mockup-header">admin.service.ts — methods</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:2;">
+      <div><code>getAllEvents()</code> &nbsp;<span style="color:var(--text-secondary);font-size:11px;">→ all events across all hosts, with host email joined from profiles</span></div>
+      <div><code>getAllProfiles()</code> &nbsp;<span style="color:var(--text-secondary);font-size:11px;">→ all users (for magic link lookup)</span></div>
+      <div><code>toggleEventEnabled(id, is_enabled)</code> &nbsp;<span style="color:var(--text-secondary);font-size:11px;">→ flip is_enabled on event</span></div>
+      <div><code>updateEvent(id, fields)</code> &nbsp;<span style="color:var(--text-secondary);font-size:11px;">→ patch any event fields</span></div>
+      <div><code>deleteEvent(id)</code> &nbsp;<span style="color:var(--text-secondary);font-size:11px;">→ hard delete (cascade wipes guests + rsvps)</span></div>
+      <div><code>sendManualMagicLink(email)</code> &nbsp;<span style="color:var(--text-secondary);font-size:11px;">→ calls supabase.signInWithMagicLink() for target email</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>UI Mockup — Admin Dashboard</h3>
+  <div class="mockup">
+    <div class="mockup-header">http://localhost:4200/admin</div>
+    <div class="mockup-body" style="font-size:11px;">
+
+      <!-- Nav -->
+      <div style="background:#1e293b;color:#f8fafc;padding:8px 16px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:16px;margin:-12px -12px 12px -12px;">
+        <span style="color:#a78bfa;font-weight:bold;font-size:13px;">⚡ Admin Command Center</span>
+        <span style="margin-left:auto;font-size:10px;color:#64748b;">lakshikac@embla.asia</span>
+        <span style="font-size:10px;color:#64748b;cursor:pointer;">Sign Out</span>
+      </div>
+
+      <!-- Search bar -->
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <input class="mock-input" placeholder="🔍  Search by host email, event title, or event ID..." style="flex:1;font-size:11px;">
+        <select class="mock-input" style="width:130px;font-size:11px;">
+          <option>All Statuses</option>
+          <option>Upcoming</option>
+          <option>Ongoing</option>
+          <option>Passed</option>
+          <option>Disabled</option>
+        </select>
+      </div>
+
+      <!-- Event table -->
+      <table style="width:100%;border-collapse:collapse;font-size:10px;">
+        <thead>
+          <tr style="background:#f1f5f9;color:#475569;">
+            <th style="text-align:left;padding:6px 8px;">Host Email</th>
+            <th style="text-align:left;padding:6px 8px;">Event Title</th>
+            <th style="text-align:left;padding:6px 8px;">Date</th>
+            <th style="text-align:left;padding:6px 8px;">Status</th>
+            <th style="text-align:left;padding:6px 8px;">Enabled</th>
+            <th style="text-align:left;padding:6px 8px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px 8px;">john@email.com</td>
+            <td style="padding:6px 8px;">Reza's Wedding</td>
+            <td style="padding:6px 8px;">2025-12-20</td>
+            <td style="padding:6px 8px;"><span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:10px;">Upcoming</span></td>
+            <td style="padding:6px 8px;"><span style="background:#7c3aed;color:white;padding:2px 8px;border-radius:10px;font-size:10px;">ON</span></td>
+            <td style="padding:6px 8px;display:flex;gap:6px;">
+              <button class="mock-button" style="font-size:9px;padding:2px 6px;">✏️ Edit</button>
+              <button class="mock-button" style="font-size:9px;padding:2px 6px;background:#fee2e2;color:#dc2626;">🗑 Delete</button>
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid #e2e8f0;background:#fafafa;">
+            <td style="padding:6px 8px;">sara@email.com</td>
+            <td style="padding:6px 8px;">Tech Conf 2025</td>
+            <td style="padding:6px 8px;">2025-06-10</td>
+            <td style="padding:6px 8px;"><span style="background:#fee2e2;color:#dc2626;padding:2px 6px;border-radius:10px;">Disabled</span></td>
+            <td style="padding:6px 8px;"><span style="background:#e2e8f0;color:#64748b;padding:2px 8px;border-radius:10px;font-size:10px;">OFF</span></td>
+            <td style="padding:6px 8px;display:flex;gap:6px;">
+              <button class="mock-button" style="font-size:9px;padding:2px 6px;">✏️ Edit</button>
+              <button class="mock-button" style="font-size:9px;padding:2px 6px;background:#fee2e2;color:#dc2626;">🗑 Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 8px;">ali@email.com</td>
+            <td style="padding:6px 8px;">Birthday Bash</td>
+            <td style="padding:6px 8px;">2025-03-01</td>
+            <td style="padding:6px 8px;"><span style="background:#f1f5f9;color:#64748b;padding:2px 6px;border-radius:10px;">Passed</span></td>
+            <td style="padding:6px 8px;"><span style="background:#7c3aed;color:white;padding:2px 8px;border-radius:10px;font-size:10px;">ON</span></td>
+            <td style="padding:6px 8px;display:flex;gap:6px;">
+              <button class="mock-button" style="font-size:9px;padding:2px 6px;">✏️ Edit</button>
+              <button class="mock-button" style="font-size:9px;padding:2px 6px;background:#fee2e2;color:#dc2626;">🗑 Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Magic link panel -->
+      <div style="margin-top:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+        <div style="font-weight:bold;font-size:11px;margin-bottom:6px;color:#1e293b;">✉️ Manual Magic Link Dispatcher</div>
+        <div style="display:flex;gap:8px;">
+          <input class="mock-input" placeholder="Search user by email..." style="flex:1;font-size:11px;">
+          <button class="mock-button" style="font-size:11px;background:#7c3aed;color:white;">Send Magic Email</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Verification Guard Modal</h3>
+  <div class="mockup">
+    <div class="mockup-header">Triggered on any Save action</div>
+    <div class="mockup-body" style="font-size:11px;">
+      <div style="background:rgba(0,0,0,0.5);border-radius:6px;padding:20px;text-align:center;">
+        <div style="background:white;border-radius:8px;padding:20px;max-width:340px;margin:0 auto;">
+          <div style="font-size:20px;margin-bottom:8px;">⚠️</div>
+          <div style="font-weight:bold;font-size:13px;margin-bottom:6px;">You are editing an active event</div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:12px;">Type <strong>VERIFY</strong> to confirm these changes.</div>
+          <input class="mock-input" placeholder="Type VERIFY..." style="width:100%;text-align:center;font-size:12px;margin-bottom:10px;">
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <button class="mock-button" style="background:#e2e8f0;color:#64748b;font-size:11px;">Cancel</button>
+            <button class="mock-button" style="background:#e2e8f0;color:#94a3b8;font-size:11px;cursor:not-allowed;">Save Changes</button>
+          </div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:6px;">"Save Changes" unlocks when input matches exactly</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:16px;font-size:12px;color:var(--text-secondary);">Does this structure and UI look right? Reply in terminal.</p>
