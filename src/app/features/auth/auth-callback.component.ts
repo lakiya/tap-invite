@@ -119,16 +119,21 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const params = new URLSearchParams(this.document.location.hash.substring(1));
-    const error = params.get('error');
+    // Check both hash fragment (implicit flow) and query string (PKCE flow) for errors
+    const hashParams  = new URLSearchParams(this.document.location.hash.substring(1));
+    const queryParams = new URLSearchParams(this.document.location.search);
+    const error       = hashParams.get('error') ?? queryParams.get('error');
 
     if (error) {
-      const description = params.get('error_description') ?? 'The magic link has expired or already been used.';
+      const description =
+        hashParams.get('error_description') ??
+        queryParams.get('error_description') ??
+        'The magic link has expired or already been used.';
       this.errorMessage.set(description.replace(/\+/g, ' '));
       return;
     }
 
-    if (!this.document.location.hash) {
+    if (!this.document.location.hash && !this.document.location.search) {
       this.router.navigate(['/login']);
       return;
     }
@@ -156,9 +161,13 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
   private async navigateByRole(userId: string) {
     if (this.navigated) return;
     this.navigated = true;
-    const profile = await this.profiles.getMyProfile(userId);
-    const dest = profile?.role === 'super_admin' ? '/admin' : '/dashboard';
-    this.router.navigate([dest]);
+    try {
+      const profile = await this.profiles.getMyProfile(userId);
+      const dest = profile?.role === 'super_admin' ? '/admin' : '/dashboard';
+      this.router.navigate([dest]);
+    } catch {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   ngOnDestroy() {
