@@ -72,5 +72,51 @@ describe('Supabase', () => {
 
       await expect(service.updateEvent('event-123', { title: 'x' })).rejects.toBeTruthy();
     });
+
+    it('passes google_maps_url in changes when provided', async () => {
+      const mockUpdate = vi.fn().mockReturnThis();
+      const mockEq    = vi.fn().mockResolvedValue({ error: null });
+      vi.spyOn(service.client, 'from').mockReturnValue({ update: mockUpdate, eq: mockEq } as any);
+
+      await service.updateEvent('event-123', { google_maps_url: 'https://maps.google.com/xyz' });
+
+      expect(mockUpdate).toHaveBeenCalledWith({ google_maps_url: 'https://maps.google.com/xyz' });
+    });
+  });
+
+  describe('createEvent', () => {
+    it('inserts event with google_maps_url when provided', async () => {
+      const mockInsert = vi.fn().mockReturnThis();
+      const mockSelect = vi.fn().mockReturnThis();
+      const mockSingle = vi.fn().mockResolvedValue({ data: { id: 'e1' }, error: null });
+      vi.spyOn(service.client, 'from').mockReturnValue(
+        { insert: mockInsert, select: mockSelect, single: mockSingle } as any
+      );
+
+      await service.createEvent('host-1', 'My Party', '2026-07-01', 'Colombo', 'https://maps.google.com/abc');
+
+      expect(mockInsert).toHaveBeenCalledWith([{
+        host_id: 'host-1',
+        title: 'My Party',
+        event_date: '2026-07-01',
+        location_text: 'Colombo',
+        google_maps_url: 'https://maps.google.com/abc',
+      }]);
+    });
+
+    it('coerces empty googleMapsUrl to null', async () => {
+      const mockInsert = vi.fn().mockReturnThis();
+      const mockSelect = vi.fn().mockReturnThis();
+      const mockSingle = vi.fn().mockResolvedValue({ data: { id: 'e1' }, error: null });
+      vi.spyOn(service.client, 'from').mockReturnValue(
+        { insert: mockInsert, select: mockSelect, single: mockSingle } as any
+      );
+
+      await service.createEvent('host-1', 'My Party', '2026-07-01', 'Colombo', '');
+
+      expect(mockInsert).toHaveBeenCalledWith([
+        expect.objectContaining({ google_maps_url: null })
+      ]);
+    });
   });
 });

@@ -59,10 +59,16 @@ export class Supabase {
     if (error) throw error;
   }
 
-  async createEvent(hostId: string, title: string, date: string, location: string) {
+  async createEvent(hostId: string, title: string, date: string, location: string, googleMapsUrl?: string | null) {
     const { data, error } = await this.supabase
       .from('events')
-      .insert([{ host_id: hostId, title, event_date: date, location_text: location }])
+      .insert([{
+        host_id: hostId,
+        title,
+        event_date: date,
+        location_text: location,
+        google_maps_url: googleMapsUrl || null,
+      }])
       .select().single();
     if (error) throw error;
     return data;
@@ -109,7 +115,7 @@ export class Supabase {
 
   async updateEvent(
     eventId: string,
-    changes: { title?: string; location_text?: string; template_id?: string }
+    changes: { title?: string; location_text?: string; template_id?: string; google_maps_url?: string | null }
   ): Promise<void> {
     const { error } = await this.supabase
       .from('events')
