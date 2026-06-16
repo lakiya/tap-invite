@@ -41,13 +41,11 @@ export class Supabase {
     return data;
   }
 
-  async signInWithMagicLink(email: string, redirectTo: string) {
-    const { data, error } = await this.supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectTo }
+  async signInWithMagicLink(email: string, redirectTo: string): Promise<void> {
+    const { error } = await this.supabase.functions.invoke('send-magic-link', {
+      body: { email, redirectTo }
     });
     if (error) throw error;
-    return data;
   }
 
   async getCurrentUser() {
