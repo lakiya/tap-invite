@@ -48,6 +48,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Supabase CLI temp files (contains project ref and org ID)
+supabase/.temp/
+
 # Generated Angular environment files (values live in .env)
 src/environments/environment.ts
 src/environments/environment.prod.ts
