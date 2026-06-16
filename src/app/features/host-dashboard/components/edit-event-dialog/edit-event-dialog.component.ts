@@ -14,6 +14,7 @@ export interface EditDialogResult {
   title: string;
   location_text: string;
   template_id: string;
+  google_maps_url: string | null;
 }
 
 @Component({
@@ -28,8 +29,9 @@ export class EditEventDialogComponent {
   readonly data: EditDialogData = inject(MAT_DIALOG_DATA);
 
   form = new FormGroup({
-    title:         new FormControl(this.data.event.title,         Validators.required),
-    location_text: new FormControl(this.data.event.location_text ?? ''),
+    title:           new FormControl(this.data.event.title,                  Validators.required),
+    location_text:   new FormControl(this.data.event.location_text ?? ''),
+    google_maps_url: new FormControl(this.data.event.google_maps_url ?? ''),
   });
 
   selectedTemplateId = signal(this.data.event.template_id ?? 'default-minimal');
@@ -37,9 +39,10 @@ export class EditEventDialogComponent {
   save(): void {
     if (this.form.invalid) return;
     const result: EditDialogResult = {
-      title:         this.form.value.title!,
-      location_text: this.form.value.location_text ?? '',
-      template_id:   this.selectedTemplateId(),
+      title:           this.form.value.title!,
+      location_text:   this.form.value.location_text ?? '',
+      template_id:     this.selectedTemplateId(),
+      google_maps_url: this.form.value.google_maps_url || null,
     };
     this.dialogRef.close(result);
   }
