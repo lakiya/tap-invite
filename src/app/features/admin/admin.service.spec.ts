@@ -148,23 +148,25 @@ describe('AdminService', () => {
   // ---- sendManualMagicLink ----
 
   describe('sendManualMagicLink', () => {
-    it('calls signInWithOtp with correct email and redirectTo', async () => {
-      const mockSignInWithOtp = vi.fn().mockResolvedValue({ error: null });
-      vi.spyOn(supabase.client.auth, 'signInWithOtp').mockImplementation(mockSignInWithOtp);
+    it('calls functions.invoke with correct function name, email and redirectTo', async () => {
+      const mockInvoke = vi.fn().mockResolvedValue({ error: null });
+      vi.spyOn(supabase.client.functions, 'invoke').mockImplementation(mockInvoke);
 
       await service.sendManualMagicLink('user@example.com');
 
-      expect(mockSignInWithOtp).toHaveBeenCalledWith({
-        email: 'user@example.com',
-        options: { emailRedirectTo: 'https://test.example.com/auth/callback' },
+      expect(mockInvoke).toHaveBeenCalledWith('send-magic-link', {
+        body: {
+          email: 'user@example.com',
+          redirectTo: 'https://test.example.com/auth/callback',
+        },
       });
     });
 
-    it('throws when Supabase returns an error', async () => {
-      const fakeError = { message: 'OTP send failed' };
-      vi.spyOn(supabase.client.auth, 'signInWithOtp').mockResolvedValue({ data: { user: null, session: null }, error: fakeError as any });
+    it('throws when functions.invoke returns an error', async () => {
+      const fakeError = { message: 'Edge function failed' };
+      vi.spyOn(supabase.client.functions, 'invoke').mockResolvedValue({ data: null, error: fakeError as any });
 
-      await expect(service.sendManualMagicLink('bad@example.com')).rejects.toMatchObject({ message: 'OTP send failed' });
+      await expect(service.sendManualMagicLink('bad@example.com')).rejects.toMatchObject({ message: 'Edge function failed' });
     });
   });
 });
