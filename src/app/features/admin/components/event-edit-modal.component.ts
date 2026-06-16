@@ -115,7 +115,7 @@ export class EventEditModalComponent implements OnInit {
 
   ngOnInit() {
     this.editTitle = this.event.title;
-    this.editDate = this.event.event_date;
+    this.editDate = this.event.event_date?.split('T')[0] ?? '';
     this.editVenue = this.event.location_text;
     this.editMapsUrl = this.event.google_maps_url ?? '';
     this.guests.forEach(g => { this.guestEdits[g.id] = g.display_name; });
