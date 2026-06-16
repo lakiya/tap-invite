@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, TransferState } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideLottieOptions } from 'ngx-lottie';
 import { APP_ENV, APP_ENV_STATE_KEY, AppEnv } from './core/tokens/app-env';
@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideClientHydration(),
+    provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
     provideLottieOptions({
       player: () => import('lottie-web'),

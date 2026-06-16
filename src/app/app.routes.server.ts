@@ -16,9 +16,19 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client
   },
   {
-    // Magic link hash fragment is client-only; cannot be prerendered
+    // Magic link hash/query fragment is client-only; cannot be prerendered
     path: 'auth/callback',
     renderMode: RenderMode.Client
+  },
+  {
+    // Uses document.location.origin to build redirect URL; needs real origin
+    path: 'login',
+    renderMode: RenderMode.Server
+  },
+  {
+    // Support page that may use document.location
+    path: 'magic-link',
+    renderMode: RenderMode.Server
   },
   {
     path: '**',

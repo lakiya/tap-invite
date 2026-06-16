@@ -10,10 +10,12 @@ const serverConfig: ApplicationConfig = {
     {
       provide: APP_ENV,
       useFactory: (ts: TransferState): AppEnv => {
-        const env: AppEnv = {
-          supabaseUrl: process.env['SUPABASE_URL'] ?? '',
-          supabaseKey: process.env['SUPABASE_KEY'] ?? '',
-        };
+        const supabaseUrl = process.env['SUPABASE_URL'];
+        const supabaseKey = process.env['SUPABASE_KEY'];
+        if (!supabaseUrl || !supabaseKey) {
+          throw new Error('[server] SUPABASE_URL and SUPABASE_KEY must be set as environment variables');
+        }
+        const env: AppEnv = { supabaseUrl, supabaseKey };
         ts.set(APP_ENV_STATE_KEY, env);
         return env;
       },
