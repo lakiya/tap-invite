@@ -159,15 +159,6 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  async sendEmailInvitation(guestId: string) {
-    try {
-      await this.supabase.sendEmailInvitation(guestId);
-      this.toast.success('Invitation email sent!');
-    } catch {
-      this.toast.error('Failed to send email. The email service may not be set up yet.');
-    }
-  }
-
   async handleLogout() {
     await this.supabase.signOut();
     this.router.navigate(['/login']);
