@@ -18,7 +18,7 @@ export class EventFormComponent {
 
   isSubmitting = signal(false);
   submitError = signal<string | null>(null);
-  fields = { title: '', date: '', location: '' };
+  fields = { title: '', date: '', location: '', googleMapsUrl: '' };
 
   async handleSubmit() {
     if (!this.fields.title.trim()) return;
@@ -29,7 +29,8 @@ export class EventFormComponent {
         this.hostId,
         this.fields.title,
         this.fields.date,
-        this.fields.location
+        this.fields.location,
+        this.fields.googleMapsUrl || null
       );
       this.eventCreated.emit(event);
     } catch {

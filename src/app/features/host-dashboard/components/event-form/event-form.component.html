@@ -35,6 +35,16 @@
       />
     </div>
 
+    <div class="field-group">
+      <label class="field-label">Google Maps URL</label>
+      <input
+        class="field-input"
+        [(ngModel)]="fields.googleMapsUrl"
+        name="googleMapsUrl"
+        placeholder="https://maps.google.com/..."
+      />
+    </div>
+
     <button class="submit-btn" type="submit" [disabled]="isSubmitting() || !fields.title.trim()">
       {{ isSubmitting() ? 'Launching...' : '🚀 Launch Event' }}
     </button>
