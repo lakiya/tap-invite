@@ -1,4 +1,3 @@
-// src/app/features/guest-view/components/guest-view.component.ts
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -23,10 +22,11 @@ export class GuestViewComponent implements OnInit {
   eventData  = signal<EventData | null>(null);
   guestData  = signal<GuestData | null>(null);
   rsvpStatus = signal<RsvpStatus>('Pending');
-  isLoading   = signal(true);
-  hasError    = signal(false);
-  isDisabled  = signal(false);
-  rsvpError   = signal<string | null>(null);
+  isLoading  = signal(true);
+  hasError   = signal(false);
+  isDisabled = signal(false);
+  isPast     = signal(false);
+  rsvpError  = signal<string | null>(null);
 
   templateContext = computed<TemplateContext | null>(() => {
     const event = this.eventData();
@@ -57,12 +57,21 @@ export class GuestViewComponent implements OnInit {
       this.isLoading.set(true);
       const [eventRes, guestRes, rsvpRes] = await Promise.all([
         this.supabase.client.from('events').select('*').eq('id', this.eventId()).single(),
-        this.supabase.client.from('guests').select('*').eq('id', this.guestId()).single(),
+        this.supabase.client.from('guests').select('*')
+          .eq('id', this.guestId())
+          .eq('event_id', this.eventId())  // prevent cross-event data access
+          .single(),
         this.supabase.client.from('rsvps').select('*').eq('guest_id', this.guestId()).maybeSingle()
       ]);
       if (eventRes.error || guestRes.error) throw new Error('Invitation not found');
       this.eventData.set(eventRes.data as EventData);
       this.isDisabled.set((eventRes.data as any).is_enabled === false);
+
+      // Block RSVPs for past events
+      const eventDay = (eventRes.data as any).event_date?.split('T')[0] ?? '';
+      const today    = new Date().toISOString().split('T')[0];
+      this.isPast.set(!!eventDay && eventDay < today);
+
       this.guestData.set(guestRes.data as GuestData);
       if (!rsvpRes.error && rsvpRes.data?.status) {
         this.rsvpStatus.set(rsvpRes.data.status as RsvpStatus);
@@ -75,6 +84,10 @@ export class GuestViewComponent implements OnInit {
   }
 
   async handleRsvpChange(status: RsvpStatus) {
+    if (this.isPast()) {
+      this.rsvpError.set('This event has already passed.');
+      return;
+    }
     if (status === 'Pending') { this.rsvpStatus.set('Pending'); return; }
     const guestId = this.guestId();
     if (!guestId) return;
