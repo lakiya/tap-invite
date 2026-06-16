@@ -1,16 +1,11 @@
-import { Component } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-magic-link',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './magic-link.component.html',
   styleUrls: ['./magic-link.component.css']
 })
-export class MagicLinkComponent {
-  email = '';
-  isLoading = false;
-  loginError: string | null = null;
-}
+export class MagicLinkComponent {}
