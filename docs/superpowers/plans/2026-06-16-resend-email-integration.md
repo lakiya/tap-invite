@@ -165,7 +165,7 @@ Done: send-magic-link
 ```bash
 curl -X POST https://vnvywgtrdywfvrlrdgwq.supabase.co/functions/v1/send-magic-link \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudnl3Z3RyZHl3ZnZybHJkZ3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzQzOTEsImV4cCI6MjA5NjkxMDM5MX0.NSBw9X03L-zvcG0m09LRE7WZW8iMI4lSzqSW2ZjYnG4" \
+  -H "Authorization: Bearer <your-anon-key>" \
   -d '{"email":"lakshikachirantha1@gmail.com","redirectTo":"http://localhost:4200/auth/callback"}'
 ```
 
