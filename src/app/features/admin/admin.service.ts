@@ -75,9 +75,8 @@ export class AdminService {
 
   async sendManualMagicLink(email: string): Promise<void> {
     const redirectTo = `${this.document.location.origin}/auth/callback`;
-    const { error } = await this.supabase.client.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectTo }
+    const { error } = await this.supabase.client.functions.invoke('send-magic-link', {
+      body: { email, redirectTo }
     });
     if (error) throw error;
   }
