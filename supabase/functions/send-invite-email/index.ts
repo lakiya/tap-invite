@@ -6,6 +6,15 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -65,9 +74,11 @@ Deno.serve(async (req) => {
     }
 
     const invitationUrl = `${siteUrl}/w/${guest.event_id}/${guest.id}`
-    const eventDate = new Date(event.event_date).toLocaleDateString('en-US', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    })
+    const eventDate = event.event_date
+      ? new Date(event.event_date).toLocaleDateString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        })
+      : 'Date TBD'
 
     const resend = new Resend(resendApiKey)
     const { error: emailError } = await resend.emails.send({
@@ -77,10 +88,10 @@ Deno.serve(async (req) => {
       html: `
         <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#f8fafc;">
           <div style="background:white;border-radius:12px;padding:32px;border:1px solid #e2e8f0;">
-            <h2 style="margin:0 0 4px;font-size:1.4rem;color:#1e293b;font-weight:800;">You're invited, ${guest.display_name}!</h2>
-            <h3 style="margin:0 0 8px;font-size:1.1rem;color:#7c3aed;font-weight:700;">${event.title}</h3>
+            <h2 style="margin:0 0 4px;font-size:1.4rem;color:#1e293b;font-weight:800;">You're invited, ${escapeHtml(guest.display_name)}!</h2>
+            <h3 style="margin:0 0 8px;font-size:1.1rem;color:#7c3aed;font-weight:700;">${escapeHtml(event.title)}</h3>
             <p style="color:#64748b;margin:0 0 4px;font-size:0.9rem;">📅 ${eventDate}</p>
-            <p style="color:#64748b;margin:0 0 24px;font-size:0.9rem;">📍 ${event.location_text}</p>
+            <p style="color:#64748b;margin:0 0 24px;font-size:0.9rem;">📍 ${escapeHtml(event.location_text ?? '')}</p>
             <a href="${invitationUrl}" style="display:inline-block;background:#7c3aed;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.95rem;">View Invitation</a>
             <p style="color:#94a3b8;font-size:0.75rem;margin:24px 0 0;word-break:break-all;">Or copy: ${invitationUrl}</p>
           </div>
