@@ -55,13 +55,12 @@ export class AddGuestFormComponent {
         this.name.trim(),
         this.phone.trim() || undefined,
         this.email.trim() || undefined
-      ).then(() => {
-        this.guestAdded.emit();
-      });
+      );
+      this.resetForm();
+      this.guestAdded.emit();
     } catch {
       this.submitError.set('Failed to add guest. Please try again.');
     } finally {
-      this.resetForm();
       this.isSubmitting.set(false);
     }
   }
