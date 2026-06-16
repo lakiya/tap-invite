@@ -1,6 +1,6 @@
 // src/app/features/host-dashboard/components/host-dashboard.component.ts
 import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Supabase } from '../../../core/services/supabase/supabase';
@@ -32,6 +32,7 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
   private platformId  = inject(PLATFORM_ID);
   private toast       = inject(ToastService);
   private dialog      = inject(MatDialog);
+  private document    = inject(DOCUMENT);
 
   userId             = signal<string | null>(null);
   isLoading          = signal(true);
@@ -58,6 +59,8 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
         await this.loadGuests(events[0].id);
         this.subscribeToRsvpUpdates(events[0].id);
       }
+    } catch {
+      this.toast.error('Could not load your dashboard. Please refresh.');
     } finally {
       this.isLoading.set(false);
     }
@@ -88,7 +91,9 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
   openEditDialog() {
     const event = this.activeEvent();
     if (!event) return;
-    const isMobile = window.innerWidth <= 600;
+    const isMobile = isPlatformBrowser(this.platformId)
+      ? this.document.documentElement.clientWidth <= 600
+      : false;
     const ref = this.dialog.open(EditEventDialogComponent, {
       data: { event },
       width: isMobile ? '100vw' : '760px',

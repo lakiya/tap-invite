@@ -28,6 +28,7 @@ export class ThemeService {
 
   private applyDark(dark: boolean): void {
     this._isDark.set(dark);
+    if (!isPlatformBrowser(this.platformId)) return;
     if (dark) {
       document.documentElement.setAttribute('data-theme', 'dark');
     } else {
