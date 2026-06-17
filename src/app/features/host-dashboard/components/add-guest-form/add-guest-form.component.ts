@@ -1,10 +1,8 @@
-import { Component, Input, Output, EventEmitter, inject, signal, output } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Supabase } from '../../../../core/services/supabase/supabase';
-
-const PHONE_REGEX = /^\+?[\d\s\-()]{7,15}$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { PHONE_REGEX, EMAIL_REGEX } from '../../../../shared/validation/guest-validation';
 
 @Component({
   selector: 'app-add-guest-form',
@@ -16,6 +14,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export class AddGuestFormComponent {
   @Input() eventId!: string;
   @Output() guestAdded = new EventEmitter<void>();
+  @Output() bulkUploadRequested = new EventEmitter<void>();
 
   private supabase = inject(Supabase);
 

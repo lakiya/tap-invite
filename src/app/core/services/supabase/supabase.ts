@@ -98,6 +98,24 @@ export class Supabase {
     return data;
   }
 
+  async addGuestsBulk(
+    eventId: string,
+    guests: Array<{ display_name: string; phone_number?: string | null; email?: string | null }>
+  ) {
+    const rows = guests.map(g => ({
+      event_id: eventId,
+      display_name: g.display_name,
+      phone_number: g.phone_number || null,
+      email: g.email || null,
+    }));
+    const { data, error } = await this.supabase
+      .from('guests')
+      .insert(rows)
+      .select();
+    if (error) throw error;
+    return data;
+  }
+
   async deleteGuest(guestId: string) {
     const { error } = await this.supabase
       .from('guests')

@@ -72,4 +72,10 @@
       <p class="hint hint-error">{{ submitError() }}</p>
     }
   </form>
+
+  <div class="bulk-divider"><span>or</span></div>
+
+  <button class="bulk-upload-btn" type="button" (click)="bulkUploadRequested.emit()">
+    ⬆ Bulk upload from CSV / Excel
+  </button>
 </div>

@@ -11,6 +11,8 @@ import { AddGuestFormComponent } from './add-guest-form/add-guest-form.component
 import { GuestTableComponent } from './guest-table/guest-table.component';
 import { TemplateGalleryComponent } from '../../../features/templates/components/template-gallery/template-gallery.component';
 import { EditEventDialogComponent, EditDialogResult } from './edit-event-dialog/edit-event-dialog.component';
+import { BulkUploadDialogComponent } from './bulk-upload-dialog/bulk-upload-dialog.component';
+import { normalizeEmail, normalizePhone, type ExistingGuestKey } from './bulk-upload-dialog/guest-import';
 
 @Component({
   selector: 'app-host-dashboard',
@@ -111,6 +113,35 @@ export class HostDashboardComponent implements OnInit, OnDestroy {
       } catch {
         this.toast.error('Could not update event. Please try again.');
       }
+    });
+  }
+
+  openBulkUpload() {
+    const event = this.activeEvent();
+    if (!event) return;
+
+    const existingGuests: ExistingGuestKey[] = this.guests().map(g => ({
+      email: normalizeEmail(g.email ?? ''),
+      phone: normalizePhone(g.phone_number ?? ''),
+    }));
+
+    const isMobile = isPlatformBrowser(this.platformId)
+      ? this.document.documentElement.clientWidth <= 600
+      : false;
+
+    const ref = this.dialog.open(BulkUploadDialogComponent, {
+      data: { eventId: event.id, existingGuests },
+      width: isMobile ? '100vw' : '860px',
+      maxWidth: '100vw',
+      maxHeight: isMobile ? '92vh' : '90vh',
+      position: isMobile ? { bottom: '0' } : undefined,
+      panelClass: 'edit-event-dialog-panel',
+    });
+
+    ref.afterClosed().subscribe(async (insertedCount: number | undefined) => {
+      if (insertedCount == null) return;
+      await this.loadGuests(event.id);
+      this.toast.success(`${insertedCount} guest${insertedCount === 1 ? '' : 's'} added successfully!`);
     });
   }
 
