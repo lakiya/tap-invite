@@ -21,6 +21,7 @@
   max-width: 420px;
   height: min(640px, 86vh);
   perspective: 1400px;
+  transform-style: preserve-3d;
 }
 
 /* ── Shared face rules ── */
@@ -149,6 +150,7 @@
 .wb-inside {
   background: #fffaf4;
   display: flex;
+  overflow: hidden;
   transform: rotateY(180deg);
 }
 
@@ -159,6 +161,7 @@
   flex-direction: column;
   padding: 32px 20px 24px;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .wb-spine {

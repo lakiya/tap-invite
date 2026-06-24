@@ -65,7 +65,9 @@ type BookState = 'cover' | 'inside' | 'back';
             } @else {
               <p class="wb-notes-empty">❧</p>
             }
-            <button class="wb-rsvp-btn" (click)="toBack()" type="button">RSVP →</button>
+            @if (context().event.show_rsvp !== false) {
+              <button class="wb-rsvp-btn" (click)="toBack()" type="button">RSVP →</button>
+            }
           </div>
         </div>
 
