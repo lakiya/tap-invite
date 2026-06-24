@@ -14,7 +14,7 @@ const mockContext: TemplateContext = {
   event: {
     id: 'e1', host_id: 'h1', title: 'Test Event',
     event_date: '2025-07-12T18:00:00', location_text: 'Venue',
-    template_id: 'default-minimal', google_maps_url: null,
+    template_id: 'default-minimal', google_maps_url: null, show_rsvp: true, notes: null,
   },
   guest: { id: 'g1', event_id: 'e1', display_name: 'Alice' },
   rsvpStatus: 'Pending',
