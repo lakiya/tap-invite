@@ -1,0 +1,10 @@
+import { TemplateManifest } from '../template.types';
+
+export const weddingBookManifest: TemplateManifest = {
+  id: 'wedding-book',
+  label: 'Wedding Book',
+  thumbnail: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="213"><rect width="160" height="213" fill="%23fffaf4" rx="6"/><rect x="10" y="10" width="140" height="193" fill="none" stroke="%23c9a84c" stroke-width="0.7" rx="4" opacity="0.35"/><rect x="10" y="10" width="16" height="1.5" fill="%23c9a84c" opacity="0.6"/><rect x="10" y="10" width="1.5" height="16" fill="%23c9a84c" opacity="0.6"/><rect x="134" y="10" width="16" height="1.5" fill="%23c9a84c" opacity="0.6"/><rect x="148.5" y="10" width="1.5" height="16" fill="%23c9a84c" opacity="0.6"/><rect x="10" y="211.5" width="16" height="1.5" fill="%23c9a84c" opacity="0.6"/><rect x="10" y="187" width="1.5" height="16" fill="%23c9a84c" opacity="0.6"/><rect x="134" y="211.5" width="16" height="1.5" fill="%23c9a84c" opacity="0.6"/><rect x="148.5" y="187" width="1.5" height="16" fill="%23c9a84c" opacity="0.6"/><ellipse cx="80" cy="72" rx="18" ry="20" fill="%23c9a84c" opacity="0.08"/><ellipse cx="80" cy="72" rx="10" ry="12" fill="%23c9a84c" opacity="0.15"/><rect x="76" y="68" width="8" height="8" fill="%23c9a84c" opacity="0.5" transform="rotate(45 80 72)"/><line x1="36" y1="102" x2="124" y2="102" stroke="%23c9a84c" stroke-width="0.8" opacity="0.5"/><rect x="24" y="111" width="112" height="7" rx="3.5" fill="%233a2e1e" opacity="0.45"/><rect x="36" y="124" width="88" height="5.5" rx="2.75" fill="%233a2e1e" opacity="0.3"/><line x1="36" y1="138" x2="124" y2="138" stroke="%23c9a84c" stroke-width="0.8" opacity="0.5"/><rect x="44" y="146" width="72" height="5" rx="2.5" fill="%237a6a52" opacity="0.45"/><circle cx="67" cy="168" r="3" fill="%23c9a84c" opacity="0.4"/><rect x="74" y="165" width="38" height="4" rx="2" fill="%237a6a52" opacity="0.3"/></svg>`,
+  tags: ['wedding', 'elegant', 'book'],
+  load: () =>
+    import('./wedding-book.template').then(m => m.WeddingBookTemplateComponent),
+};
