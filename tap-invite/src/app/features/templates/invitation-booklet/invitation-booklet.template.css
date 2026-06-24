@@ -1,1 +1,466 @@
-/* Invitation Booklet styles — added in Tasks 5–7 */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+/* ── Scene ── */
+.ib-scene {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #f5ede0 0%, #ede0cf 50%, #e8d8c0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px 64px;
+  font-family: 'Playfair Display', Georgia, serif;
+  perspective: 1600px;
+  perspective-origin: center center;
+}
+
+/* ── Wrapper: positions tap zones and dots relative to the book ── */
+.ib-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 740px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  user-select: none;
+}
+
+/* ── Book frame ── */
+.ib-book {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: min(520px, 82vh);
+}
+
+/* ── Pages ── */
+.ib-page {
+  flex: 1;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+/* ── Spine ── */
+.ib-spine {
+  width: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    to right,
+    rgba(100, 70, 20, 0.12) 0%,
+    rgba(201, 168, 76, 0.55) 35%,
+    rgba(201, 168, 76, 0.55) 65%,
+    rgba(100, 70, 20, 0.12) 100%
+  );
+  z-index: 10;
+  align-self: stretch;
+  box-shadow:
+    -3px 0 12px rgba(100, 70, 20, 0.10),
+     3px 0 12px rgba(100, 70, 20, 0.10);
+}
+
+/* ── Faces ── */
+.ib-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow:
+    0 28px 60px rgba(100, 70, 20, 0.20),
+    0 0 0 1px rgba(201, 168, 76, 0.15);
+}
+
+.ib-face-back { transform: rotateY(180deg); }
+
+.ib-page-left  .ib-face { border-radius: 14px 0 0 14px; }
+.ib-page-right .ib-face { border-radius: 0 14px 14px 0; }
+
+/* ── 3-state rotations ── */
+
+/* COVER: right page shows front (Page 1), left page is edge-on */
+.ib-cover .ib-page-left  { transform: rotateY(-90deg); }
+.ib-cover .ib-page-right { transform: rotateY(0deg);   }
+
+/* SPREAD: left shows front (Page 2), right shows back (Page 3) */
+.ib-spread .ib-page-left  { transform: rotateY(0deg);    }
+.ib-spread .ib-page-right { transform: rotateY(-180deg); }
+
+/* BACK: left shows back (Page 4), right page is edge-on */
+.ib-back .ib-page-left  { transform: rotateY(180deg);  }
+.ib-back .ib-page-right { transform: rotateY(-90deg);  }
+
+/* ── Pointer events — disable hidden/edge-on faces ── */
+.ib-cover  .ib-page-left  .ib-face-front,
+.ib-cover  .ib-page-left  .ib-face-back,
+.ib-cover  .ib-page-right .ib-face-back  { pointer-events: none; }
+
+.ib-spread .ib-page-left  .ib-face-back,
+.ib-spread .ib-page-right .ib-face-front { pointer-events: none; }
+
+.ib-back   .ib-page-right .ib-face-front,
+.ib-back   .ib-page-right .ib-face-back,
+.ib-back   .ib-page-left  .ib-face-front { pointer-events: none; }
+
+/* ── Shared utilities ── */
+.ib-gold-rule {
+  width: 56px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  margin: 0 auto 14px;
+  flex-shrink: 0;
+}
+
+.ib-corner {
+  position: absolute;
+  color: #c9a84c;
+  font-size: 0.68rem;
+  opacity: 0.45;
+}
+.ib-tl { top: 14px;    left: 16px;  }
+.ib-tr { top: 14px;    right: 16px; }
+.ib-bl { bottom: 14px; left: 16px;  }
+.ib-br { bottom: 14px; right: 16px; }
+
+.ib-inner-content {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 3vw, 28px) clamp(12px, 2.5vw, 22px) clamp(14px, 2.5vw, 20px);
+  width: 100%;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.ib-section-ornament {
+  color: #c9a84c;
+  font-size: 0.4rem;
+  text-align: center;
+  margin: 0 0 5px;
+}
+
+.ib-section-label {
+  color: #c9a84c;
+  font-size: clamp(0.46rem, 1.1vw, 0.54rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 12px;
+  font-style: normal;
+}
+
+.ib-detail-block { margin-bottom: 14px; }
+
+.ib-detail-label {
+  font-size: clamp(0.44rem, 1vw, 0.52rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin: 0 0 3px;
+  font-style: normal;
+}
+
+.ib-detail-primary {
+  font-size: clamp(0.66rem, 1.8vw, 0.78rem);
+  color: #3a2e1e;
+  margin: 0 0 2px;
+  line-height: 1.4;
+}
+
+.ib-detail-secondary {
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+  color: #7a6a52;
+  font-style: italic;
+  margin: 0;
+}
+
+.ib-map-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: clamp(0.58rem, 1.4vw, 0.66rem);
+  color: #c9a84c;
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 600;
+}
+.ib-map-link:hover { text-decoration: underline; }
+
+.ib-notes-text {
+  color: #3a2e1e;
+  font-size: clamp(0.64rem, 1.8vw, 0.76rem);
+  font-style: italic;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* ── Page 1 — Cover ── */
+.ib-side-1 {
+  background: #fffaf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.ib-side-1::before {
+  content: '';
+  position: absolute;
+  inset: 13px;
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.ib-s1-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 36px 22px;
+  gap: 0;
+}
+
+.ib-ornament {
+  color: #c9a84c;
+  font-size: 1.25rem;
+  margin: 0 0 12px;
+  line-height: 1;
+}
+
+.ib-invite-line {
+  color: #7a6a52;
+  font-size: clamp(0.55rem, 1.4vw, 0.68rem);
+  font-style: italic;
+  letter-spacing: 0.1em;
+  margin: 0 0 12px;
+}
+
+.ib-title {
+  color: #3a2e1e;
+  font-size: clamp(1rem, 3.2vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+.ib-cover-date {
+  color: #7a6a52;
+  font-size: clamp(0.62rem, 1.6vw, 0.76rem);
+  font-style: italic;
+  letter-spacing: 0.06em;
+  margin: 0 0 22px;
+}
+
+.ib-tap-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(58, 46, 30, 0.36);
+  font-size: clamp(0.5rem, 1.2vw, 0.58rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+.ib-pulse {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.7);
+  animation: ibPulse 2.4s ease infinite;
+  flex-shrink: 0;
+}
+
+@keyframes ibPulse {
+  0%, 100% { opacity: 1;   transform: scale(1);   box-shadow: 0 0 0 0   rgba(201, 168, 76, 0.5); }
+  60%       { opacity: 0.7; transform: scale(1.3); box-shadow: 0 0 0 6px rgba(201, 168, 76, 0);   }
+}
+
+/* ── Page 2 — Left spread ── */
+.ib-side-2 {
+  background: #fffdf8;
+  display: flex;
+  align-items: stretch;
+}
+
+/* ── Page 3 — Right spread ── */
+.ib-side-3 {
+  background: #fffdf8;
+  display: flex;
+  align-items: stretch;
+}
+
+.ib-guest-name {
+  color: #3a2e1e;
+  font-size: clamp(0.72rem, 2vw, 0.88rem);
+  font-weight: 600;
+  font-style: italic;
+  text-align: center;
+  margin: 0 0 14px;
+}
+
+.ib-rsvp-area {
+  margin-top: auto;
+  padding-top: 2px;
+  --color-primary:      #c9a84c;
+  --color-primary-dark: #a8843a;
+  --color-text:         #3a2e1e;
+  --color-text-muted:   #7a6a52;
+  --color-border:       rgba(201, 168, 76, 0.35);
+  --color-error:        #e05050;
+}
+
+.ib-rsvp-error {
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+  color: #e05050;
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+.ib-rsvp-disabled {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto 0;
+}
+
+.ib-rsvp-ornament {
+  color: rgba(201, 168, 76, 0.3);
+  font-size: 1.4rem;
+  margin: 0 0 10px;
+}
+
+.ib-rsvp-note {
+  color: #7a6a52;
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Page 4 — Back Cover ── */
+.ib-side-4 {
+  background: #fffaf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ib-side-4::before {
+  content: '';
+  position: absolute;
+  inset: 13px;
+  border: 1px solid rgba(201, 168, 76, 0.20);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.ib-s4-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 20px;
+  gap: 0;
+}
+
+.ib-s4-ornament {
+  color: #c9a84c;
+  font-size: 1.25rem;
+  margin: 0 0 14px;
+  line-height: 1;
+}
+
+.ib-s4-message {
+  color: #7a6a52;
+  font-size: clamp(0.66rem, 1.8vw, 0.8rem);
+  font-style: italic;
+  line-height: 1.75;
+  margin: 0 0 14px;
+}
+
+.ib-s4-closing {
+  color: #c9a84c;
+  font-size: clamp(0.58rem, 1.5vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* ── Tap zones ── */
+.ib-tap-left,
+.ib-tap-right {
+  position: absolute;
+  top: 0;
+  height: min(520px, 82vh);
+  width: 20%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ib-tap-left  { left: 0;  cursor: w-resize; }
+.ib-tap-right { right: 0; cursor: e-resize; }
+.ib-tap-disabled { pointer-events: none; }
+
+/* ── Chevrons ── */
+.ib-chevron {
+  color: rgba(201, 168, 76, 0.55);
+  font-size: 1.8rem;
+  line-height: 1;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ib-tap-disabled .ib-chevron { opacity: 0; }
+
+/* ── Navigation dots ── */
+.ib-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 14px 0;
+  z-index: 20;
+}
+
+.ib-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid #c9a84c;
+  background: transparent;
+  transition: background 0.3s;
+  opacity: 0.55;
+}
+
+.ib-dot-active {
+  background: #c9a84c;
+  opacity: 1;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .ib-scene {
+    padding: 0 0 56px;
+    align-items: flex-start;
+  }
+  .ib-book {
+    height: calc(100dvh - 56px);
+  }
+  .ib-face { box-shadow: none; }
+  .ib-page-left  .ib-face { border-radius: 0; }
+  .ib-page-right .ib-face { border-radius: 0; }
+  .ib-spine { width: 5px; }
+  .ib-tap-left,
+  .ib-tap-right { height: calc(100dvh - 56px); }
+}
