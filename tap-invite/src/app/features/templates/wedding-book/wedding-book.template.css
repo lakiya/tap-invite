@@ -1,130 +1,187 @@
 /* ══════════════════════════════════════════════════════
-   Wedding Book — ivory & gold book-flip invitation
+   Wedding Book — always-wide two-page book spread
+   Spread 1 (closed): Left = Side 4 (decorative) | Right = Side 1 (cover)
+   Spread 2 (open):   Left = Side 2 (ceremony)   | Right = Side 3 (details + RSVP)
    ══════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-.wb-page {
+/* ── Outer scene: perspective source + background ── */
+.wb-scene {
   min-height: 100vh;
   background: linear-gradient(160deg, #f5ede0 0%, #ede0cf 50%, #e8d8c0 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
+  padding: 40px 16px;
   font-family: 'Playfair Display', Georgia, serif;
+  perspective: 1600px;
+  perspective-origin: center center;
 }
 
-/* ── Book container (perspective context) ── */
+/* ── Book: flex row of left-page + spine + right-page ── */
 .wb-book {
-  position: relative;
+  display: flex;
+  align-items: stretch;
   width: 100%;
-  max-width: 420px;
-  height: min(640px, 86vh);
-  perspective: 1400px;
-  transform-style: preserve-3d;
+  max-width: 740px;
+  height: min(520px, 82vh);
 }
 
-/* ── Shared face rules ── */
+/* ── Each page: independent 3D flip around center axis ── */
+.wb-page {
+  flex: 1;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+/* ── SPINE ── */
+.wb-spine {
+  width: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    to right,
+    rgba(100, 70, 20, 0.12) 0%,
+    rgba(201, 168, 76, 0.55) 35%,
+    rgba(201, 168, 76, 0.55) 65%,
+    rgba(100, 70, 20, 0.12) 100%
+  );
+  z-index: 10;
+  align-self: stretch;
+  box-shadow:
+    -3px 0 12px rgba(100, 70, 20, 0.10),
+     3px 0 12px rgba(100, 70, 20, 0.10);
+}
+
+/* ── State-driven page rotations ── */
+
+/* CLOSED: left page shows its BACK face (Side 4), right page shows its FRONT face (Side 1) */
+.wb-closed .wb-page-left  { transform: rotateY(180deg); }
+.wb-closed .wb-page-right { transform: rotateY(0deg);   }
+
+/* OPEN: left page shows its FRONT face (Side 2), right page shows its BACK face (Side 3) */
+.wb-open .wb-page-left  { transform: rotateY(0deg);    }
+.wb-open .wb-page-right { transform: rotateY(-180deg); }
+
+/* Prevent phantom clicks on faces hidden by backface-visibility */
+.wb-closed .wb-page-left  .wb-face-front { pointer-events: none; }
+.wb-closed .wb-page-right .wb-face-back  { pointer-events: none; }
+.wb-open   .wb-page-left  .wb-face-back  { pointer-events: none; }
+.wb-open   .wb-page-right .wb-face-front { pointer-events: none; }
+
+/* ── Shared face ── */
 .wb-face {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  border-radius: 16px;
   overflow: hidden;
   box-shadow:
-    0 32px 72px rgba(100, 70, 20, 0.22),
-    0 0 0 1px rgba(201, 168, 76, 0.18);
-  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+    0 28px 60px rgba(100, 70, 20, 0.20),
+    0 0 0 1px rgba(201, 168, 76, 0.15);
+}
+
+/* Back faces are pre-rotated 180deg so content appears correct when the page flips */
+.wb-face-back {
+  transform: rotateY(180deg);
+}
+
+/* Outer-edge radius only (spine edge is flush) */
+.wb-page-left  .wb-face { border-radius: 14px 0 0 14px; }
+.wb-page-right .wb-face { border-radius: 0 14px 14px 0; }
+
+/* ── Corner ornaments (shared) ── */
+.wb-corner {
+  position: absolute;
+  color: #c9a84c;
+  font-size: 0.68rem;
+  opacity: 0.45;
+}
+.wb-tl { top: 14px;    left: 16px;  }
+.wb-tr { top: 14px;    right: 16px; }
+.wb-bl { bottom: 14px; left: 16px;  }
+.wb-br { bottom: 14px; right: 16px; }
+
+/* ── Gold rule (shared) ── */
+.wb-gold-rule {
+  width: 56px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  margin: 0 auto 14px;
+  flex-shrink: 0;
 }
 
 /* ═══════════════════════════════════════
-   SIDE 1 — Cover
+   SIDE 1 — Front Cover (right page, front face)
    ═══════════════════════════════════════ */
-.wb-cover {
+.wb-side-1 {
   background: #fffaf4;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transform: rotateY(0deg);
 }
 
-.wb-cover::before {
+.wb-side-1::before {
   content: '';
   position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  border-radius: 8px;
+  inset: 13px;
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 4px;
   pointer-events: none;
 }
 
-.wb-corner {
-  position: absolute;
-  color: #c9a84c;
-  font-size: 0.75rem;
-  opacity: 0.5;
-}
-.wb-corner-tl { top: 18px;    left: 22px;  }
-.wb-corner-tr { top: 18px;    right: 22px; }
-.wb-corner-bl { bottom: 18px; left: 22px;  }
-.wb-corner-br { bottom: 18px; right: 22px; }
-
-.wb-cover-content {
+.wb-s1-content {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 48px 36px;
+  padding: 36px 22px;
+  gap: 0;
 }
 
 .wb-ornament {
   color: #c9a84c;
-  font-size: 1.4rem;
-  margin: 0 0 14px;
+  font-size: 1.25rem;
+  margin: 0 0 12px;
   line-height: 1;
 }
 
 .wb-invite-line {
   color: #7a6a52;
-  font-size: 0.72rem;
+  font-size: clamp(0.55rem, 1.4vw, 0.68rem);
   font-style: italic;
-  letter-spacing: 0.12em;
-  margin: 0 0 14px;
-}
-
-.wb-divider-gold {
-  width: 80px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
-  margin: 0 auto 18px;
+  letter-spacing: 0.1em;
+  margin: 0 0 12px;
 }
 
 .wb-couple-names {
   color: #3a2e1e;
-  font-size: 1.7rem;
+  font-size: clamp(1rem, 3.2vw, 1.45rem);
   font-weight: 700;
-  line-height: 1.25;
-  margin: 0 0 18px;
+  line-height: 1.2;
+  margin: 0 0 14px;
   letter-spacing: -0.01em;
 }
 
 .wb-cover-date {
   color: #7a6a52;
-  font-size: 0.82rem;
+  font-size: clamp(0.62rem, 1.6vw, 0.76rem);
   font-style: italic;
   letter-spacing: 0.06em;
-  margin: 0 0 28px;
+  margin: 0 0 22px;
 }
 
 .wb-tap-hint {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(58, 46, 30, 0.38);
-  font-size: 0.62rem;
+  gap: 7px;
+  color: rgba(58, 46, 30, 0.36);
+  font-size: clamp(0.5rem, 1.2vw, 0.58rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-style: normal;
@@ -140,69 +197,62 @@
 }
 
 @keyframes wbPulse {
-  0%, 100% { opacity: 1;   transform: scale(1);    box-shadow: 0 0 0 0   rgba(201, 168, 76, 0.5); }
-  60%       { opacity: 0.7; transform: scale(1.3);  box-shadow: 0 0 0 6px rgba(201, 168, 76, 0);   }
+  0%, 100% { opacity: 1;   transform: scale(1);   box-shadow: 0 0 0 0   rgba(201, 168, 76, 0.5); }
+  60%       { opacity: 0.7; transform: scale(1.3); box-shadow: 0 0 0 6px rgba(201, 168, 76, 0);   }
 }
 
 /* ═══════════════════════════════════════
-   SIDES 2 + 3 — Inside spread
+   SIDE 2 — Inside Left / Ceremony (left page, front face)
    ═══════════════════════════════════════ */
-.wb-inside {
-  background: #fffaf4;
+.wb-side-2 {
+  background: #fffdf8;
   display: flex;
-  overflow: hidden;
-  transform: rotateY(180deg);
+  align-items: stretch;
 }
 
-.wb-inside-left,
-.wb-inside-right {
-  flex: 1;
+/* ═══════════════════════════════════════
+   SIDE 3 — Inside Right / Details + RSVP (right page, back face)
+   ═══════════════════════════════════════ */
+.wb-side-3 {
+  background: #fffdf8;
+  display: flex;
+  align-items: stretch;
+}
+
+/* Shared inner-spread layout */
+.wb-inner-content {
   display: flex;
   flex-direction: column;
-  padding: 32px 20px 24px;
+  padding: clamp(16px, 3vw, 28px) clamp(12px, 2.5vw, 22px) clamp(14px, 2.5vw, 20px);
+  width: 100%;
   overflow-y: auto;
   min-height: 0;
 }
 
-.wb-spine {
-  width: 2px;
-  background: linear-gradient(180deg, transparent 5%, #c9a84c 30%, #c9a84c 70%, transparent 95%);
-  opacity: 0.3;
-  flex-shrink: 0;
-  align-self: stretch;
-  margin: 20px 0;
-}
-
 .wb-section-ornament {
   color: #c9a84c;
-  font-size: 0.45rem;
+  font-size: 0.4rem;
   text-align: center;
   margin: 0 0 5px;
 }
 
 .wb-section-label {
   color: #c9a84c;
-  font-size: 0.58rem;
+  font-size: clamp(0.46rem, 1.1vw, 0.54rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-style: normal;
 }
 
-.wb-inside-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.4), transparent);
-  margin: 0 0 16px;
-}
-
-.wb-detail-row {
-  margin-bottom: 16px;
+.wb-detail-block {
+  margin-bottom: 14px;
 }
 
 .wb-detail-label {
-  font-size: 0.56rem;
+  font-size: clamp(0.44rem, 1vw, 0.52rem);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -212,14 +262,14 @@
 }
 
 .wb-detail-primary {
-  font-size: 0.8rem;
+  font-size: clamp(0.66rem, 1.8vw, 0.78rem);
   color: #3a2e1e;
   margin: 0 0 2px;
   line-height: 1.4;
 }
 
 .wb-detail-secondary {
-  font-size: 0.72rem;
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
   color: #7a6a52;
   font-style: italic;
   margin: 0;
@@ -227,8 +277,8 @@
 
 .wb-map-link {
   display: inline-block;
-  margin-top: 4px;
-  font-size: 0.68rem;
+  margin-top: 3px;
+  font-size: clamp(0.58rem, 1.4vw, 0.66rem);
   color: #c9a84c;
   text-decoration: none;
   font-style: normal;
@@ -238,29 +288,27 @@
 
 .wb-notes-text {
   color: #3a2e1e;
-  font-size: 0.8rem;
+  font-size: clamp(0.64rem, 1.8vw, 0.76rem);
   font-style: italic;
   line-height: 1.7;
   margin: 0;
-  flex: 1;
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
 
 .wb-notes-empty {
-  color: rgba(201, 168, 76, 0.35);
-  font-size: 1.6rem;
+  color: rgba(201, 168, 76, 0.3);
+  font-size: 1.4rem;
   text-align: center;
-  margin: auto;
-  flex: 1;
+  margin: auto 0;
 }
 
-.wb-nav-btn {
+.wb-close-btn {
   margin-top: auto;
   background: none;
   border: none;
-  color: rgba(122, 106, 82, 0.6);
-  font-size: 0.66rem;
+  color: rgba(122, 106, 82, 0.5);
+  font-size: clamp(0.54rem, 1.2vw, 0.62rem);
   font-weight: 600;
   font-family: inherit;
   letter-spacing: 0.06em;
@@ -269,59 +317,11 @@
   text-align: left;
   transition: color 0.2s;
 }
-.wb-nav-btn:hover { color: #c9a84c; }
-
-.wb-rsvp-btn {
-  margin-top: auto;
-  background: none;
-  border: 1px solid rgba(201, 168, 76, 0.4);
-  color: #c9a84c;
-  font-size: 0.66rem;
-  font-weight: 700;
-  font-family: inherit;
-  letter-spacing: 0.12em;
-  cursor: pointer;
-  padding: 7px 12px;
-  border-radius: 6px;
-  align-self: flex-end;
-  transition: background 0.2s;
-}
-.wb-rsvp-btn:hover { background: rgba(201, 168, 76, 0.08); }
-
-/* ═══════════════════════════════════════
-   SIDE 4 — Back / RSVP
-   ═══════════════════════════════════════ */
-.wb-back {
-  background: #fffaf4;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 32px;
-  text-align: center;
-  transform: rotateY(180deg);
-}
-
-.wb-back::before {
-  content: '';
-  position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  border-radius: 8px;
-  pointer-events: none;
-}
-
-.wb-back-heading {
-  color: #3a2e1e;
-  font-size: 1.35rem;
-  font-weight: 600;
-  margin: 0 0 14px;
-  line-height: 1.3;
-}
+.wb-close-btn:hover { color: #c9a84c; }
 
 .wb-rsvp-area {
-  width: 100%;
-  margin: 6px 0 14px;
+  margin-top: auto;
+  padding-top: 2px;
   --color-primary:      #c9a84c;
   --color-primary-dark: #a8843a;
   --color-text:         #3a2e1e;
@@ -331,57 +331,70 @@
 }
 
 .wb-rsvp-error {
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
   color: #e05050;
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-style: italic;
 }
 
-.wb-closing {
+/* ═══════════════════════════════════════
+   SIDE 4 — Decorative back cover (left page, back face)
+   ═══════════════════════════════════════ */
+.wb-side-4 {
+  background: #fffaf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wb-side-4::before {
+  content: '';
+  position: absolute;
+  inset: 13px;
+  border: 1px solid rgba(201, 168, 76, 0.20);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.wb-s4-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 20px;
+  gap: 0;
+}
+
+.wb-s4-ornament {
+  color: #c9a84c;
+  font-size: 1.25rem;
+  margin: 0 0 14px;
+  line-height: 1;
+}
+
+.wb-s4-message {
   color: #7a6a52;
-  font-size: 0.8rem;
+  font-size: clamp(0.66rem, 1.8vw, 0.8rem);
   font-style: italic;
-  line-height: 1.6;
+  line-height: 1.75;
+  margin: 0 0 14px;
+}
+
+.wb-s4-names {
+  color: #c9a84c;
+  font-size: clamp(0.58rem, 1.5vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
-.wb-back-nav {
-  position: absolute;
-  bottom: 22px;
-  left: 26px;
-  background: none;
-  border: none;
-  color: rgba(122, 106, 82, 0.6);
-  font-size: 0.66rem;
-  font-weight: 600;
-  font-family: inherit;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
-}
-.wb-back-nav:hover { color: #c9a84c; }
-
 /* ═══════════════════════════════════════
-   State-driven 3D transforms
-   ═══════════════════════════════════════ */
-.wb-state-cover .wb-cover  { transform: rotateY(0deg);    }
-.wb-state-cover .wb-inside { transform: rotateY(180deg);  }
-.wb-state-cover .wb-back   { transform: rotateY(180deg);  }
-
-.wb-state-inside .wb-cover  { transform: rotateY(-180deg); }
-.wb-state-inside .wb-inside { transform: rotateY(0deg);    }
-.wb-state-inside .wb-back   { transform: rotateY(180deg);  }
-
-.wb-state-back .wb-cover  { transform: rotateY(-180deg); }
-.wb-state-back .wb-inside { transform: rotateY(-180deg); }
-.wb-state-back .wb-back   { transform: rotateY(0deg);    }
-
-/* ═══════════════════════════════════════
-   Mobile
+   Mobile: fill full screen, no padding
    ═══════════════════════════════════════ */
 @media (max-width: 600px) {
-  .wb-page {
+  .wb-scene {
     padding: 0;
     align-items: flex-start;
   }
@@ -390,12 +403,9 @@
     height: 100dvh;
   }
   .wb-face {
-    border-radius: 0;
     box-shadow: none;
   }
-  .wb-cover-content { padding: 36px 28px; }
-  .wb-couple-names  { font-size: 1.45rem; }
-  .wb-inside-left,
-  .wb-inside-right  { padding: 22px 14px 18px; }
-  .wb-back          { padding: 32px 24px; }
+  .wb-page-left  .wb-face { border-radius: 0; }
+  .wb-page-right .wb-face { border-radius: 0; }
+  .wb-spine { width: 5px; }
 }
