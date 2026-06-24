@@ -15,6 +15,8 @@ export interface EditDialogResult {
   location_text: string;
   template_id: string;
   google_maps_url: string | null;
+  notes: string | null;
+  show_rsvp: boolean;
 }
 
 @Component({
@@ -32,6 +34,8 @@ export class EditEventDialogComponent {
     title:           new FormControl(this.data.event.title,                  Validators.required),
     location_text:   new FormControl(this.data.event.location_text ?? ''),
     google_maps_url: new FormControl(this.data.event.google_maps_url ?? ''),
+    notes:           new FormControl(this.data.event.notes ?? ''),
+    show_rsvp:       new FormControl(this.data.event.show_rsvp ?? true),
   });
 
   selectedTemplateId = signal(this.data.event.template_id ?? 'default-minimal');
@@ -43,6 +47,8 @@ export class EditEventDialogComponent {
       location_text:   this.form.value.location_text ?? '',
       template_id:     this.selectedTemplateId(),
       google_maps_url: this.form.value.google_maps_url || null,
+      notes:           this.form.value.notes || null,
+      show_rsvp:       this.form.value.show_rsvp ?? true,
     };
     this.dialogRef.close(result);
   }

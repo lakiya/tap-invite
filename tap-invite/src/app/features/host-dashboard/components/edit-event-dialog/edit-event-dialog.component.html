@@ -29,12 +29,32 @@
     <input id="edit-maps-url" formControlName="google_maps_url" type="text" placeholder="https://maps.google.com/..." />
   </div>
 
+  <div class="field">
+    <label for="edit-notes">Additional Details</label>
+    <textarea
+      id="edit-notes"
+      formControlName="notes"
+      placeholder="Dress code, reception info, hashtag, etc."
+      rows="3">
+    </textarea>
+  </div>
+
   <div class="template-section">
     <p class="template-label">Invitation Template</p>
     <app-template-gallery
       [selectedId]="selectedTemplateId()"
       (templateSelected)="selectedTemplateId.set($event)">
     </app-template-gallery>
+  </div>
+
+  <div class="toggle-field">
+    <label class="toggle-label">
+      <input type="checkbox" formControlName="show_rsvp" class="toggle-input" />
+      <span class="toggle-track">
+        <span class="toggle-thumb"></span>
+      </span>
+      <span>Show Accept / Decline section</span>
+    </label>
   </div>
 
   <div class="dialog-actions">
