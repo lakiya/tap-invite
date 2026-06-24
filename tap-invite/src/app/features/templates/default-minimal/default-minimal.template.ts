@@ -41,13 +41,15 @@ import { TemplateContext, TemplateComponent } from '../template.types';
             </div>
           </div>
         </div>
-        <div class="divider"></div>
-        <app-rsvp-buttons
-          [status]="context().rsvpStatus"
-          (rsvpChange)="context().onRsvpChange($event)">
-        </app-rsvp-buttons>
-        @if (context().rsvpError) {
-          <p class="rsvp-error">{{ context().rsvpError }}</p>
+        @if (context().event.show_rsvp !== false) {
+          <div class="divider"></div>
+          <app-rsvp-buttons
+            [status]="context().rsvpStatus"
+            (rsvpChange)="context().onRsvpChange($event)">
+          </app-rsvp-buttons>
+          @if (context().rsvpError) {
+            <p class="rsvp-error">{{ context().rsvpError }}</p>
+          }
         }
       </div>
     </div>

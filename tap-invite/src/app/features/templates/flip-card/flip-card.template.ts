@@ -82,20 +82,22 @@ import { TemplateContext, TemplateComponent } from '../template.types';
               </div>
 
               <!-- RSVP box -->
-              <div class="fc-rsvp-box">
-                <p class="fc-rsvp-heading">
-                  <span class="fc-rsvp-ornament">◆</span>
-                  Will you join us?
-                  <span class="fc-rsvp-ornament">◆</span>
-                </p>
-                <app-rsvp-buttons
-                  [status]="context().rsvpStatus"
-                  (rsvpChange)="context().onRsvpChange($event)">
-                </app-rsvp-buttons>
-                @if (context().rsvpError) {
-                  <p class="fc-rsvp-error">{{ context().rsvpError }}</p>
-                }
-              </div>
+              @if (context().event.show_rsvp !== false) {
+                <div class="fc-rsvp-box">
+                  <p class="fc-rsvp-heading">
+                    <span class="fc-rsvp-ornament">◆</span>
+                    Will you join us?
+                    <span class="fc-rsvp-ornament">◆</span>
+                  </p>
+                  <app-rsvp-buttons
+                    [status]="context().rsvpStatus"
+                    (rsvpChange)="context().onRsvpChange($event)">
+                  </app-rsvp-buttons>
+                  @if (context().rsvpError) {
+                    <p class="fc-rsvp-error">{{ context().rsvpError }}</p>
+                  }
+                </div>
+              }
 
             </div>
 
