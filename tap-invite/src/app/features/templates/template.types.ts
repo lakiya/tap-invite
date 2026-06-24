@@ -11,6 +11,8 @@ export interface EventData {
   location_text: string;
   template_id: string;
   google_maps_url?: string | null;
+  notes?: string | null;
+  show_rsvp: boolean;
 }
 
 export interface GuestData {

@@ -133,7 +133,14 @@ export class Supabase {
 
   async updateEvent(
     eventId: string,
-    changes: { title?: string; location_text?: string; template_id?: string; google_maps_url?: string | null }
+    changes: {
+      title?: string;
+      location_text?: string;
+      template_id?: string;
+      google_maps_url?: string | null;
+      notes?: string | null;
+      show_rsvp?: boolean;
+    }
   ): Promise<void> {
     const { error } = await this.supabase
       .from('events')
