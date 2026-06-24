@@ -1,0 +1,89 @@
+<!-- src/app/features/host-dashboard/components/host-dashboard.component.html -->
+<app-header variant="dashboard" (logoutClick)="handleLogout()"></app-header>
+
+<main class="dash-main">
+
+  @if (isLoading()) {
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <p>Loading your dashboard…</p>
+    </div>
+  }
+
+  @else if (!activeEvent()) {
+    <app-event-form
+      [hostId]="userId()!"
+      (eventCreated)="handleEventCreated($event)">
+    </app-event-form>
+  }
+
+  @else {
+    <!-- Event strip -->
+    <div class="event-strip">
+      <div class="event-strip-inner">
+        <div>
+          <h1 class="event-title">{{ activeEvent().title }}</h1>
+          <p class="event-meta">
+            {{ activeEvent().event_date | date:'EEEE, MMM d · h:mm a' }}
+            @if (activeEvent().location_text) {
+              · {{ activeEvent().location_text }}
+            }
+            @if (activeEvent().template_id) {
+              <span class="event-meta-template">· {{ activeEvent().template_id | titlecase }}</span>
+            }
+          </p>
+        </div>
+        <div class="event-strip-actions">
+          <span class="live-badge">● Live</span>
+          <button class="btn-edit" (click)="openEditDialog()" type="button">✏ Edit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Template picker step (shown once after event creation) -->
+    @if (showTemplatePicker()) {
+      <section class="template-picker-step">
+        <h2 class="picker-heading">✦ Choose your invitation template</h2>
+        <p class="picker-sub">Pick how your invitation looks to guests. You can change this later.</p>
+        <app-template-gallery
+          [selectedId]="selectedTemplateId()"
+          (templateSelected)="selectedTemplateId.set($event)">
+        </app-template-gallery>
+        <div class="picker-actions">
+          <button
+            class="btn-confirm"
+            (click)="confirmTemplate()"
+            [disabled]="isSavingTemplate()"
+            type="button">
+            {{ isSavingTemplate() ? 'Saving…' : 'Confirm Template →' }}
+          </button>
+        </div>
+      </section>
+    }
+
+    <!-- Event Share Panel -->
+    <app-event-share-panel
+      [eventId]="activeEvent().id"
+      [eventTitle]="activeEvent().title">
+    </app-event-share-panel>
+
+    <!-- RSVP Stats Bar -->
+    <app-rsvp-stats-bar [guests]="guests()"></app-rsvp-stats-bar>
+
+    <!-- Dashboard grid -->
+    <div class="dash-grid">
+      <app-add-guest-form
+        [eventId]="activeEvent().id"
+        (guestAdded)="handleGuestAdded()"
+        (bulkUploadRequested)="openBulkUpload()">
+      </app-add-guest-form>
+
+      <app-guest-table
+        [guests]="guests()"
+        (copyLink)="copyLink($event)"
+        (guestDeleted)="handleGuestDeleted()">
+      </app-guest-table>
+    </div>
+  }
+
+</main>

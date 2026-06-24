@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guest Invitation View</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #080e1a;
+    color: #e2e8f0;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header { text-align:center; margin-bottom:40px; }
+  .page-header h1 { font-size:1.8rem; font-weight:800; color:#f8fafc; letter-spacing:-0.03em; margin-bottom:6px; }
+  .page-header p { color:#64748b; font-size:0.95rem; }
+
+  .section-lbl {
+    font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:#0ea5e9; text-align:center; margin:32px 0 16px;
+  }
+
+  /* 3 columns for states */
+  .three-col {
+    max-width:1200px; margin:0 auto 12px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  .col-label {
+    font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+    color:#64748b; text-align:center; margin-bottom:10px;
+  }
+
+  .page-frame {
+    border-radius:18px; overflow:hidden;
+    border:1px solid rgba(255,255,255,0.07);
+    box-shadow:0 24px 48px rgba(0,0,0,0.45);
+  }
+
+  /* ══════════ SHARED VARIABLES ══════════ */
+  /* LIGHT MODE */
+  .lm-view {
+    background: linear-gradient(160deg, #f0f9ff 0%, #f8fafc 50%, #fff7ed 100%);
+    padding: 36px 24px;
+    display:flex; flex-direction:column; align-items:center;
+    min-height: 520px;
+  }
+
+  .lm-card {
+    background:white; border:1px solid #e2e8f0;
+    border-radius:20px; width:100%; max-width:360px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    overflow:hidden;
+  }
+
+  .lm-card-top {
+    background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    padding:28px 24px 24px;
+    text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .lm-card-top::before {
+    content:'';
+    position:absolute; top:-40px; right:-40px;
+    width:120px; height:120px;
+    background:rgba(255,255,255,0.08); border-radius:50%;
+  }
+  .lm-card-top::after {
+    content:'';
+    position:absolute; bottom:-30px; left:-20px;
+    width:90px; height:90px;
+    background:rgba(255,255,255,0.06); border-radius:50%;
+  }
+  .lm-dear { font-size:0.8rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:6px; position:relative;z-index:1; }
+  .lm-card-top h2 { font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.9); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:10px; position:relative;z-index:1; }
+  .lm-invited-badge {
+    display:inline-block;
+    background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35);
+    color:white; font-size:1rem; font-weight:800; letter-spacing:-0.01em;
+    padding:6px 16px; border-radius:30px; position:relative;z-index:1;
+  }
+
+  .lm-card-body { padding:22px; }
+  .lm-event-title { font-size:1.2rem; font-weight:800; color:#0f172a; letter-spacing:-0.02em; margin-bottom:16px; line-height:1.25; }
+
+  .lm-detail-row {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 0; border-bottom:1px solid #f1f5f9;
+  }
+  .lm-detail-row:last-of-type { border-bottom:none; }
+  .lm-icon {
+    width:32px; height:32px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:0.9rem;
+    flex-shrink:0;
+  }
+  .lm-icon.blue { background:#eff6ff; }
+  .lm-icon.orange { background:#fff7ed; }
+  .lm-icon.teal { background:#f0fdfa; }
+  .lm-detail-label { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#94a3b8; }
+  .lm-detail-val { font-size:0.85rem; font-weight:600; color:#1e293b; margin-top:1px; }
+
+  .lm-map-btn {
+    display:flex; align-items:center; gap:6px;
+    background:#f0f9ff; border:1px solid #bae6fd;
+    color:#0284c7; font-size:0.75rem; font-weight:700;
+    padding:8px 14px; border-radius:8px; margin-top:14px;
+    width:fit-content; letter-spacing:0.02em;
+  }
+
+  .lm-rsvp { padding:0 22px 22px; }
+  .lm-rsvp-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; margin-bottom:12px; }
+  .lm-rsvp-btns { display:flex; flex-direction:column; gap:8px; }
+
+  .lm-btn-accept {
+    padding:13px; border-radius:11px; font-size:0.88rem; font-weight:700;
+    background:linear-gradient(135deg,#0ea5e9,#0284c7);
+    color:white; text-align:center;
+    box-shadow:0 4px 14px rgba(14,165,233,0.35);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    cursor:pointer;
+  }
+  .lm-btn-maybe {
+    padding:13px; border-radius:11px; font-size:0.88rem; font-weight:600;
+    background:white; border:1.5px solid #e2e8f0; color:#64748b;
+    text-align:center; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .lm-btn-decline {
+    padding:11px; border-radius:11px; font-size:0.82rem; font-weight:500;
+    color:#94a3b8; text-align:center; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+
+  /* accepted state */
+  .lm-accepted-banner {
+    background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+    border:1.5px solid #86efac; border-radius:14px; padding:18px;
+    text-align:center; margin:0 22px 22px;
+  }
+  .lm-accepted-banner .tick {
+    width:44px;height:44px;background:linear-gradient(135deg,#22c55e,#16a34a);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 10px;font-size:1.2rem;color:white;
+    box-shadow:0 4px 12px rgba(34,197,94,0.3);
+  }
+  .lm-accepted-banner h4 { font-size:0.95rem;font-weight:800;color:#15803d;margin-bottom:4px; }
+  .lm-accepted-banner p { font-size:0.78rem;color:#166534;line-height:1.5; }
+  .lm-change-btn { font-size:0.75rem;color:#94a3b8;text-decoration:underline;cursor:pointer;margin-top:10px;display:block; }
+
+  /* declined state */
+  .lm-declined-banner {
+    background:#f8fafc; border:1.5px solid #e2e8f0;
+    border-radius:14px; padding:18px; text-align:center; margin:0 22px 22px;
+  }
+  .lm-declined-banner .x-icon {
+    width:44px;height:44px;background:#f1f5f9;border:1.5px solid #e2e8f0;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 10px;font-size:1.2rem;color:#94a3b8;
+  }
+  .lm-declined-banner h4 { font-size:0.95rem;font-weight:700;color:#475569;margin-bottom:4px; }
+  .lm-declined-banner p { font-size:0.78rem;color:#94a3b8;line-height:1.5; }
+
+
+  /* ══════════ DARK MODE ══════════ */
+  .dm-view {
+    background: #0b1120;
+    padding: 36px 24px;
+    display:flex; flex-direction:column; align-items:center;
+    min-height: 520px;
+    position:relative; overflow:hidden;
+  }
+  .dm-view::before {
+    content:'';
+    position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+    width:400px;height:300px;
+    background:radial-gradient(ellipse,rgba(14,165,233,0.1) 0%,transparent 65%);
+    pointer-events:none;
+  }
+
+  .dm-card {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09);
+    border-radius:20px; width:100%; max-width:360px;
+    backdrop-filter:blur(16px);
+    box-shadow:0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07);
+    overflow:hidden; position:relative;z-index:1;
+  }
+
+  .dm-card-top {
+    background:linear-gradient(135deg,#0c2a4a 0%,#0f1f3d 100%);
+    border-bottom:1px solid rgba(14,165,233,0.2);
+    padding:28px 24px 24px;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .dm-card-top::before {
+    content:'';position:absolute;top:-30px;right:-30px;
+    width:100px;height:100px;
+    background:rgba(14,165,233,0.08);border-radius:50%;
+  }
+  .dm-dear { font-size:0.8rem; color:#94a3b8; font-style:italic; margin-bottom:6px; position:relative;z-index:1; }
+  .dm-card-top h2 { font-size:0.72rem; font-weight:700; color:#64748b; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:10px; position:relative;z-index:1; }
+  .dm-invited-badge {
+    display:inline-block;
+    background:rgba(14,165,233,0.15); border:1px solid rgba(56,189,248,0.3);
+    color:#38bdf8; font-size:1rem; font-weight:800;
+    padding:6px 16px; border-radius:30px; position:relative;z-index:1;
+    box-shadow:0 0 16px rgba(14,165,233,0.2);
+  }
+
+  .dm-card-body { padding:22px; }
+  .dm-event-title { font-size:1.2rem; font-weight:800; color:#f1f5f9; letter-spacing:-0.02em; margin-bottom:16px; line-height:1.25; }
+
+  .dm-detail-row {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .dm-detail-row:last-of-type { border-bottom:none; }
+  .dm-icon {
+    width:32px; height:32px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;
+  }
+  .dm-icon.blue { background:rgba(14,165,233,0.12); }
+  .dm-icon.orange { background:rgba(251,146,60,0.12); }
+  .dm-icon.teal { background:rgba(20,184,166,0.1); }
+  .dm-detail-label { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#475569; }
+  .dm-detail-val { font-size:0.85rem; font-weight:600; color:#e2e8f0; margin-top:1px; }
+
+  .dm-map-btn {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.25);
+    color:#38bdf8; font-size:0.75rem; font-weight:700;
+    padding:8px 14px; border-radius:8px; margin-top:14px;
+    width:fit-content;
+  }
+
+  .dm-rsvp { padding:0 22px 22px; }
+  .dm-rsvp-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#475569; margin-bottom:12px; }
+  .dm-rsvp-btns { display:flex; flex-direction:column; gap:8px; }
+
+  .dm-btn-accept {
+    padding:13px; border-radius:11px; font-size:0.88rem; font-weight:700;
+    background:linear-gradient(135deg,#0ea5e9,#0284c7); color:white;
+    text-align:center; box-shadow:0 4px 16px rgba(14,165,233,0.35);
+    display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  }
+  .dm-btn-maybe {
+    padding:13px; border-radius:11px; font-size:0.88rem; font-weight:600;
+    background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1);
+    color:#94a3b8; text-align:center; cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .dm-btn-decline {
+    padding:11px; border-radius:11px; font-size:0.82rem; font-weight:500;
+    color:#475569; text-align:center; cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+
+  /* dm accepted */
+  .dm-accepted-banner {
+    background:rgba(34,197,94,0.08);border:1.5px solid rgba(34,197,94,0.25);
+    border-radius:14px;padding:18px;text-align:center;margin:0 22px 22px;
+  }
+  .dm-accepted-banner .tick {
+    width:44px;height:44px;background:rgba(34,197,94,0.15);
+    border:1px solid rgba(34,197,94,0.3);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 10px;font-size:1.2rem;
+    box-shadow:0 0 14px rgba(34,197,94,0.2);
+  }
+  .dm-accepted-banner h4 { font-size:0.95rem;font-weight:800;color:#4ade80;margin-bottom:4px; }
+  .dm-accepted-banner p { font-size:0.78rem;color:#86efac;line-height:1.5; }
+  .dm-change-btn { font-size:0.75rem;color:#475569;text-decoration:underline;cursor:pointer;margin-top:10px;display:block; }
+
+  /* dm declined */
+  .dm-declined-banner {
+    background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,255,255,0.08);
+    border-radius:14px;padding:18px;text-align:center;margin:0 22px 22px;
+  }
+  .dm-declined-banner .x-icon {
+    width:44px;height:44px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 10px;font-size:1.2rem;color:#64748b;
+  }
+  .dm-declined-banner h4 { font-size:0.95rem;font-weight:700;color:#94a3b8;margin-bottom:4px; }
+  .dm-declined-banner p { font-size:0.78rem;color:#475569;line-height:1.5; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Guest Invitation View — Section 4 of 5</h1>
+  <p>No header. Three states: pending RSVP · accepted · declined. Light &amp; dark.</p>
+</div>
+
+<!-- ── STATE 1: PENDING ── -->
+<div class="section-lbl">State 1 — Pending RSVP</div>
+<div class="three-col">
+
+  <div>
+    <div class="col-label">☀️ Light</div>
+    <div class="page-frame">
+      <div class="lm-view">
+        <div class="lm-card">
+          <div class="lm-card-top">
+            <div class="lm-dear">Dear Kamal,</div>
+            <h2>You're Invited To</h2>
+            <div class="lm-invited-badge">Sarah's Birthday Dinner</div>
+          </div>
+          <div class="lm-card-body">
+            <div class="lm-detail-row">
+              <div class="lm-icon blue">📅</div>
+              <div><div class="lm-detail-label">Date & Time</div><div class="lm-detail-val">Saturday, 28 June 2025 · 7:00 PM</div></div>
+            </div>
+            <div class="lm-detail-row">
+              <div class="lm-icon orange">📍</div>
+              <div><div class="lm-detail-label">Location</div><div class="lm-detail-val">The Grand Hotel, Colombo</div></div>
+            </div>
+            <div class="lm-map-btn">🗺 Open in Google Maps</div>
+          </div>
+          <div class="lm-rsvp">
+            <div class="lm-rsvp-label">Will you be attending?</div>
+            <div class="lm-rsvp-btns">
+              <div class="lm-btn-accept">✓ &nbsp;Accept with Joy</div>
+              <div class="lm-btn-maybe">〜 &nbsp;Maybe</div>
+              <div class="lm-btn-decline">✕ &nbsp;Regretfully Decline</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="col-label">🌙 Dark</div>
+    <div class="page-frame">
+      <div class="dm-view">
+        <div class="dm-card">
+          <div class="dm-card-top">
+            <div class="dm-dear">Dear Kamal,</div>
+            <h2>You're Invited To</h2>
+            <div class="dm-invited-badge">Sarah's Birthday Dinner</div>
+          </div>
+          <div class="dm-card-body">
+            <div class="dm-detail-row">
+              <div class="dm-icon blue">📅</div>
+              <div><div class="dm-detail-label">Date & Time</div><div class="dm-detail-val">Saturday, 28 June 2025 · 7:00 PM</div></div>
+            </div>
+            <div class="dm-detail-row">
+              <div class="dm-icon orange">📍</div>
+              <div><div class="dm-detail-label">Location</div><div class="dm-detail-val">The Grand Hotel, Colombo</div></div>
+            </div>
+            <div class="dm-map-btn">🗺 Open in Google Maps</div>
+          </div>
+          <div class="dm-rsvp">
+            <div class="dm-rsvp-label">Will you be attending?</div>
+            <div class="dm-rsvp-btns">
+              <div class="dm-btn-accept">✓ &nbsp;Accept with Joy</div>
+              <div class="dm-btn-maybe">〜 &nbsp;Maybe</div>
+              <div class="dm-btn-decline">✕ &nbsp;Regretfully Decline</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Component note -->
+  <div style="display:flex;flex-direction:column;justify-content:center;gap:14px;padding:10px 4px">
+    <div style="background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0ea5e9;margin-bottom:10px">Component Breakdown</div>
+      <div style="font-size:0.78rem;color:#94a3b8;line-height:1.7;font-family:monospace">
+        GuestViewComponent<br>
+        <span style="color:#64748b">├─ </span><span style="color:#34d399">InvitationCardTop</span><br>
+        <span style="color:#64748b">│  </span><span style="color:#94a3b8">└ greeting + event name</span><br>
+        <span style="color:#64748b">├─ </span><span style="color:#34d399">EventDetailsSection</span><br>
+        <span style="color:#64748b">│  </span><span style="color:#94a3b8">└ date, location, map</span><br>
+        <span style="color:#64748b">└─ </span><span style="color:#34d399">RsvpButtonsComponent</span><br>
+        <span style="color:#64748b">&nbsp;&nbsp;&nbsp;</span><span style="color:#94a3b8">└ 3 states via signal</span>
+      </div>
+    </div>
+    <div style="background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#f97316;margin-bottom:10px">RsvpButtonsComponent</div>
+      <div style="font-size:0.78rem;color:#94a3b8;line-height:1.7">
+        <span style="color:#60a5fa">@Input()</span> status: string<br>
+        <span style="color:#60a5fa">@Output()</span> rsvpChange<br><br>
+        <span style="color:#94a3b8">Renders: button-group<br>or status-banner<br>based on current status</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATES 2 & 3 ── -->
+<div class="section-lbl">States 2 & 3 — After RSVP</div>
+<div class="three-col">
+
+  <!-- Accepted light -->
+  <div>
+    <div class="col-label">☀️ Accepted</div>
+    <div class="page-frame">
+      <div class="lm-view" style="padding-top:28px">
+        <div class="lm-card">
+          <div class="lm-card-top">
+            <div class="lm-dear">Dear Kamal,</div>
+            <h2>You're Invited To</h2>
+            <div class="lm-invited-badge">Sarah's Birthday Dinner</div>
+          </div>
+          <div class="lm-card-body">
+            <div class="lm-detail-row">
+              <div class="lm-icon blue">📅</div>
+              <div><div class="lm-detail-label">Date & Time</div><div class="lm-detail-val">Saturday, 28 June 2025 · 7:00 PM</div></div>
+            </div>
+            <div class="lm-detail-row">
+              <div class="lm-icon orange">📍</div>
+              <div><div class="lm-detail-label">Location</div><div class="lm-detail-val">The Grand Hotel, Colombo</div></div>
+            </div>
+          </div>
+          <div class="lm-accepted-banner">
+            <div class="tick">✓</div>
+            <h4>You're coming! 🎉</h4>
+            <p>We can't wait to see you. See you on June 28th.</p>
+            <span class="lm-change-btn">Change my response</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Declined light -->
+  <div>
+    <div class="col-label">☀️ Declined</div>
+    <div class="page-frame">
+      <div class="lm-view" style="padding-top:28px">
+        <div class="lm-card">
+          <div class="lm-card-top">
+            <div class="lm-dear">Dear Kamal,</div>
+            <h2>You're Invited To</h2>
+            <div class="lm-invited-badge">Sarah's Birthday Dinner</div>
+          </div>
+          <div class="lm-card-body">
+            <div class="lm-detail-row">
+              <div class="lm-icon blue">📅</div>
+              <div><div class="lm-detail-label">Date & Time</div><div class="lm-detail-val">Saturday, 28 June 2025 · 7:00 PM</div></div>
+            </div>
+          </div>
+          <div class="lm-declined-banner">
+            <div class="x-icon">✕</div>
+            <h4>Sorry you can't make it</h4>
+            <p>We'll miss you. Thanks for letting us know.</p>
+            <span class="lm-change-btn">Change my response</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark accepted -->
+  <div>
+    <div class="col-label">🌙 Accepted (dark)</div>
+    <div class="page-frame">
+      <div class="dm-view" style="padding-top:28px">
+        <div class="dm-card">
+          <div class="dm-card-top">
+            <div class="dm-dear">Dear Kamal,</div>
+            <h2>You're Invited To</h2>
+            <div class="dm-invited-badge">Sarah's Birthday Dinner</div>
+          </div>
+          <div class="dm-card-body">
+            <div class="dm-detail-row">
+              <div class="dm-icon blue">📅</div>
+              <div><div class="dm-detail-label">Date & Time</div><div class="dm-detail-val">Saturday, 28 June 2025 · 7:00 PM</div></div>
+            </div>
+            <div class="dm-detail-row">
+              <div class="dm-icon orange">📍</div>
+              <div><div class="dm-detail-label">Location</div><div class="dm-detail-val">The Grand Hotel, Colombo</div></div>
+            </div>
+          </div>
+          <div class="dm-accepted-banner">
+            <div class="tick">✓</div>
+            <h4>You're coming! 🎉</h4>
+            <p>We can't wait to see you. See you on June 28th.</p>
+            <span class="dm-change-btn">Change my response</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p style="text-align:center;color:#475569;font-size:0.85rem;margin-top:24px">
+  Happy with the Guest View? Type <strong style="color:#f1f5f9">yes</strong> for the final Section 5 (Host Dashboard), or describe changes.
+</p>
+
+</body>
+</html>

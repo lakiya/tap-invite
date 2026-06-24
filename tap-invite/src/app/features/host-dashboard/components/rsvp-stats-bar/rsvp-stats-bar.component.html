@@ -1,0 +1,20 @@
+@if (guests().length > 0) {
+  <div class="stats-bar">
+    <div class="stat-chip stat-chip--accepted">
+      <span class="stat-count">{{ accepted() }}</span>
+      <span class="stat-label">Accepted</span>
+    </div>
+    <div class="stat-chip stat-chip--declined">
+      <span class="stat-count">{{ declined() }}</span>
+      <span class="stat-label">Declined</span>
+    </div>
+    <div class="stat-chip stat-chip--tentative">
+      <span class="stat-count">{{ tentative() }}</span>
+      <span class="stat-label">Tentative</span>
+    </div>
+    <div class="stat-chip stat-chip--pending">
+      <span class="stat-count">{{ pending() }}</span>
+      <span class="stat-label">Pending</span>
+    </div>
+  </div>
+}

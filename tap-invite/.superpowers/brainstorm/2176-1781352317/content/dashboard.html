@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Host Dashboard Mockup</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #080e1a;
+    color: #e2e8f0;
+    padding: 40px 24px 80px;
+  }
+  .page-header { text-align:center; margin-bottom:40px; }
+  .page-header h1 { font-size:1.8rem; font-weight:800; color:#f8fafc; letter-spacing:-0.03em; margin-bottom:6px; }
+  .page-header p { color:#64748b; font-size:0.95rem; }
+
+  .section-lbl {
+    font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:#0ea5e9; text-align:center; margin:32px 0 16px;
+  }
+
+  .split { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .col-label { font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#64748b; text-align:center; margin-bottom:10px; }
+
+  .page-frame { border-radius:18px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); box-shadow:0 24px 48px rgba(0,0,0,0.45); }
+
+  /* ════════════════ LIGHT SETUP STATE ════════════════ */
+  .lm { background:#f8fafc; }
+
+  .lm .hdr {
+    background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid #e2e8f0;
+    padding:0 24px; height:58px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .lm .hdr-logo { display:flex;align-items:center;gap:8px;font-weight:800;font-size:0.95rem;color:#0f172a;letter-spacing:-0.03em; }
+  .lm .hdr-logo-icon { width:26px;height:26px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:white; }
+  .lm .hdr-logo span { color:#0ea5e9; }
+  .lm .hdr-right { display:flex;align-items:center;gap:10px; }
+  .lm .hdr-user { font-size:0.78rem;color:#64748b; }
+  .lm .hdr-logout { font-size:0.78rem;font-weight:600;color:#ef4444;padding:6px 12px;border:1px solid #fecaca;border-radius:8px;background:#fff5f5; }
+  .lm .hdr-toggle { width:38px;height:20px;background:#e2e8f0;border-radius:10px;display:flex;align-items:center;padding:0 2px;border:1px solid #cbd5e1; }
+  .lm .hdr-toggle .k { width:15px;height:15px;background:white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.2);font-size:0.5rem;display:flex;align-items:center;justify-content:center; }
+
+  .lm .main { padding:32px 24px; }
+
+  /* setup card */
+  .lm .setup-wrap { display:flex;flex-direction:column;align-items:center; }
+  .lm .setup-card {
+    background:white; border:1px solid #e2e8f0; border-radius:18px;
+    padding:32px 28px; width:100%; max-width:440px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.07);
+  }
+  .lm .setup-eyebrow { font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0ea5e9;margin-bottom:8px; }
+  .lm .setup-card h2 { font-size:1.25rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-bottom:4px; }
+  .lm .setup-card p { font-size:0.82rem;color:#64748b;margin-bottom:24px;line-height:1.5; }
+  .lm .form-group { margin-bottom:16px; }
+  .lm .form-label { font-size:0.72rem;font-weight:600;letter-spacing:0.04em;color:#374151;margin-bottom:6px;display:block;text-transform:uppercase; }
+  .lm .form-input {
+    width:100%; padding:11px 13px; border:1.5px solid #e2e8f0; border-radius:10px;
+    font-size:0.85rem; color:#0f172a; background:white;
+  }
+  .lm .form-input.focused { border-color:#0ea5e9; box-shadow:0 0 0 3px rgba(14,165,233,0.1); }
+  .lm .submit-btn {
+    width:100%; padding:13px; border-radius:12px;
+    background:linear-gradient(135deg,#f97316,#ea580c); color:white;
+    font-size:0.9rem; font-weight:700; margin-top:8px;
+    box-shadow:0 4px 14px rgba(249,115,22,0.35);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  /* dashboard grid */
+  .lm .dash-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:16px; }
+  .lm .card {
+    background:white; border:1px solid #e2e8f0; border-radius:16px; padding:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  }
+  .lm .card-title { font-size:0.92rem;font-weight:800;color:#0f172a;margin-bottom:16px; }
+  .lm .mini-form-group { margin-bottom:12px; }
+  .lm .mini-label { font-size:0.68rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8;margin-bottom:5px;display:block; }
+  .lm .mini-input { width:100%;padding:9px 11px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.8rem;color:#0f172a;background:white; }
+  .lm .mini-btn { width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:white;font-size:0.82rem;font-weight:700;margin-top:4px;text-align:center; box-shadow:0 3px 10px rgba(14,165,233,0.3); }
+
+  .lm .guest-table { width:100%; border-collapse:collapse; }
+  .lm .guest-table th { font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;padding-bottom:10px;border-bottom:2px solid #f1f5f9;text-align:left; }
+  .lm .guest-table td { padding:11px 0;border-bottom:1px solid #f8fafc;font-size:0.82rem;color:#1e293b;vertical-align:middle; }
+  .badge { padding:3px 9px;border-radius:20px;font-size:0.68rem;font-weight:700; }
+  .badge.accepted { background:#dcfce7;color:#16a34a; }
+  .badge.declined { background:#fee2e2;color:#dc2626; }
+  .badge.pending { background:#f1f5f9;color:#64748b; }
+  .badge.tentative { background:#fef9c3;color:#ca8a04; }
+  .lm .copy-btn { background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:4px 10px;font-size:0.7rem;font-weight:600;color:#64748b; }
+
+  /* event header strip */
+  .lm .event-strip {
+    background:linear-gradient(135deg,#eff6ff,#f0f9ff);
+    border:1px solid #bfdbfe; border-radius:14px; padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+  }
+  .lm .event-strip .ev-name { font-size:0.95rem;font-weight:800;color:#1e40af; }
+  .lm .event-strip .ev-date { font-size:0.75rem;color:#3b82f6;margin-top:2px; }
+  .lm .event-strip .ev-badge { background:#2563eb;color:white;font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:20px; }
+
+  /* toast */
+  .lm-toast {
+    position:absolute; top:68px; right:16px;
+    background:white; border:1px solid #e2e8f0; border-radius:12px;
+    padding:12px 16px; display:flex; align-items:center; gap:10px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.12);
+    max-width:260px;
+  }
+  .lm-toast .t-icon { width:28px;height:28px;background:#dcfce7;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.85rem; }
+  .lm-toast .t-msg { font-size:0.78rem;font-weight:600;color:#0f172a; }
+
+  /* ════════════════ DARK ════════════════ */
+  .dm { background:#0b1120; position:relative; }
+
+  .dm .hdr {
+    background:rgba(11,17,32,0.9); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.07);
+    padding:0 24px; height:58px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .dm .hdr-logo { display:flex;align-items:center;gap:8px;font-weight:800;font-size:0.95rem;color:#f1f5f9;letter-spacing:-0.03em; }
+  .dm .hdr-logo-icon { width:26px;height:26px;background:linear-gradient(135deg,#0ea5e9,#0369a1);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:white;box-shadow:0 0 10px rgba(14,165,233,0.35); }
+  .dm .hdr-logo span { color:#38bdf8; }
+  .dm .hdr-right { display:flex;align-items:center;gap:10px; }
+  .dm .hdr-user { font-size:0.78rem;color:#64748b; }
+  .dm .hdr-logout { font-size:0.78rem;font-weight:600;color:#f87171;padding:6px 12px;border:1px solid rgba(248,113,113,0.25);border-radius:8px;background:rgba(239,68,68,0.08); }
+  .dm .hdr-toggle { width:38px;height:20px;background:#1d4ed8;border-radius:10px;display:flex;align-items:center;justify-content:flex-end;padding:0 2px; }
+  .dm .hdr-toggle .k { width:15px;height:15px;background:#60a5fa;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.4);font-size:0.5rem;display:flex;align-items:center;justify-content:center;color:white; }
+
+  .dm .main { padding:32px 24px; }
+
+  .dm .dash-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:16px; }
+  .dm .card {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:20px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 4px 24px rgba(0,0,0,0.3);
+  }
+  .dm .card-title { font-size:0.92rem;font-weight:800;color:#f1f5f9;margin-bottom:16px; }
+  .dm .mini-form-group { margin-bottom:12px; }
+  .dm .mini-label { font-size:0.68rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#475569;margin-bottom:5px;display:block; }
+  .dm .mini-input { width:100%;padding:9px 11px;border:1.5px solid rgba(255,255,255,0.1);border-radius:8px;font-size:0.8rem;color:#e2e8f0;background:rgba(255,255,255,0.05); }
+  .dm .mini-btn { width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:white;font-size:0.82rem;font-weight:700;margin-top:4px;text-align:center;box-shadow:0 3px 12px rgba(14,165,233,0.3); }
+
+  .dm .guest-table { width:100%; border-collapse:collapse; }
+  .dm .guest-table th { font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#475569;padding-bottom:10px;border-bottom:2px solid rgba(255,255,255,0.06);text-align:left; }
+  .dm .guest-table td { padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82rem;color:#e2e8f0;vertical-align:middle; }
+  .dm .badge.accepted { background:rgba(34,197,94,0.15);color:#4ade80; }
+  .dm .badge.declined { background:rgba(239,68,68,0.12);color:#f87171; }
+  .dm .badge.pending { background:rgba(255,255,255,0.07);color:#64748b; }
+  .dm .badge.tentative { background:rgba(234,179,8,0.12);color:#fde047; }
+  .dm .copy-btn { background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;font-size:0.7rem;font-weight:600;color:#94a3b8; }
+
+  .dm .event-strip {
+    background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.2);
+    border-radius:14px; padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+  }
+  .dm .event-strip .ev-name { font-size:0.95rem;font-weight:800;color:#38bdf8; }
+  .dm .event-strip .ev-date { font-size:0.75rem;color:#64748b;margin-top:2px; }
+  .dm .event-strip .ev-badge { background:rgba(14,165,233,0.2);border:1px solid rgba(14,165,233,0.3);color:#38bdf8;font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:20px; }
+
+  .dm-toast {
+    background:rgba(30,41,59,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:12px;
+    padding:12px 16px; display:flex; align-items:center; gap:10px;
+    box-shadow:0 12px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter:blur(16px); margin:0 16px 16px;
+  }
+  .dm-toast .t-icon { width:28px;height:28px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.85rem; }
+  .dm-toast .t-msg { font-size:0.78rem;font-weight:600;color:#f1f5f9; }
+  .dm-toast .t-close { font-size:0.7rem;color:#475569;margin-left:auto; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Host Dashboard — Section 5 of 5</h1>
+  <p>Two states: event setup · active dashboard. Shared header with toggle. Toast notifications.</p>
+</div>
+
+<!-- ── STATE 1: NO EVENT YET ── -->
+<div class="section-lbl">State 1 — No Event Created Yet (EventFormComponent)</div>
+<div class="split">
+
+  <div>
+    <div class="col-label">☀️ Light</div>
+    <div class="page-frame lm">
+      <div class="hdr">
+        <div class="hdr-logo"><div class="hdr-logo-icon">⚡</div>Tap<span>Invite</span></div>
+        <div class="hdr-right">
+          <span class="hdr-user">kamal@example.com</span>
+          <div class="hdr-logout">Logout</div>
+          <div class="hdr-toggle"><div class="k">☀️</div></div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="setup-wrap">
+          <div class="setup-card">
+            <div class="setup-eyebrow">Step 1 of 1</div>
+            <h2>Create your event</h2>
+            <p>Fill in the details below. You can always edit these later.</p>
+            <div class="form-group">
+              <label class="form-label">Event Name</label>
+              <input class="form-input focused" value="Sarah's Birthday Dinner" style="pointer-events:none">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date &amp; Time</label>
+              <input class="form-input" value="2025-06-28T19:00" type="datetime-local" style="pointer-events:none">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <input class="form-input" value="The Grand Hotel, Colombo" style="pointer-events:none">
+            </div>
+            <div class="submit-btn">🚀 &nbsp;Launch Event</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="col-label">🌙 Dark</div>
+    <div class="page-frame dm">
+      <div class="hdr">
+        <div class="hdr-logo"><div class="hdr-logo-icon">⚡</div>Tap<span>Invite</span></div>
+        <div class="hdr-right">
+          <span class="hdr-user">kamal@example.com</span>
+          <div class="hdr-logout">Logout</div>
+          <div class="hdr-toggle"><div class="k">🌙</div></div>
+        </div>
+      </div>
+      <div class="main">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:32px 28px;width:100%;max-width:440px;backdrop-filter:blur(16px);box-shadow:0 24px 48px rgba(0,0,0,0.4)">
+            <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#38bdf8;margin-bottom:8px">Step 1 of 1</div>
+            <div style="font-size:1.25rem;font-weight:800;color:#f1f5f9;margin-bottom:4px">Create your event</div>
+            <div style="font-size:0.82rem;color:#64748b;margin-bottom:24px;line-height:1.5">Fill in the details below. You can always edit these later.</div>
+            <div style="margin-bottom:14px">
+              <label style="font-size:0.72rem;font-weight:600;letter-spacing:0.04em;color:#64748b;margin-bottom:6px;display:block;text-transform:uppercase">Event Name</label>
+              <input style="width:100%;padding:11px 13px;border:1.5px solid #0ea5e9;border-radius:10px;font-size:0.85rem;color:#f1f5f9;background:rgba(14,165,233,0.08);box-shadow:0 0 0 3px rgba(14,165,233,0.12)" value="Sarah's Birthday Dinner" readonly>
+            </div>
+            <div style="margin-bottom:14px">
+              <label style="font-size:0.72rem;font-weight:600;letter-spacing:0.04em;color:#64748b;margin-bottom:6px;display:block;text-transform:uppercase">Date &amp; Time</label>
+              <input type="datetime-local" style="width:100%;padding:11px 13px;border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;font-size:0.85rem;color:#e2e8f0;background:rgba(255,255,255,0.05)" value="2025-06-28T19:00" readonly>
+            </div>
+            <div style="margin-bottom:14px">
+              <label style="font-size:0.72rem;font-weight:600;letter-spacing:0.04em;color:#64748b;margin-bottom:6px;display:block;text-transform:uppercase">Location</label>
+              <input style="width:100%;padding:11px 13px;border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;font-size:0.85rem;color:#e2e8f0;background:rgba(255,255,255,0.05)" value="The Grand Hotel, Colombo" readonly>
+            </div>
+            <div style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#fb923c,#ea580c);color:white;font-size:0.9rem;font-weight:700;margin-top:8px;text-align:center;box-shadow:0 4px 16px rgba(251,146,60,0.35)">🚀 &nbsp;Launch Event</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATE 2: ACTIVE DASHBOARD ── -->
+<div class="section-lbl">State 2 — Active Dashboard (AddGuestForm + GuestTable + Toast)</div>
+<div class="split">
+
+  <div>
+    <div class="col-label">☀️ Light — Active Dashboard</div>
+    <div class="page-frame lm" style="position:relative">
+      <!-- Toast -->
+      <div class="lm-toast" style="position:absolute;top:68px;right:16px;z-index:10">
+        <div class="t-icon">✓</div>
+        <div class="t-msg">Invitation link copied!</div>
+      </div>
+      <div class="hdr">
+        <div class="hdr-logo"><div class="hdr-logo-icon">⚡</div>Tap<span>Invite</span></div>
+        <div class="hdr-right">
+          <span class="hdr-user">kamal@example.com</span>
+          <div class="hdr-logout">Logout</div>
+          <div class="hdr-toggle"><div class="k">☀️</div></div>
+        </div>
+      </div>
+      <div class="main">
+        <!-- Event strip -->
+        <div class="event-strip">
+          <div><div class="ev-name">Sarah's Birthday Dinner</div><div class="ev-date">📅 Sat 28 Jun 2025 · 7:00 PM &nbsp;·&nbsp; 📍 The Grand Hotel</div></div>
+          <div class="ev-badge">Live</div>
+        </div>
+        <!-- Grid -->
+        <div class="dash-grid">
+          <!-- Add guest card -->
+          <div class="card">
+            <div class="card-title">Add Guest</div>
+            <div class="mini-form-group">
+              <label class="mini-label">Name</label>
+              <input class="mini-input" value="Priya Sharma" readonly>
+            </div>
+            <div class="mini-form-group">
+              <label class="mini-label">Phone</label>
+              <input class="mini-input" value="+94 77 234 5678" readonly>
+            </div>
+            <div class="mini-btn">+ Add Guest</div>
+          </div>
+          <!-- Guest table card -->
+          <div class="card">
+            <div class="card-title">Guest Network (4)</div>
+            <table class="guest-table">
+              <thead><tr><th>Name</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Kamal Perera</td>
+                  <td><span class="badge accepted">Accepted</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+                <tr>
+                  <td>Nisha Fernando</td>
+                  <td><span class="badge declined">Declined</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+                <tr>
+                  <td>Arun Silva</td>
+                  <td><span class="badge tentative">Maybe</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+                <tr>
+                  <td>Dilini Jayawardena</td>
+                  <td><span class="badge pending">Pending</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="col-label">🌙 Dark — Active Dashboard</div>
+    <div class="page-frame dm" style="position:relative">
+      <div class="hdr">
+        <div class="hdr-logo"><div class="hdr-logo-icon">⚡</div>Tap<span>Invite</span></div>
+        <div class="hdr-right">
+          <span class="hdr-user">kamal@example.com</span>
+          <div class="hdr-logout">Logout</div>
+          <div class="hdr-toggle"><div class="k">🌙</div></div>
+        </div>
+      </div>
+      <!-- Toast -->
+      <div class="dm-toast">
+        <div class="t-icon">✓</div>
+        <div class="t-msg">Guest added successfully!</div>
+        <div class="t-close">✕</div>
+      </div>
+      <div class="main" style="padding-top:16px">
+        <!-- Event strip -->
+        <div class="event-strip">
+          <div><div class="ev-name">Sarah's Birthday Dinner</div><div class="ev-date">📅 Sat 28 Jun 2025 · 7:00 PM &nbsp;·&nbsp; 📍 The Grand Hotel</div></div>
+          <div class="ev-badge">Live</div>
+        </div>
+        <!-- Grid -->
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-title">Add Guest</div>
+            <div class="mini-form-group">
+              <label class="mini-label">Name</label>
+              <input class="mini-input" value="Priya Sharma" readonly>
+            </div>
+            <div class="mini-form-group">
+              <label class="mini-label">Phone</label>
+              <input class="mini-input" value="+94 77 234 5678" readonly>
+            </div>
+            <div class="mini-btn">+ Add Guest</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Guest Network (4)</div>
+            <table class="guest-table">
+              <thead><tr><th>Name</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Kamal Perera</td>
+                  <td><span class="badge accepted">Accepted</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+                <tr>
+                  <td>Nisha Fernando</td>
+                  <td><span class="badge declined">Declined</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+                <tr>
+                  <td>Arun Silva</td>
+                  <td><span class="badge tentative">Maybe</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+                <tr>
+                  <td>Dilini Jayawardena</td>
+                  <td><span class="badge pending">Pending</span></td>
+                  <td><div class="copy-btn">Copy</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center;color:#475569;font-size:0.85rem;margin-top:32px">
+  All 5 sections complete. Type <strong style="color:#f1f5f9">yes</strong> to approve the full design and move to writing the spec, or describe any changes.
+</p>
+</body>
+</html>

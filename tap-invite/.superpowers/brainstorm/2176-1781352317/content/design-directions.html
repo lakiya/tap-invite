@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TapInvite Design Directions</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .page-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    color: #94a3b8;
+    font-size: 1.05rem;
+  }
+
+  .directions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    max-width: 1140px;
+    margin: 0 auto 50px;
+  }
+
+  .direction-card {
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    background: #1e2333;
+  }
+  .direction-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  }
+  .direction-card.selected {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.2), 0 30px 60px rgba(0,0,0,0.4);
+  }
+  .direction-card.selected::after {
+    content: '✓ Selected';
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #38bdf8;
+    color: #0f172a;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── Direction A: Azure Clarity ── */
+  .dir-a .preview {
+    background: #f8fafc;
+    padding: 0;
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+  }
+  .dir-a .nav-bar {
+    background: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .dir-a .nav-logo { font-weight: 800; font-size: 0.9rem; color: #1e40af; letter-spacing: -0.02em; }
+  .dir-a .nav-btn {
+    background: #2563eb;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .dir-a .content {
+    padding: 20px;
+  }
+  .dir-a .hero-badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .dir-a .hero-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .dir-a .hero-title span { color: #2563eb; }
+  .dir-a .hero-sub {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .dir-a .cta-row { display: flex; gap: 8px; }
+  .dir-a .btn-primary {
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .dir-a .btn-ghost {
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  /* ── Direction B: Deep Azure Glow ── */
+  .dir-b .preview {
+    background: #060d1f;
+    height: 260px;
+    overflow: hidden;
+    position: relative;
+  }
+  .dir-b .glow-orb {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(37,99,235,0.35) 0%, transparent 70%);
+    top: -60px;
+    right: -40px;
+    border-radius: 50%;
+  }
+  .dir-b .glow-orb2 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(20,184,166,0.2) 0%, transparent 70%);
+    bottom: -30px;
+    left: 20px;
+    border-radius: 50%;
+  }
+  .dir-b .nav-bar {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dir-b .nav-logo { font-weight: 800; font-size: 0.9rem; color: #93c5fd; letter-spacing: -0.02em; }
+  .dir-b .nav-btn {
+    background: rgba(37,99,235,0.8);
+    color: #bfdbfe;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(96,165,250,0.3);
+  }
+  .dir-b .content { padding: 20px; position: relative; z-index: 2; }
+  .dir-b .hero-badge {
+    display: inline-block;
+    background: rgba(37,99,235,0.2);
+    color: #93c5fd;
+    border: 1px solid rgba(96,165,250,0.3);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .dir-b .hero-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .dir-b .hero-title span {
+    background: linear-gradient(90deg, #60a5fa, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .dir-b .hero-sub { font-size: 0.78rem; color: #94a3b8; margin-bottom: 14px; line-height: 1.5; }
+  .dir-b .cta-row { display: flex; gap: 8px; }
+  .dir-b .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.5);
+  }
+  .dir-b .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* ── Direction C: Slate Premium ── */
+  .dir-c .preview {
+    background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+    height: 260px;
+    overflow: hidden;
+    position: relative;
+  }
+  .dir-c .accent-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0ea5e9, #0284c7, #7c3aed);
+  }
+  .dir-c .nav-bar {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(203,213,225,0.7);
+  }
+  .dir-c .nav-logo { font-weight: 800; font-size: 0.9rem; color: #0f172a; letter-spacing: -0.03em; }
+  .dir-c .nav-logo span { color: #0ea5e9; }
+  .dir-c .nav-btn {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .dir-c .content { padding: 20px; }
+  .dir-c .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #e0f2fe, #cffafe);
+    color: #0284c7;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    border: 1px solid rgba(14,165,233,0.2);
+  }
+  .dir-c .hero-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .dir-c .hero-title span { color: #0ea5e9; }
+  .dir-c .hero-sub { font-size: 0.78rem; color: #475569; margin-bottom: 14px; line-height: 1.5; }
+  .dir-c .cta-row { display: flex; gap: 8px; }
+  .dir-c .btn-primary {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(14,165,233,0.35);
+  }
+  .dir-c .btn-secondary {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(249,115,22,0.3);
+  }
+
+  /* ── Card info ── */
+  .card-info {
+    padding: 22px;
+  }
+  .card-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+  .card-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .palette-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .swatch-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-left: 4px;
+  }
+
+  /* Palette A */
+  .pa-1 { background: #1e40af; }
+  .pa-2 { background: #2563eb; }
+  .pa-3 { background: #f8fafc; border: 1px solid #e2e8f0; }
+  .pa-4 { background: #e2e8f0; border: 1px solid #cbd5e1; }
+  .pa-5 { background: #06b6d4; }
+
+  /* Palette B */
+  .pb-1 { background: #060d1f; border: 1px solid #1e3a8a; }
+  .pb-2 { background: #1d4ed8; }
+  .pb-3 { background: #60a5fa; }
+  .pb-4 { background: #14b8a6; }
+  .pb-5 { background: #f97316; }
+
+  /* Palette C */
+  .pc-1 { background: #0f172a; }
+  .pc-2 { background: #0ea5e9; }
+  .pc-3 { background: #e2e8f0; border: 1px solid #cbd5e1; }
+  .pc-4 { background: #7c3aed; }
+  .pc-5 { background: #f97316; }
+
+  .selection-hint {
+    text-align: center;
+    color: #475569;
+    font-size: 0.88rem;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>TapInvite — Design Direction</h1>
+  <p>Three premium UI directions. Click to select your favourite.</p>
+</div>
+
+<div class="directions-grid">
+
+  <!-- Direction A -->
+  <div class="direction-card dir-a" onclick="selectCard(this, 'A')" data-choice="A">
+    <div class="preview">
+      <div class="nav-bar">
+        <div class="nav-logo">⚡ TapInvite</div>
+        <div class="nav-btn">Dashboard</div>
+      </div>
+      <div class="content">
+        <div class="hero-badge">Now Live</div>
+        <div class="hero-title">Your Event,<br><span>Beautifully Delivered</span></div>
+        <div class="hero-sub">Personalised invitations that guests actually open and remember.</div>
+        <div class="cta-row">
+          <div class="btn-primary">Get Started</div>
+          <div class="btn-ghost">Learn More</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-tag">Direction A</div>
+      <div class="card-name">Azure Clarity</div>
+      <div class="card-desc">Crisp white background with Royal Blue as the dominant accent. Clean, trustworthy, and professional. Ideal for a polished SaaS feel.</div>
+      <div class="palette-row">
+        <div class="swatch pa-1" title="Navy Blue #1e40af"></div>
+        <div class="swatch pa-2" title="Royal Blue #2563eb"></div>
+        <div class="swatch pa-3" title="White #f8fafc"></div>
+        <div class="swatch pa-4" title="Slate Gray #e2e8f0"></div>
+        <div class="swatch pa-5" title="Teal Accent #06b6d4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Direction B -->
+  <div class="direction-card dir-b" onclick="selectCard(this, 'B')" data-choice="B">
+    <div class="preview">
+      <div class="glow-orb"></div>
+      <div class="glow-orb2"></div>
+      <div class="nav-bar">
+        <div class="nav-logo">⚡ TapInvite</div>
+        <div class="nav-btn">Dashboard</div>
+      </div>
+      <div class="content">
+        <div class="hero-badge">Now Live</div>
+        <div class="hero-title">Your Event,<br><span>Beautifully Delivered</span></div>
+        <div class="hero-sub">Personalised invitations that guests actually open and remember.</div>
+        <div class="cta-row">
+          <div class="btn-primary">Get Started</div>
+          <div class="btn-ghost">Learn More</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-tag">Direction B</div>
+      <div class="card-name">Deep Azure Glow</div>
+      <div class="card-desc">Dark near-black background with glowing blue radials and gradient text. Futuristic, immersive, and striking. Perfect for a premium tech aesthetic.</div>
+      <div class="palette-row">
+        <div class="swatch pb-1" title="Deep Dark #060d1f"></div>
+        <div class="swatch pb-2" title="Deep Blue #1d4ed8"></div>
+        <div class="swatch pb-3" title="Sky Blue #60a5fa"></div>
+        <div class="swatch pb-4" title="Teal #14b8a6"></div>
+        <div class="swatch pb-5" title="Orange #f97316"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Direction C -->
+  <div class="direction-card dir-c" onclick="selectCard(this, 'C')" data-choice="C">
+    <div class="preview">
+      <div class="accent-bar"></div>
+      <div class="nav-bar">
+        <div class="nav-logo">⚡ Tap<span>Invite</span></div>
+        <div class="nav-btn">Dashboard</div>
+      </div>
+      <div class="content">
+        <div class="hero-badge">Now Live</div>
+        <div class="hero-title">Your Event,<br><span>Beautifully Delivered</span></div>
+        <div class="hero-sub">Personalised invitations that guests actually open and remember.</div>
+        <div class="cta-row">
+          <div class="btn-primary">Get Started</div>
+          <div class="btn-secondary">Create Event →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-tag">Direction C — Recommended ★</div>
+      <div class="card-name">Sky Blue + Slate Premium</div>
+      <div class="card-desc">Light Cool Gray background with Sky Blue primary and vivid Orange CTA buttons. Glassmorphism accents for depth. Feels fresh, modern, and energetic.</div>
+      <div class="palette-row">
+        <div class="swatch pc-1" title="Near Black #0f172a"></div>
+        <div class="swatch pc-2" title="Sky Blue #0ea5e9"></div>
+        <div class="swatch pc-3" title="Cool Gray #e2e8f0"></div>
+        <div class="swatch pc-4" title="Violet accent #7c3aed"></div>
+        <div class="swatch pc-5" title="Orange CTA #f97316"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="selection-hint">Click a card to select it, then reply in the terminal with your choice (or just type A, B, or C).</p>
+
+<script>
+  function selectCard(el, choice) {
+    document.querySelectorAll('.direction-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+
+    // Post event for Claude to read
+    fetch('/event', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ type: 'click', choice: choice, text: el.querySelector('.card-name').textContent, timestamp: Date.now() })
+    }).catch(() => {});
+  }
+</script>
+</body>
+</html>

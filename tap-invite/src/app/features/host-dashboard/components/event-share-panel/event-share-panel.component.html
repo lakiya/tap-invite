@@ -1,0 +1,25 @@
+<div class="share-panel">
+  <h3 class="share-title">Share Event</h3>
+
+  <div class="share-row">
+    <input
+      type="text"
+      class="share-url-input"
+      [value]="shareUrl()"
+      readonly
+      aria-label="Event share link"
+    />
+    <button type="button" class="btn-copy" (click)="copyLink()">🔗 Copy Link</button>
+  </div>
+
+  @if (qrDataUrl()) {
+    <div class="qr-wrap">
+      <img [src]="qrDataUrl()" alt="Event QR code" width="128" height="128" />
+      <a
+        class="btn-download"
+        [href]="qrDataUrl()"
+        [download]="eventTitle() + '-invite-qr.png'"
+      >⬇ Download QR</a>
+    </div>
+  }
+</div>

@@ -1,0 +1,32 @@
+<!-- src/app/features/guest-view/components/guest-view.component.html -->
+<main class="guest-page">
+
+  @if (isLoading()) {
+    <div class="status-wrap fade-in">
+      <div class="spinner"></div>
+      <p class="status-text">Preparing your invitation…</p>
+    </div>
+  }
+
+  @else if (hasError()) {
+    <div class="status-wrap error fade-in">
+      <div class="err-icon">🔍</div>
+      <h2>Invitation not found</h2>
+      <p>Please verify the link with your host.</p>
+      <a routerLink="/" class="back-home">← Back to home</a>
+    </div>
+  }
+
+  @else if (isDisabled()) {
+    <div class="status-wrap fade-in">
+      <div class="err-icon">🔒</div>
+      <h2>Invitation Unavailable</h2>
+      <p>This invitation is temporarily unavailable. Please contact the host.</p>
+    </div>
+  }
+
+  @else if (templateContext()) {
+    <app-template-renderer [context]="templateContext()!"></app-template-renderer>
+  }
+
+</main>

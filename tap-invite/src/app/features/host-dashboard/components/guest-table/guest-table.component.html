@@ -1,0 +1,79 @@
+<div class="gt-card">
+  <div class="gt-header">
+    <div class="field-group">
+      <h3 class="gt-title">Guest Network</h3>
+      <input
+        class="field-input"
+        [(value)]="searchTerm"
+        name="search"
+        placeholder="Guest Name or Phone"
+      />
+    </div>
+    @if (guests.length > 0 && hasAnyEmail) {
+      <button
+        type="button"
+        class="btn-send-all"
+        [disabled]="sendingIds().size > 0"
+        (click)="handleSendAll()"
+      >
+        {{ sendingIds().size > 0 ? 'Sending…' : '✉ Send All Invitations' }}
+      </button>
+    }
+  </div>
+
+  @if (guests.length === 0) {
+    <p class="empty-msg">No guests yet. Start building your list.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="guest-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Tools</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (guest of guests; track guest.id) {
+            <tr>
+              <td class="name-cell">{{ guest.display_name }}</td>
+              <td>
+                <span class="badge badge-{{ getStatus(guest).toLowerCase() }}">
+                  {{ getStatus(guest) }}
+                </span>
+              </td>
+              <td>
+                <div class="field-group">
+                  @if (guest.phone_number) {
+                    <div>📱</div>
+                  } @else {
+                    <div class="email-icon-disabled">📱</div>
+                  }
+                  @if (guest.email) {
+                    <div>✉</div>
+                  } @else {
+                    <div class="email-icon-disabled">✉</div>
+                  }
+                </div>
+              </td>
+              <td class="action-cell">
+                <button type="button" class="btn-copy" (click)="copyLink.emit(guest.id)">🔗 Copy</button>
+                <button
+                  type="button"
+                  class="btn-email"
+                  [disabled]="isSending(guest.id) || !guest.email"
+                  [title]="!guest.email ? 'No email on file' : ''"
+                  (click)="onSendEmail(guest.id)"
+                >
+                  {{ isSending(guest.id) ? 'Sending…' : '✉ Send' }}
+                </button>
+                <button type="button" class="btn-delete" (click)="onDelete(guest.id)">🗑️ Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

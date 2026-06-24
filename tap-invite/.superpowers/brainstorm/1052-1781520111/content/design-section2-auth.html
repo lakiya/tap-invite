@@ -1,0 +1,69 @@
+<h2>Design — Section 2: Auth, Routing & RLS</h2>
+<p class="subtitle">How the admin is identified, protected, and routed after login.</p>
+
+<div class="section">
+  <h3>Auth Flow (updated)</h3>
+  <div class="mockup">
+    <div class="mockup-header">auth-callback.component.ts — updated redirect logic</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8;">
+      <div style="color:var(--text-secondary);">On SIGNED_IN event:</div>
+      <div style="padding-left:16px;">1. Fetch <code>profiles</code> row for current user</div>
+      <div style="padding-left:16px;">2. If <code>role === 'super_admin'</code> → navigate to <code>/admin</code></div>
+      <div style="padding-left:16px;">3. Else → navigate to <code>/dashboard</code></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>New <code>adminGuard</code></h3>
+  <div class="mockup">
+    <div class="mockup-header">src/app/core/guards/admin.guard.ts</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8;">
+      <div>1. Check <code>supabase.getCurrentUser()</code> — redirect <code>/login</code> if no session</div>
+      <div>2. Query <code>profiles</code> for <code>role</code></div>
+      <div>3. If <code>super_admin</code> → allow</div>
+      <div>4. Else → redirect <code>/dashboard</code> (silently, no error page needed)</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--text-secondary);margin-top:6px;">Regular users who somehow hit <code>/admin</code> just bounce to their own dashboard.</p>
+</div>
+
+<div class="section">
+  <h3>New <code>ProfilesService</code></h3>
+  <div class="mockup">
+    <div class="mockup-header">src/app/core/services/profiles/profiles.service.ts</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8;">
+      <div><code>getMyProfile(userId)</code> → fetch role from profiles table</div>
+      <div style="color:var(--text-secondary);font-size:11px;padding-left:16px;">Used by adminGuard + auth-callback</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--text-secondary);margin-top:6px;">Tiny service — one method. Keeps the Supabase client call out of the guard itself.</p>
+</div>
+
+<div class="section">
+  <h3>Updated Routes (<code>app.routes.ts</code>)</h3>
+  <div class="mockup">
+    <div class="mockup-header">New route added</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8;">
+      <div><span style="color:#7c3aed;">{ path: 'admin',</span></div>
+      <div style="padding-left:16px;"><span style="color:#7c3aed;">component: AdminDashboardComponent,</span></div>
+      <div style="padding-left:16px;"><span style="color:#7c3aed;">canActivate: [adminGuard] }</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Supabase RLS Policies</h3>
+  <div class="mockup">
+    <div class="mockup-header">New policies on events, guests, rsvps tables</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:2;">
+      <div><span style="color:#16a34a;">SELECT</span> all events → allowed if <code>profiles.role = 'super_admin'</code></div>
+      <div><span style="color:#d97706;">UPDATE</span> any event → allowed if <code>profiles.role = 'super_admin'</code></div>
+      <div><span style="color:#dc2626;">DELETE</span> any event → allowed if <code>profiles.role = 'super_admin'</code></div>
+      <div><span style="color:#16a34a;">SELECT</span> all profiles → allowed if <code>profiles.role = 'super_admin'</code></div>
+      <div style="color:var(--text-secondary);font-size:11px;margin-top:6px;">Existing host policies remain untouched. Cascade delete handles guests + rsvps automatically when event is deleted.</div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:16px;font-size:12px;color:var(--text-secondary);">Does this auth + routing + RLS design look right? Reply in terminal.</p>

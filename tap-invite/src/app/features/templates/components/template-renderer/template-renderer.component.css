@@ -1,0 +1,18 @@
+/* src/app/features/templates/components/template-renderer/template-renderer.component.css */
+.tpl-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.tpl-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: tplSpin 0.8s linear infinite;
+}
+
+@keyframes tplSpin { to { transform: rotate(360deg); } }

@@ -1,0 +1,47 @@
+/* Guest page is just a shell — templates own their full-page layout */
+.guest-page {
+  min-height: 100vh;
+}
+
+/* Loading and error states handle their own full-height centering */
+.status-wrap {
+  min-height: 100vh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.status-text { color: var(--color-text-muted); font-size: 0.875rem; }
+
+.status-wrap.error { color: var(--color-text); }
+.err-icon { font-size: 2.5rem; }
+.status-wrap h2 { font-size: 1.25rem; font-weight: 700; margin: 0; }
+.status-wrap p  { font-size: 0.875rem; color: var(--color-text-muted); margin: 0; }
+
+.back-home {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.83rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.back-home:hover { color: var(--color-primary); }
+
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

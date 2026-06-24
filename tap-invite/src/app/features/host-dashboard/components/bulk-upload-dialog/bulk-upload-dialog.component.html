@@ -1,0 +1,117 @@
+<div class="dialog-header">
+  <h2 class="dialog-title">⬆ Bulk Upload Guests</h2>
+  <button class="btn-close" type="button" (click)="cancel()" aria-label="Close">✕</button>
+</div>
+
+@if (step() === 'upload') {
+  <div class="upload-step">
+    <p class="upload-intro">
+      Download the template, fill in your guests, then upload the file. You can review
+      and edit everything before saving.
+    </p>
+
+    <div class="template-buttons">
+      <button class="btn-template" type="button" (click)="downloadTemplate('csv')">
+        ⬇ Download CSV template
+      </button>
+      <button class="btn-template" type="button" (click)="downloadTemplate('xlsx')">
+        ⬇ Download Excel template
+      </button>
+    </div>
+
+    <label
+      class="dropzone"
+      (drop)="onDrop($event)"
+      (dragover)="onDragOver($event)">
+      <input type="file" accept=".csv,.xlsx" hidden (change)="onFileSelected($event)" />
+      <span class="dropzone-icon">📄</span>
+      <span class="dropzone-text">Click to choose a file or drag it here</span>
+      <span class="dropzone-hint">Accepts .csv and .xlsx</span>
+    </label>
+
+    @if (fileError()) {
+      <p class="alert alert-error">{{ fileError() }}</p>
+    }
+  </div>
+}
+
+@if (step() === 'preview') {
+  <div class="preview-step">
+    <div class="preview-summary">
+      <span class="pill pill-file">{{ fileName() }}</span>
+      <span class="pill pill-valid">{{ validCount() }} valid</span>
+      @if (errorCount() > 0) {
+        <span class="pill pill-error">{{ errorCount() }} with errors</span>
+      }
+      @if (duplicateCount() > 0) {
+        <span class="pill pill-dup">{{ duplicateCount() }} duplicates</span>
+      }
+    </div>
+
+    @if (rows().length === 0) {
+      <p class="alert alert-neutral">No rows found in this file.</p>
+    } @else {
+      <div class="table-scroll">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th>Name <span class="req">*</span></th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows(); track row.rowId) {
+              <tr>
+                <td>
+                  <input
+                    class="cell-input"
+                    [class.cell-error]="row.issues.includes('name_required')"
+                    [(ngModel)]="row.display_name"
+                    (ngModelChange)="onCellEdit()"
+                    placeholder="Required" />
+                </td>
+                <td>
+                  <input
+                    class="cell-input"
+                    [class.cell-error]="row.issues.includes('invalid_phone')"
+                    [(ngModel)]="row.phone_number"
+                    (ngModelChange)="onCellEdit()" />
+                </td>
+                <td>
+                  <input
+                    class="cell-input"
+                    [class.cell-error]="row.issues.includes('invalid_email')"
+                    [(ngModel)]="row.email"
+                    (ngModelChange)="onCellEdit()" />
+                </td>
+                <td class="cell-actions">
+                  @if (row.issues.includes('duplicate_in_file') || row.issues.includes('duplicate_existing')) {
+                    <span class="dup-badge" title="Possible duplicate">dup</span>
+                  }
+                  <button class="btn-remove" type="button" (click)="removeRow(row.rowId)" aria-label="Remove row">✕</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (saveError()) {
+      <p class="alert alert-error">{{ saveError() }}</p>
+    }
+
+    <div class="dialog-actions">
+      <button class="btn-cancel" type="button" (click)="backToUpload()">← Upload another</button>
+      <button class="btn-save" type="button" [disabled]="!canSave()" (click)="save()">
+        {{ isSaving() ? 'Saving…' : 'Save ' + saveCount() + ' guests' }}
+      </button>
+    </div>
+
+    @if (errorCount() > 0) {
+      <p class="submit-hint">Fix the highlighted cells to enable saving.</p>
+    }
+  </div>
+}

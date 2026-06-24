@@ -1,0 +1,45 @@
+<div class="dialog-header">
+  <h2 class="dialog-title">Edit Event</h2>
+  <button class="btn-close" (click)="cancel()" type="button" aria-label="Close">✕</button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+
+  <div class="field">
+    <label for="edit-title">Event Title</label>
+    <input id="edit-title" formControlName="title" type="text" placeholder="Event name" />
+  </div>
+
+  <div class="field field-locked">
+    <label>Date <span class="lock-hint">(cannot be changed)</span></label>
+    <input
+      type="text"
+      [value]="data.event.event_date | date:'EEEE, MMMM d, y · h:mm a'"
+      readonly
+      disabled />
+  </div>
+
+  <div class="field">
+    <label for="edit-location">Location</label>
+    <input id="edit-location" formControlName="location_text" type="text" placeholder="Venue or address" />
+  </div>
+
+  <div class="field">
+    <label for="edit-maps-url">Google Maps URL</label>
+    <input id="edit-maps-url" formControlName="google_maps_url" type="text" placeholder="https://maps.google.com/..." />
+  </div>
+
+  <div class="template-section">
+    <p class="template-label">Invitation Template</p>
+    <app-template-gallery
+      [selectedId]="selectedTemplateId()"
+      (templateSelected)="selectedTemplateId.set($event)">
+    </app-template-gallery>
+  </div>
+
+  <div class="dialog-actions">
+    <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+    <button type="submit" class="btn-save" [disabled]="form.invalid">Save Changes</button>
+  </div>
+
+</form>

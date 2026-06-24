@@ -1,0 +1,159 @@
+/* ── Full-bleed immersive page ── */
+.sf-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 75% 25%, rgba(244, 185, 130, 0.22) 0%, transparent 55%),
+    linear-gradient(160deg, #200a02 0%, #4a1a07 30%, #7a3214 60%, #a85228 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+/* ── Card ── */
+.sf-card {
+  background: #fdf6f0;
+  border-radius: 28px;
+  max-width: 560px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow:
+    0 40px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.sf-header {
+  background: linear-gradient(135deg, #f9e4d4, #f0c4b0);
+  padding: 32px 36px 28px;
+  text-align: center;
+  border-bottom: 2px solid #e8a87c;
+}
+
+.sf-floral-accent {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  letter-spacing: 0.35em;
+}
+
+.sf-subtitle {
+  font-size: 0.82rem;
+  color: #8b4513;
+  font-style: italic;
+  margin: 0 0 8px;
+  letter-spacing: 0.06em;
+}
+
+.sf-greeting {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-style: italic;
+  color: #5c2d0e;
+  margin: 0;
+}
+
+.sf-body {
+  padding: 36px;
+}
+
+.sf-event-name {
+  font-size: 1.9rem;
+  font-weight: 700;
+  font-style: italic;
+  color: #5c2d0e;
+  text-align: center;
+  margin: 0 0 24px;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+.sf-details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sf-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sf-detail-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sf-detail-primary {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #5c2d0e;
+  margin: 0 0 3px;
+}
+
+.sf-detail-secondary {
+  font-size: 0.8rem;
+  color: #8b4513;
+  margin: 0;
+}
+
+.sf-map-link {
+  font-size: 0.78rem;
+  color: #c47a3a;
+  text-decoration: none;
+  font-weight: 600;
+}
+.sf-map-link:hover { text-decoration: underline; }
+
+.sf-divider {
+  text-align: center;
+  color: #e8a87c;
+  font-size: 1.2rem;
+  letter-spacing: 0.45em;
+  margin: 24px 0;
+  border-top: 1px dashed #f0d9cc;
+  padding-top: 18px;
+}
+
+.sf-rsvp-error {
+  font-size: 0.82rem;
+  color: #c0392b;
+  text-align: center;
+  margin: 14px 0 0;
+  font-style: italic;
+}
+
+.sf-fade-up { animation: sfFadeUp 0.5s ease; }
+
+@keyframes sfFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Mobile: seamless full-width card ── */
+@media (max-width: 600px) {
+  .sf-page {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .sf-card {
+    border-radius: 0;
+    max-width: 100%;
+    box-shadow: none;
+    min-height: 100dvh;
+  }
+
+  .sf-header {
+    padding: 28px 24px 22px;
+  }
+
+  .sf-body {
+    padding: 28px 24px 36px;
+  }
+
+  .sf-event-name {
+    font-size: 1.55rem;
+  }
+}

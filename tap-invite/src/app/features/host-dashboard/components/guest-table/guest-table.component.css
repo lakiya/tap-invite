@@ -1,0 +1,197 @@
+.gt-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.gt-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guest-count {
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 99px;
+}
+
+.empty-msg {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 32px 0;
+}
+
+.table-wrap { overflow-x: auto; }
+
+.guest-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.guest-table th {
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 0 12px 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.guest-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.guest-table tr:last-child td { border-bottom: none; }
+
+.name-cell { font-weight: 600; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.badge-accepted  { background: rgba(34,197,94,0.15);  color: #16a34a; }
+.badge-declined  { background: rgba(239,68,68,0.12);  color: #dc2626; }
+.badge-tentative { background: rgba(234,179,8,0.12);  color: #ca8a04; }
+.badge-pending   { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+
+[data-theme="dark"] .badge-accepted  { color: #4ade80; }
+[data-theme="dark"] .badge-declined  { color: #f87171; }
+[data-theme="dark"] .badge-tentative { color: #fde047; }
+
+.contact-icons {
+  display: flex;
+  gap: 6px;
+  font-size: 1rem;
+}
+
+.action-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-copy, .btn-email,.btn-delete {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.btn-copy:hover  { border-color: var(--color-primary); color: var(--color-primary); }
+.btn-email:hover { border-color: var(--color-accent);  color: var(--color-accent); }
+.btn-delete:hover { border-color: var(--color-danger);  color: var(--color-danger); }
+.btn-email:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.no-email {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.stats {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.field-input {
+  max-width: 300px;
+  align-self: flex-end;
+  padding: 10px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column; /* Forces 2-line layout on mobile */
+  gap: 10px;
+  align-items: flex-start; /* Aligns both to the left */
+}
+
+.field-input {
+  width: 250px; /* Adjust this to your desired fixed size */
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+/* For screens wider than 600px */
+@media (min-width: 600px) {
+  .field-group {
+    flex-direction: row; /* Aligns in one line */
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.gt-title {
+  margin: 0;
+}
+
+.email-icon-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: default;
+}
+
+.gt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.btn-send-all {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.btn-send-all:disabled {
+  background: #475569;
+  cursor: not-allowed;
+}

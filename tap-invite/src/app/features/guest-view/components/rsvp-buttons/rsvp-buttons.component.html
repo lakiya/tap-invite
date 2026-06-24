@@ -1,0 +1,43 @@
+<div class="rsvp-section">
+  @if (status === 'Pending') {
+    <h3 class="rsvp-heading">Will you join us?</h3>
+    <div class="rsvp-actions">
+      <button type="button" class="btn-accept" (click)="rsvpChange.emit('Accepted')">✓ Accept with Joy</button>
+      <button type="button" class="btn-maybe"  (click)="rsvpChange.emit('Tentative')">〜 Maybe</button>
+      <button type="button" class="btn-decline" (click)="rsvpChange.emit('Declined')">✕ Regretfully Decline</button>
+    </div>
+  }
+
+  @if (status === 'Accepted') {
+    <div class="rsvp-banner rsvp-accepted">
+      <span class="banner-icon">🎉</span>
+      <div>
+        <p class="banner-title">You're coming!</p>
+        <p class="banner-sub">We can't wait to see you.</p>
+      </div>
+    </div>
+    <button type="button" class="btn-change" (click)="rsvpChange.emit('Pending')">Change my response</button>
+  }
+
+  @if (status === 'Declined') {
+    <div class="rsvp-banner rsvp-declined">
+      <span class="banner-icon">😔</span>
+      <div>
+        <p class="banner-title">Sorry you can't make it</p>
+        <p class="banner-sub">We'll miss you.</p>
+      </div>
+    </div>
+    <button type="button" class="btn-change" (click)="rsvpChange.emit('Pending')">Change my response</button>
+  }
+
+  @if (status === 'Tentative') {
+    <div class="rsvp-banner rsvp-tentative">
+      <span class="banner-icon">🤔</span>
+      <div>
+        <p class="banner-title">We've noted your maybe</p>
+        <p class="banner-sub">Let us know if your plans change.</p>
+      </div>
+    </div>
+    <button type="button" class="btn-change" (click)="rsvpChange.emit('Pending')">Change my response</button>
+  }
+</div>

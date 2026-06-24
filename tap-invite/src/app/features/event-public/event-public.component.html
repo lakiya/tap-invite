@@ -1,0 +1,29 @@
+<main class="pub-page">
+  @if (isLoading()) {
+    <div class="status-wrap">
+      <div class="spinner"></div>
+      <p>Loading event…</p>
+    </div>
+  } @else if (hasError()) {
+    <div class="status-wrap">
+      <div class="err-icon">🔍</div>
+      <h2>Event not found</h2>
+      <p>The link may be invalid or the event has been removed.</p>
+      <a routerLink="/" class="back-home">← Back to home</a>
+    </div>
+  } @else if (isDisabled()) {
+    <div class="status-wrap">
+      <div class="err-icon">🔒</div>
+      <h2>Event Unavailable</h2>
+      <p>This event is currently unavailable. Please contact the host.</p>
+    </div>
+  } @else if (event()) {
+    <div class="event-card">
+      <h1 class="event-title">{{ event().title }}</h1>
+      <p class="event-date">📅 {{ event().event_date | date:'EEEE, MMMM d, y' }}</p>
+      @if (event().location_text) {
+        <p class="event-location">📍 {{ event().location_text }}</p>
+      }
+    </div>
+  }
+</main>

@@ -1,0 +1,29 @@
+.stats-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.stat-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 10px;
+  min-width: 80px;
+}
+.stat-count {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+.stat-chip--accepted  { background: #dcfce7; color: #16a34a; }
+.stat-chip--declined  { background: #fee2e2; color: #dc2626; }
+.stat-chip--tentative { background: #fef9c3; color: #854d0e; }
+.stat-chip--pending   { background: #f1f5f9; color: #64748b; }

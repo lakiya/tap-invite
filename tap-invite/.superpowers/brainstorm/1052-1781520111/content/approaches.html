@@ -1,0 +1,70 @@
+<h2>Architectural Approaches</h2>
+<p class="subtitle">Three ways to structure the Admin Command Center. All use Supabase RLS — the difference is how admin logic is organized on the Angular side.</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Dedicated <code>AdminService</code> + Feature Module <span style="background:#7c3aed;color:white;font-size:10px;padding:2px 6px;border-radius:4px;margin-left:6px;">Recommended</span></h3>
+      <p>New <code>admin</code> feature folder (<code>src/app/features/admin/</code>) with its own <code>AdminService</code>, components, and route. The existing <code>supabase.ts</code> stays untouched — admin SQL queries live exclusively in <code>AdminService</code>. A new <code>adminGuard</code> protects the route by checking the profiles table for the <code>super_admin</code> role.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Clean separation — admin code never bleeds into user-facing features</li>
+          <li>Matches existing pattern (host-dashboard has its own folder/service)</li>
+          <li>Easy to find, modify, or remove entirely</li>
+          <li>AdminService can call Supabase directly with RLS bypass policies</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Some Supabase methods (e.g., sendMagicLink) may need to be duplicated or extracted</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Extend Existing <code>supabase.ts</code> with Admin Methods</h3>
+      <p>Add admin-specific methods (e.g., <code>getAllEvents()</code>, <code>disableEvent()</code>, <code>sendManualMagicLink()</code>) directly to the existing <code>SupabaseService</code>. No new service file — everything in one place.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Less files, simpler setup</li>
+          <li>Magic link method already lives in supabase.ts — reuse directly</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>supabase.ts already handles events, guests, RSVPs — adding admin bloats it further</li>
+          <li>Admin methods mixed with user methods — any component can accidentally call them</li>
+          <li>Harder to enforce "admin-only" at the service layer</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Supabase Edge Functions for All Admin Mutations</h3>
+      <p>Admin reads use RLS policies, but writes (disable event, delete event, edit fields) go through Supabase Edge Functions using the service role key server-side. Maximum security.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Service role key never touches the browser</li>
+          <li>Audit log at the Edge Function layer is possible</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Significant complexity — each admin operation needs its own Edge Function</li>
+          <li>The <code>supabase/functions/</code> folder is empty — this is a big greenfield addition</li>
+          <li>RLS with <code>super_admin</code> bypass policies already give server-enforced security without this overhead</li>
+          <li>Over-engineered for a single admin user</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:16px;padding:12px;background:var(--card-bg);border-radius:8px;border-left:3px solid #7c3aed;">
+  <p><strong>My recommendation: Approach A.</strong> It mirrors the existing <code>host-dashboard</code> pattern exactly — its own folder, its own service, its own guard. RLS policies on the Supabase side provide server-enforced security. The magic link method can be extracted to a shared util or called via the existing SupabaseService. Clean, proportionate, and maintainable.</p>
+</div>
+
+<p style="margin-top:12px;font-size:12px;color:var(--text-secondary);">Click to select, then reply in the terminal.</p>
