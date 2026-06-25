@@ -35,6 +35,7 @@ const template = (production) =>
   supabaseKey: '${get('SUPABASE_KEY')}',
 };\n`;
 
+fs.mkdirSync(path.join(root, 'src/environments'), { recursive: true });
 fs.writeFileSync(path.join(root, 'src/environments/environment.ts'), template(false));
 fs.writeFileSync(path.join(root, 'src/environments/environment.prod.ts'), template(true));
 console.log('[set-env] environment files generated');
