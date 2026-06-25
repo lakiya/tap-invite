@@ -1,59 +1,75 @@
 # TapInvite
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.1.
+A digital event invitation platform. Hosts create events and send personalized invitations via magic link — guests tap the link, land on a themed invite page, and RSVP in one step.
 
-## Development server
+Built with Angular 22, Supabase (auth + database), and Resend (email).
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Features
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **5 invitation templates** — default minimal, soft floral, flip card, wedding book, invitation booklet
+- **Host dashboard** — create events, manage guests, track RSVPs, bulk upload via CSV/Excel
+- **Magic link auth** — guests authenticate with a single email link, no password required
+- **Super admin panel** — enable/disable events, edit event data, dispatch magic links manually, hard delete with cascade
+- **RSVP stats** — live attendance counts and meal preference breakdowns
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Prerequisites
 
-```bash
-ng generate component component-name
-```
+- Node.js 20+
+- Angular CLI 22 (`npm install -g @angular/cli`)
+- A [Supabase](https://supabase.com) project
+- A [Resend](https://resend.com) account with a verified sender domain
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## Setup
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 1. Install dependencies
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### 2. Configure environment
 
 ```bash
-ng e2e
+cp .env.example .env
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Fill in `.env` with your Supabase and Resend credentials (see comments in `.env.example`).
 
-## Additional Resources
+Angular environment files (`src/environments/environment.ts` and `environment.prod.ts`) are generated automatically from `.env` when you run `npm start` or `npm run build`. Do not create or edit them manually.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 3. Set up the database
+
+Apply the schema via the Supabase SQL editor or CLI. The schema includes:
+
+- `profiles` table with `user_role` ENUM (`host`, `guest`, `super_admin`)
+- `events` table with `is_enabled` flag
+- RLS policies for role-based access
+- Trigger to auto-create a profile on sign-up
+
+Bootstrap a super admin by setting `role = 'super_admin'` for your account in the `profiles` table:
+
+```sql
+UPDATE profiles SET role = 'super_admin' WHERE email = '<your-email>';
+```
+
+---
+
+## Development
+
+```bash
+npm start          # serves at http://localhost:4200
+npm run build      # production build → dist/
+npm test           # unit tests via Vitest
+```
+
+---
+
+## Deployment
+
+Set the four environment variables (`SUPABASE_URL`, `SUPABASE_KEY`, `RESEND_API_KEY`, `FROM_EMAIL`) in your hosting platform (Vercel, Railway, etc.). The `prebuild` hook runs `scripts/set-env.js` automatically during deployment to generate the environment files from those variables.
