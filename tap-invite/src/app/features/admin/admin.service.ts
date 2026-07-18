@@ -55,6 +55,12 @@ export class AdminService {
     if (error) throw error;
   }
 
+  async togglePremium(id: string, is_premium: boolean): Promise<void> {
+    const { error } = await this.supabase.client
+      .from('events').update({ is_premium }).eq('id', id);
+    if (error) throw error;
+  }
+
   async updateEvent(id: string, fields: EventEditFields): Promise<void> {
     const { error } = await this.supabase.client
       .from('events').update(fields).eq('id', id);

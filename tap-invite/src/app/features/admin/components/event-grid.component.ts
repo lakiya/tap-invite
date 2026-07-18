@@ -44,6 +44,7 @@ import { EventEditModalComponent } from './event-edit-modal.component';
                 <th>Date</th>
                 <th>Status</th>
                 <th>Enabled</th>
+                <th>Premium</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -64,6 +65,13 @@ import { EventEditModalComponent } from './event-edit-modal.component';
                       [class.toggle-pill--on]="event.is_enabled"
                       (click)="toggleEnabled(event)"
                     >{{ event.is_enabled ? 'ON' : 'OFF' }}</button>
+                  </td>
+                  <td>
+                    <button
+                      class="toggle-pill"
+                      [class.toggle-pill--on]="event.is_premium"
+                      (click)="togglePremium(event)"
+                    >{{ event.is_premium ? 'ON' : 'OFF' }}</button>
                   </td>
                   <td class="actions-cell">
                     <button class="btn-edit" (click)="openEdit(event)">✏️ Edit</button>
@@ -191,6 +199,18 @@ export class EventGridComponent implements OnInit {
         )
       );
       this.toast.error('Failed to update event status.');
+    }
+  }
+
+  async togglePremium(event: AdminEvent) {
+    const newValue = !event.is_premium;
+    try {
+      await this.adminService.togglePremium(event.id, newValue);
+      this.allEvents.update(events =>
+        events.map(e => e.id === event.id ? { ...e, is_premium: newValue } : e)
+      );
+    } catch {
+      this.toast.error('Failed to update premium status.');
     }
   }
 
