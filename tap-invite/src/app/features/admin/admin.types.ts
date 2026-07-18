@@ -8,6 +8,8 @@ export interface AdminEvent {
   location_text: string;
   google_maps_url: string | null;
   is_enabled: boolean;
+  is_premium: boolean;
+  wall_token: string;
   host_id: string;
   created_at: string;
   hostEmail: string;

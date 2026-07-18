@@ -13,6 +13,8 @@ export interface EventData {
   google_maps_url?: string | null;
   notes?: string | null;
   show_rsvp: boolean;
+  is_premium: boolean;
+  wall_token: string;
 }
 
 export interface GuestData {
