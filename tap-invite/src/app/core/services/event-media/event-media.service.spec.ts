@@ -97,7 +97,10 @@ describe('EventMediaService', () => {
     it('throws and never uploads when the free-tier photo cap is reached', async () => {
       const file = new File([new Uint8Array(1024)], 'photo.jpg', { type: 'image/jpeg' });
       vi.spyOn(service, 'getMediaCount').mockResolvedValue(30);
-      const uploadSpy = vi.spyOn(supabase.client.storage.from('event-media'), 'upload');
+      const uploadSpy = vi.fn().mockResolvedValue({ error: null });
+      vi.spyOn(supabase.client, 'storage', 'get').mockReturnValue({
+        from: vi.fn(() => ({ upload: uploadSpy })),
+      } as any);
 
       await expect(service.uploadMedia('evt-1', 'guest-1', file, false)).rejects.toThrow(/free photo limit/);
       expect(uploadSpy).not.toHaveBeenCalled();
@@ -105,7 +108,10 @@ describe('EventMediaService', () => {
 
     it('rejects a video on a non-premium event before touching storage', async () => {
       const file = new File([new Uint8Array(1024)], 'clip.mp4', { type: 'video/mp4' });
-      const uploadSpy = vi.spyOn(supabase.client.storage.from('event-media'), 'upload');
+      const uploadSpy = vi.fn().mockResolvedValue({ error: null });
+      vi.spyOn(supabase.client, 'storage', 'get').mockReturnValue({
+        from: vi.fn(() => ({ upload: uploadSpy })),
+      } as any);
 
       await expect(service.uploadMedia('evt-1', 'guest-1', file, false)).rejects.toThrow(/premium/);
       expect(uploadSpy).not.toHaveBeenCalled();
