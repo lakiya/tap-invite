@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventMediaService } from '../../../../core/services/event-media/event-media.service';
 import { EventMediaWithUrl } from '../../../../core/services/event-media/event-media.types';
@@ -37,6 +37,8 @@ interface PendingPreview {
 
       @if (isLoading()) {
         <p class="hint-text">Loading photos…</p>
+      } @else if (loadError()) {
+        <p class="upload-error">{{ loadError() }}</p>
       } @else if (approvedMedia().length === 0 && myPendingUploads().length === 0) {
         <p class="hint-text">No photos yet — be the first to share one!</p>
       } @else {
@@ -81,7 +83,7 @@ interface PendingPreview {
     .gallery-item__by { position: absolute; bottom: 4px; left: 4px; background: rgba(0,0,0,0.55); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; }
   `]
 })
-export class PhotoTabComponent implements OnInit {
+export class PhotoTabComponent implements OnInit, OnDestroy {
   @Input({ required: true }) eventId!: string;
   @Input({ required: true }) guestId!: string;
   @Input({ required: true }) isPremium = false;
@@ -91,6 +93,7 @@ export class PhotoTabComponent implements OnInit {
   isLoading = signal(true);
   isUploading = signal(false);
   uploadError = signal<string | null>(null);
+  loadError = signal<string | null>(null);
   approvedMedia = signal<EventMediaWithUrl[]>([]);
   myPendingUploads = signal<PendingPreview[]>([]);
 
@@ -104,10 +107,19 @@ export class PhotoTabComponent implements OnInit {
     await this.loadApprovedMedia();
   }
 
+  ngOnDestroy() {
+    for (const item of this.myPendingUploads()) {
+      URL.revokeObjectURL(item.previewUrl);
+    }
+  }
+
   async loadApprovedMedia() {
     try {
       this.isLoading.set(true);
+      this.loadError.set(null);
       this.approvedMedia.set(await this.eventMediaService.getApprovedMedia(this.eventId));
+    } catch {
+      this.loadError.set("Couldn't load photos. Please try reloading the page.");
     } finally {
       this.isLoading.set(false);
     }
