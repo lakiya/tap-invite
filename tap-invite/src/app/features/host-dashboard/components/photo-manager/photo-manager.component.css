@@ -1,0 +1,15 @@
+.photo-manager { background: white; border-radius: 12px; padding: 20px; margin-top: 20px; }
+.photo-manager__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-title { font-size: 1rem; font-weight: 700; margin: 0; }
+.btn-download { background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.8125rem; font-weight: 600; cursor: pointer; }
+.btn-download:disabled { background: #cbd5e1; cursor: not-allowed; }
+.hint-text { color: #64748b; font-size: 0.875rem; }
+.photo-section { margin-bottom: 20px; }
+.photo-section__title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin: 0 0 10px; }
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.photo-card { position: relative; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: #f8fafc; }
+.photo-card img, .photo-card video { width: 100%; height: 140px; object-fit: cover; display: block; }
+.photo-card__by { display: block; font-size: 0.7rem; color: #64748b; padding: 4px 8px; }
+.photo-card__actions { display: flex; gap: 6px; padding: 0 8px 8px; }
+.btn-approve { flex: 1; background: #16a34a; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 0.75rem; cursor: pointer; }
+.btn-reject { flex: 1; background: #dc2626; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 0.75rem; cursor: pointer; }

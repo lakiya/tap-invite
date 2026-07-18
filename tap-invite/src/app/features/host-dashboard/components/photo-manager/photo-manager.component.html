@@ -1,0 +1,62 @@
+<section class="photo-manager">
+  <div class="photo-manager__header">
+    <h2 class="section-title">📸 Guest Photos</h2>
+    @if (isPremium) {
+      <button
+        class="btn-download"
+        [disabled]="isZipping() || approvedMedia().length === 0"
+        (click)="downloadAll()">
+        {{ isZipping() ? 'Preparing ZIP…' : '⬇ Download All' }}
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <p class="hint-text">Loading photos…</p>
+  } @else {
+    @if (pendingMedia().length > 0) {
+      <div class="photo-section">
+        <h3 class="photo-section__title">Pending Approval ({{ pendingMedia().length }})</h3>
+        <div class="photo-grid">
+          @for (item of pendingMedia(); track item.id) {
+            <div class="photo-card">
+              @if (item.media_type === 'video') {
+                <video [src]="item.url" controls></video>
+              } @else {
+                <img [src]="item.url" [alt]="item.caption || 'Pending photo'" />
+              }
+              <span class="photo-card__by">{{ item.guestName }}</span>
+              <div class="photo-card__actions">
+                <button class="btn-approve" (click)="approve(item)">✓ Approve</button>
+                <button class="btn-reject" (click)="reject(item)">✕ Reject</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="photo-section">
+      <h3 class="photo-section__title">Approved ({{ approvedMedia().length }})</h3>
+      @if (approvedMedia().length === 0) {
+        <p class="hint-text">No approved photos yet.</p>
+      } @else {
+        <div class="photo-grid">
+          @for (item of approvedMedia(); track item.id) {
+            <div class="photo-card">
+              @if (item.media_type === 'video') {
+                <video [src]="item.url" controls></video>
+              } @else {
+                <img [src]="item.url" [alt]="item.caption || 'Guest photo'" />
+              }
+              <span class="photo-card__by">{{ item.guestName }}</span>
+              <div class="photo-card__actions">
+                <button class="btn-reject" (click)="remove(item)">🗑 Remove</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>
