@@ -27,6 +27,11 @@
 
   @else if (templateContext()) {
     <app-template-renderer [context]="templateContext()!"></app-template-renderer>
+    <app-photo-tab
+      [eventId]="eventId()!"
+      [guestId]="guestId()!"
+      [isPremium]="eventData()!.is_premium">
+    </app-photo-tab>
   }
 
 </main>

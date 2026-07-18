@@ -5,11 +5,12 @@ import { Supabase } from '../../../core/services/supabase/supabase';
 import { RsvpStatus } from './rsvp-buttons/rsvp-buttons.component';
 import { EventData, GuestData, TemplateContext } from '../../templates/template.types';
 import { TemplateRendererComponent } from '../../templates/components/template-renderer/template-renderer.component';
+import { PhotoTabComponent } from './photo-tab/photo-tab.component';
 
 @Component({
   selector: 'app-guest-view',
   standalone: true,
-  imports: [CommonModule, RouterModule, TemplateRendererComponent],
+  imports: [CommonModule, RouterModule, TemplateRendererComponent, PhotoTabComponent],
   templateUrl: './guest-view.component.html',
   styleUrls: ['./guest-view.component.css']
 })
