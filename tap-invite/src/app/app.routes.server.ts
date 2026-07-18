@@ -6,6 +6,11 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    // Public live wall, keyed by wallToken; dynamic per-event, cannot be prerendered
+    path: 'wall/:eventId/:wallToken',
+    renderMode: RenderMode.Server
+  },
+  {
     // Auth guard reads localStorage; must run client-side only
     path: 'dashboard',
     renderMode: RenderMode.Client
