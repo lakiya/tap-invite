@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventMediaService } from '../../../../core/services/event-media/event-media.service';
-import { EventMediaWithUrl } from '../../../../core/services/event-media/event-media.types';
+import { EventMediaWithUrl, FREE_PHOTO_CAP } from '../../../../core/services/event-media/event-media.types';
 
 interface PendingPreview {
   id: string;
@@ -19,17 +19,21 @@ interface PendingPreview {
       <p class="photo-tab__sub">Add your photos{{ isPremium ? ' or a short video' : '' }} for everyone to see.</p>
 
       <div class="upload-row">
-        <label class="upload-btn">
+        <label class="upload-btn" [class.upload-btn--disabled]="atPhotoCap()">
           {{ isUploading() ? 'Uploading…' : ('+ Add Photo' + (isPremium ? '/Video' : '')) }}
           <input
             type="file"
             [accept]="acceptTypes"
             (change)="onFileSelected($event)"
-            [disabled]="isUploading()"
+            [disabled]="isUploading() || atPhotoCap()"
             hidden
           />
         </label>
       </div>
+
+      @if (atPhotoCap()) {
+        <p class="cap-message">This event has reached its free photo limit. Ask your host to unlock more.</p>
+      }
 
       @if (uploadError()) {
         <p class="upload-error">{{ uploadError() }}</p>
@@ -73,7 +77,9 @@ interface PendingPreview {
     .photo-tab__sub { font-size: 0.85rem; color: #64748b; margin: 0 0 16px; }
     .upload-row { margin-bottom: 12px; }
     .upload-btn { display: inline-block; background: #7c3aed; color: white; padding: 10px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+    .upload-btn--disabled { background: #a3a3a3; cursor: not-allowed; }
     .upload-error { color: #dc2626; font-size: 0.8125rem; margin: 0 0 12px; }
+    .cap-message { color: #92400e; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 12px; font-size: 0.8125rem; margin: 0 0 12px; }
     .hint-text { color: #64748b; font-size: 0.875rem; }
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
     .gallery-item { position: relative; border-radius: 10px; overflow: hidden; background: #f1f5f9; aspect-ratio: 1; }
@@ -96,6 +102,7 @@ export class PhotoTabComponent implements OnInit, OnDestroy {
   loadError = signal<string | null>(null);
   approvedMedia = signal<EventMediaWithUrl[]>([]);
   myPendingUploads = signal<PendingPreview[]>([]);
+  atPhotoCap = signal(false);
 
   get acceptTypes(): string {
     return this.isPremium
@@ -104,7 +111,7 @@ export class PhotoTabComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await this.loadApprovedMedia();
+    await Promise.all([this.loadApprovedMedia(), this.checkPhotoCap()]);
   }
 
   ngOnDestroy() {
@@ -125,6 +132,17 @@ export class PhotoTabComponent implements OnInit, OnDestroy {
     }
   }
 
+  async checkPhotoCap() {
+    if (this.isPremium) return;
+    try {
+      const count = await this.eventMediaService.getMediaCount(this.eventId, 'photo');
+      this.atPhotoCap.set(count >= FREE_PHOTO_CAP);
+    } catch {
+      // Non-fatal: leave atPhotoCap as-is; the reactive check in uploadMedia
+      // still guards against exceeding the cap if this proactive check fails.
+    }
+  }
+
   async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -142,6 +160,9 @@ export class PhotoTabComponent implements OnInit, OnDestroy {
         { id: crypto.randomUUID(), previewUrl, mediaType },
         ...items,
       ]);
+      if (mediaType === 'photo' && !this.isPremium) {
+        await this.checkPhotoCap();
+      }
     } catch (err) {
       this.uploadError.set(err instanceof Error ? err.message : 'Failed to upload. Please try again.');
       URL.revokeObjectURL(previewUrl);
