@@ -37,5 +37,9 @@ export const routes: Routes = [
     path: 'e/:eventId',
     loadComponent: () => import('./features/event-public/event-public.component').then(c => c.EventPublicPageComponent)
   },
+  {
+    path: 'wall/:eventId/:wallToken',
+    loadComponent: () => import('./features/wall/wall.component').then(c => c.WallComponent)
+  },
   { path: '**', redirectTo: '' }
 ];
