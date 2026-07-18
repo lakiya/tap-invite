@@ -204,12 +204,21 @@ export class EventGridComponent implements OnInit {
 
   async togglePremium(event: AdminEvent) {
     const newValue = !event.is_premium;
+    this.allEvents.update(events =>
+      events.map(e => e.id === event.id
+        ? { ...e, is_premium: newValue }
+        : e
+      )
+    );
     try {
       await this.adminService.togglePremium(event.id, newValue);
-      this.allEvents.update(events =>
-        events.map(e => e.id === event.id ? { ...e, is_premium: newValue } : e)
-      );
     } catch {
+      this.allEvents.update(events =>
+        events.map(e => e.id === event.id
+          ? { ...e, is_premium: event.is_premium }
+          : e
+        )
+      );
       this.toast.error('Failed to update premium status.');
     }
   }
