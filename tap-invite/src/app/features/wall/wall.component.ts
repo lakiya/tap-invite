@@ -19,7 +19,7 @@ import { EventMediaWithUrl } from '../../core/services/event-media/event-media.t
           <h1>{{ eventTitle() }}</h1>
           <p>No photos yet — check back soon!</p>
         </div>
-      } @else {
+      } @else if (currentItem()) {
         <div class="wall-slide">
           <h1 class="wall-slide__title">{{ eventTitle() }}</h1>
           @if (currentItem()?.media_type === 'video') {
@@ -78,7 +78,9 @@ export class WallComponent implements OnInit, OnDestroy {
     const event = await this.eventMediaService.getEventForWall(this.eventId, this.wallToken);
     if (!event) { this.eventTitle.set(null); return; }
     this.eventTitle.set(event.title);
-    this.media.set(await this.eventMediaService.getApprovedMedia(this.eventId));
+    const newMedia = await this.eventMediaService.getApprovedMedia(this.eventId);
+    this.media.set(newMedia);
+    this.currentIndex.update(i => Math.min(i, Math.max(newMedia.length - 1, 0)));
   }
 
   ngOnDestroy() {
