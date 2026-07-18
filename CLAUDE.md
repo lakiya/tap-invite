@@ -45,12 +45,15 @@ Three user-facing surfaces gated by role, all lazy-loaded:
 - `/admin` — super admin command center, behind `adminGuard` (requires `profiles.role === 'super_admin'`, checked via `ProfilesService.getMyProfile`).
 - `/w/:eventId/:guestId` — the actual guest invitation (magic-link destination); loads event + guest + rsvp rows and blocks cross-event access by filtering on both ids together.
 - `/e/:eventId` — a public, guest-less read-only view of an event (no RSVP).
+- `/wall/:eventId/:wallToken` — public live photo wall (e.g. projected at the venue); access is gated by matching `events.wall_token`, not by auth.
 
 Guards (`core/guards/*.guard.ts`) call `Supabase.getCurrentUser()` and redirect via `router.createUrlTree(...)` rather than injecting `Router.navigate` — keep that pattern for new guards.
 
 ### Data access
 
-`core/services/supabase/supabase.ts` (`Supabase` service) is the single wrapper around the Supabase client and holds essentially all query/mutation methods (events, guests, rsvps, edge function invocations for magic-link/email). `features/admin/admin.service.ts` (`AdminService`) duplicates a parallel set of admin-scoped queries (bypassing RLS-friendly host scoping) rather than reusing `Supabase` — follow that existing split (host/guest-facing queries in `Supabase`, admin-only queries in `AdminService`) rather than merging them.
+`core/services/supabase/supabase.ts` (`Supabase` service) is the single wrapper around the Supabase client and holds most query/mutation methods (events, guests, rsvps, edge function invocations for magic-link/email). `features/admin/admin.service.ts` (`AdminService`) duplicates a parallel set of admin-scoped queries (bypassing RLS-friendly host scoping) rather than reusing `Supabase` — follow that existing split (host/guest-facing queries in `Supabase`, admin-only queries in `AdminService`) rather than merging them.
+
+`core/services/event-media/event-media.service.ts` (`EventMediaService`) is a third, domain-scoped service for the guest photo/video wall: it reaches through `Supabase.client` directly for the `event_media` table and the `event-media` Storage bucket. It enforces business rules client-side before upload (free events capped at `FREE_PHOTO_CAP` photos unless `events.is_premium`; videos ≤ 60s — constants and file validation in `event-media.types.ts`) and serves media via 1-hour signed URLs. Media rows have a moderation `status` (`pending`/`approved`/`rejected`): guests upload from the guest-view photo-tab, hosts approve/delete in `host-dashboard/components/photo-manager`, and only approved media appears on the guest tab and the `/wall` page.
 
 `APP_ENV` (`core/tokens/app-env.ts`) is an injection token carrying `{ supabaseUrl, supabaseKey }`, seeded from `environment.ts` on the server and transferred to the client via Angular's `TransferState` (see `app.config.ts`) so SSR and browser share one config source without re-reading env vars client-side.
 
