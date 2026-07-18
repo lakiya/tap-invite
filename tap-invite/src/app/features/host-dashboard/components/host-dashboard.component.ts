@@ -14,6 +14,7 @@ import { EditEventDialogComponent, EditDialogResult } from './edit-event-dialog/
 import { BulkUploadDialogComponent } from './bulk-upload-dialog/bulk-upload-dialog.component';
 import { RsvpStatsBarComponent } from './rsvp-stats-bar/rsvp-stats-bar.component';
 import { EventSharePanelComponent } from './event-share-panel/event-share-panel.component';
+import { PhotoManagerComponent } from './photo-manager/photo-manager.component';
 import { normalizeEmail, normalizePhone, type ExistingGuestKey } from './bulk-upload-dialog/guest-import';
 
 @Component({
@@ -28,6 +29,7 @@ import { normalizeEmail, normalizePhone, type ExistingGuestKey } from './bulk-up
     TemplateGalleryComponent,
     RsvpStatsBarComponent,
     EventSharePanelComponent,
+    PhotoManagerComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrls: ['./host-dashboard.component.css']

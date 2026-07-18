@@ -84,6 +84,11 @@
         (guestDeleted)="handleGuestDeleted()">
       </app-guest-table>
     </div>
+
+    <app-photo-manager
+      [eventId]="activeEvent().id"
+      [isPremium]="activeEvent().is_premium">
+    </app-photo-manager>
   }
 
 </main>
