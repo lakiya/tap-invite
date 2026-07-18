@@ -8,6 +8,7 @@ const mockContext: TemplateContext = {
     event_date: '2026-12-01T18:00:00',
     location_text: 'Test Venue', template_id: 'invitation-booklet',
     google_maps_url: null, notes: null, show_rsvp: true,
+    is_premium: false, wall_token: 'wall-token-1',
   },
   guest: { id: 'g1', event_id: '1', display_name: 'Jane Doe' },
   rsvpStatus: 'Pending' as RsvpStatus,
