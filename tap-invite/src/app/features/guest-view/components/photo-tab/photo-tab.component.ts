@@ -43,7 +43,7 @@ interface PendingPreview {
         <p class="hint-text">Loading photos…</p>
       } @else if (loadError()) {
         <p class="upload-error">{{ loadError() }}</p>
-      } @else if (approvedMedia().length === 0 && myPendingUploads().length === 0) {
+      } @else if (approvedMedia().length === 0 && myPendingUploads().length === 0 && !atPhotoCap()) {
         <p class="hint-text">No photos yet — be the first to share one!</p>
       } @else {
         <div class="gallery-grid">
